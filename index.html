@@ -882,7 +882,6 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 <script>
 const DEFAULT_PLACES = {
   sensoji:    { name: "Senso-ji", lat: 35.71477, lng: 139.79666 },
-  tnm:        { name: "Tokyo National Museum", lat: 35.71883, lng: 139.77653 },
   yanaka:     { name: "Yanaka Ginza", lat: 35.72769, lng: 139.76579 },
   meiji:      { name: "Meiji Jingu", lat: 35.67640, lng: 139.69933 },
   tower:      { name: "Tokyo Tower", lat: 35.65858, lng: 139.74543 },
@@ -915,12 +914,10 @@ const DEFAULT_PLACES = {
 };
 
 const DEFAULT_DAYS = [
-  { date: "Sun 11/29", full: "Sunday, Nov 29", area: "Asakusa · Ueno · Yanaka · Ikebukuro", title: "Old Tokyo, street food, and a muscle bar", stops: [
-    { t: "09:00", id: "sensoji", note: "Go early; it fills up by late morning. Snack your way down Nakamise-dori on the way in: ningyo-yaki cakes and age-manju." },
-    { t: "11:30", id: "ameyoko", note: "About 10 minutes by subway to Ueno. Busy market street for lunch on the go: takoyaki, skewers, and cheap seafood bowls." },
-    { t: "13:30", id: "tnm", note: "A 10-minute walk through Ueno Park. Japan's national museum." },
-    { t: "15:30", id: "yanaka", note: "A 20-minute walk north through Yanaka's temple streets. Snack street: try the menchi-katsu croquettes. Sunset is about 4:30." },
-    { t: "18:30", id: "musclegirls", note: "About 15 minutes on the JR Yamanote Line from Nippori. Bar where women bodybuilders host a show; a May 2026 review says about ¥6,000 a person for entry and 80 minutes of drinks, with games extra. Small, so reserve on Instagram or LINE. Open 5-11 PM, closed Tuesdays." } ]},
+  { date: "Sun 11/29", full: "Sunday, Nov 29", area: "Asakusa · Ueno · Ikebukuro", title: "Arrival evening: lanterns, street food, muscle bar", stops: [
+    { t: "17:30", id: "sensoji", note: "You land around 2 PM; allow about 3 hours for immigration, bags and the hotel. Senso-ji's grounds stay open after dark and are lit up and much quieter than by day. Most Nakamise-dori stalls close around 5 PM." },
+    { t: "19:00", id: "ameyoko", note: "About 10 minutes by subway to Ueno. Dinner from the street stalls and the izakayas under the train tracks: skewers, takoyaki, seafood. Some stalls close early, but the bars stay open late." },
+    { t: "20:30", id: "musclegirls", note: "About 20 minutes on the JR Yamanote Line from Ueno. Bar where women bodybuilders host a show; a May 2026 review says about ¥6,000 a person for entry and 80 minutes of drinks, with games extra. Small, so reserve on Instagram or LINE. Open until 11 PM; closed Tuesdays." } ]},
   { date: "Mon 11/30", full: "Monday, Nov 30", area: "Harajuku · Shibuya · Ebisu", title: "Meiji Jingu to Shibuya", stops: [
     { t: "10:00", id: "meiji", note: "Forest path to the shrine from Harajuku Station." },
     { t: "11:30", id: "takeshita", note: "Right across from the station. Crepes, giant cotton candy, and Harajuku snacks. Then wander down Omotesando toward Shibuya." },
@@ -945,8 +942,9 @@ const DEFAULT_DAYS = [
     { t: "18:00", id: "nakameguro", note: "Canal-side walk with lit-up cafes." } ]},
   { date: "Fri 12/4", full: "Friday, Dec 4", area: "Hakone", title: "Hakone day trip", stops: [
     { t: "08:30", id: "hakone", note: "Lake Ashi, Hakone Shrine, and a hot spring. Fuji may show on a clear day. Check the last train back." } ]},
-  { date: "Sat 12/5", full: "Saturday, Dec 5", area: "Shinjuku", title: "Shinjuku, garden to bars", stops: [
-    { t: "13:00", id: "gyoen", note: "Big garden with some late autumn color left in early December. Small entry fee." },
+  { date: "Sat 12/5", full: "Saturday, Dec 5", area: "Yanaka · Shinjuku", title: "Yanaka morning, Shinjuku night", stops: [
+    { t: "10:30", id: "yanaka", note: "Old-Tokyo temple streets and a snack street; try the menchi-katsu croquettes. Shops open from about 10 or 11." },
+    { t: "13:00", id: "gyoen", note: "About 30 minutes on the JR Yamanote Line from Nippori to Shinjuku, then a 10-minute walk. Big garden with some late autumn color left in early December. Small entry fee." },
     { t: "16:30", id: "southern", note: "Ten minutes' walk. Southern Terrace lights by the station." },
     { t: "18:00", id: "uogashi", note: "Standing sushi bar across the station: fast, cheap, and very fresh. No reservation needed." },
     { t: "19:30", id: "omoide", note: "Two minutes away. Yakitori alleys by the tracks." },
