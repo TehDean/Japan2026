@@ -685,20 +685,23 @@ svg.leaflet-image-layer.leaflet-interactive path {
   --pin-ring: #ffffff;
   --sushi: #23527c;
   --sushi-soft: #dde8f2;
+  --food: #8a5a00;
+  --food-pin: #c27c0e;
+  --food-soft: #f6e7c8;
   --map-filter: none;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #151418; --surface: #1d1c22; --fg: #efe9e1; --muted: #a39ba5; --line: #36333c;
-    --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36;
+    --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36; --food: #e8b65a; --food-pin: #d4952a; --food-soft: #33280f;
     --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #151418; --surface: #1d1c22; --fg: #efe9e1; --muted: #a39ba5; --line: #36333c;
-  --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36;
+  --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36; --food: #e8b65a; --food-pin: #d4952a; --food-soft: #33280f;
   --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
   color-scheme: dark;
 }
@@ -753,6 +756,9 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 .pin { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; border: 2px solid var(--pin-ring);
   display: grid; place-items: center; font: 600 12px "IBM Plex Mono", monospace; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: opacity .2s; }
 .pin.sushi { background: var(--sushi); }
+.pin.food { background: var(--food-pin); }
+.num.food { background: var(--food-pin); }
+.kind.food { color: var(--food); background: var(--food-soft); }
 .pin.dim { opacity: .35; background: var(--muted); }
 .num.sushi { background: var(--sushi); }
 .kind { display: inline-block; margin-left: 6px; font: 500 11px "IBM Plex Mono", monospace; color: var(--sushi); background: var(--sushi-soft); border-radius: 3px; padding: 1px 6px; vertical-align: 1px; }
@@ -807,7 +813,7 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 <header>
   <div class="eyebrow">Tokyo · Nov 29 – Dec 5, 2026</div>
   <h1>Tokyo December Plan</h1>
-  <p class="lede">Seven days, each kept to one part of town, plus two day trips. Pick a day to see its stops on the map. Times are suggestions.</p>
+  <p class="lede">Seven days, each kept to one part of town, with street food along the way and two day trips. Pick a day to see its stops on the map. Times are suggestions.</p>
 </header>
 
 <nav class="tabs" role="tablist" aria-label="Days" id="tabs"></nav>
@@ -818,7 +824,7 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
   </div>
   <section class="panel map-wrap" aria-label="Map">
     <h2>Map</h2>
-    <p class="cap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span>Faded pins are other days. Tap a pin or a stop for details.</p>
+    <p class="cap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span><span class="key"><i style="background:var(--food-pin)"></i>Street food</span>Faded pins are other days. Tap a pin or a stop for details.</p>
     <div id="map"></div>
     <p id="map-note">The map library didn't load. The stop list and Google Maps links still work.</p>
   </section>
@@ -849,21 +855,33 @@ const DEFAULT_PLACES = {
   // Sushi
   joe:        { name: "Osushi no Joe", lat: 35.66458, lng: 139.73005, sushi: "Splurge" },
   sushidai:   { name: "Sushi Dai (Toyosu Market)", lat: 35.64430, lng: 139.78245, sushi: "Mid-range" },
-  uogashi:    { name: "Uogashi Nihon-Ichi", lat: 35.68998, lng: 139.69730, sushi: "Casual" }
+  uogashi:    { name: "Uogashi Nihon-Ichi", lat: 35.68998, lng: 139.69730, sushi: "Casual" },
+  // Street food and fun
+  ameyoko:    { name: "Ameyoko Market", lat: 35.71007, lng: 139.77460, food: true },
+  takeshita:  { name: "Takeshita-dori", lat: 35.67155, lng: 139.70333, food: true },
+  ebisuyoko:  { name: "Ebisu Yokocho", lat: 35.64822, lng: 139.71064, food: true },
+  xmasmarket: { name: "Tokyo Christmas Market (Shin-Toyosu)", lat: 35.64873, lng: 139.79017, food: true },
+  komachi:    { name: "Komachi-dori, Kamakura", lat: 35.32166, lng: 139.55246, food: true },
+  musclegirls:{ name: "Muscle Girls (Ikebukuro)", lat: 35.73318, lng: 139.70977 }
 };
 
 const DEFAULT_DAYS = [
-  { date: "Sun 11/29", full: "Sunday, Nov 29", area: "Asakusa · Ueno · Yanaka", title: "Old Tokyo in the northeast", stops: [
-    { t: "09:00", id: "sensoji", note: "Go early; it fills up by late morning. Nakamise-dori is the shopping street on the way in." },
-    { t: "13:00", id: "tnm", note: "About 10 minutes by subway to Ueno. Japan's national museum, in Ueno Park." },
-    { t: "15:30", id: "yanaka", note: "A 20-minute walk north through Yanaka's temple streets. Good for a slow walk before the 4:30 sunset." } ]},
-  { date: "Mon 11/30", full: "Monday, Nov 30", area: "Harajuku · Shibuya", title: "Meiji Jingu to Shibuya", stops: [
-    { t: "10:00", id: "meiji", note: "Forest path to the shrine from Harajuku Station. Then walk Takeshita-dori and Omotesando toward Shibuya." },
-    { t: "16:00", id: "shibuyasky", note: "Sunset is about 4:30. Book a sunset slot ahead; they sell out." } ]},
+  { date: "Sun 11/29", full: "Sunday, Nov 29", area: "Asakusa · Ueno · Yanaka · Ikebukuro", title: "Old Tokyo, street food, and a muscle bar", stops: [
+    { t: "09:00", id: "sensoji", note: "Go early; it fills up by late morning. Snack your way down Nakamise-dori on the way in: ningyo-yaki cakes and age-manju." },
+    { t: "11:30", id: "ameyoko", note: "About 10 minutes by subway to Ueno. Busy market street for lunch on the go: takoyaki, skewers, and cheap seafood bowls." },
+    { t: "13:30", id: "tnm", note: "A 10-minute walk through Ueno Park. Japan's national museum." },
+    { t: "15:30", id: "yanaka", note: "A 20-minute walk north through Yanaka's temple streets. Snack street: try the menchi-katsu croquettes. Sunset is about 4:30." },
+    { t: "18:30", id: "musclegirls", note: "About 15 minutes on the JR Yamanote Line from Nippori. Bar where women bodybuilders host a show; a May 2026 review says about ¥6,000 a person for entry and 80 minutes of drinks, with games extra. Small, so reserve on Instagram or LINE. Open 5-11 PM, closed Tuesdays." } ]},
+  { date: "Mon 11/30", full: "Monday, Nov 30", area: "Harajuku · Shibuya · Ebisu", title: "Meiji Jingu to Shibuya", stops: [
+    { t: "10:00", id: "meiji", note: "Forest path to the shrine from Harajuku Station." },
+    { t: "11:30", id: "takeshita", note: "Right across from the station. Crepes, giant cotton candy, and Harajuku snacks. Then wander down Omotesando toward Shibuya." },
+    { t: "16:00", id: "shibuyasky", note: "Sunset is about 4:30. Book a sunset slot ahead; they sell out." },
+    { t: "18:00", id: "ebisuyoko", note: "One stop from Shibuya on the JR line. A covered alley of small food stalls; graze from one to the next. Some stalls add a table charge, so ask before ordering." } ]},
   { date: "Tue 12/1", full: "Tuesday, Dec 1", area: "Toyosu · Tsukiji · Ginza", title: "Market morning, Marunouchi lights", stops: [
     { t: "07:00", id: "sushidai", note: "Famous counter inside Toyosu Market; lines form early. The market closes Sundays, holidays, and some Wednesdays, which is why this is on a Tuesday." },
     { t: "09:30", id: "teamlab", note: "About 15 minutes' walk from the market. You walk barefoot through water rooms. Book tickets weeks ahead." },
-    { t: "12:30", id: "tsukiji", note: "Short taxi or Yurikamome ride. Graze the stalls for lunch: tamagoyaki, grilled scallops. Most close by 2 PM. Bring cash." },
+    { t: "11:30", id: "xmasmarket", note: "Next to teamLab, by Shin-Toyosu Station. German-style Christmas market with hot food and mulled wine. ¥1,000 on weekdays; buy tickets online. Pin is approximate." },
+    { t: "13:00", id: "tsukiji", note: "Short taxi or Yurikamome ride. Graze the stalls: tamagoyaki, grilled scallops, wagyu skewers. Many close around 2 PM, so go straight there. Bring cash." },
     { t: "17:30", id: "marunouchi", note: "Walk through Ginza to the champagne-gold lights by Tokyo Station." } ]},
   { date: "Wed 12/2", full: "Wednesday, Dec 2", area: "Azabudai · Roppongi", title: "Tokyo Tower and Roppongi lights", stops: [
     { t: "13:00", id: "tower", note: "Slow morning, then start here. Go up, or just see it from the park at its base." },
@@ -872,8 +890,9 @@ const DEFAULT_DAYS = [
     { t: "17:00", id: "keyakizaka", note: "Right outside. Lights come on around 5 PM, with Tokyo Tower framing the slope." },
     { t: "18:00", id: "midtown", note: "About 10 minutes' walk. Midtown's Christmas lights." },
     { t: "19:00", id: "joe", note: "Lively omakase counter (rated 4.8) a few minutes from Midtown. Reserve ahead." } ]},
-  { date: "Thu 12/3", full: "Thursday, Dec 3", area: "Kamakura → Nakameguro", title: "Kamakura, then Nakameguro on the way back", stops: [
-    { t: "08:30", id: "kamakura", note: "About an hour by train. The Great Buddha, Hase-dera, and Komachi-dori. Return via Yokohama on the Tokyu Toyoko Line, which stops at Nakameguro." },
+  { date: "Thu 12/3", full: "Thursday, Dec 3", area: "Kamakura → Nakameguro", title: "Kamakura street food, Nakameguro evening", stops: [
+    { t: "08:30", id: "kamakura", note: "About an hour by train. The Great Buddha and Hase-dera in the morning." },
+    { t: "12:00", id: "komachi", note: "Kamakura's snack street by the station: grilled seafood, croquettes, and sweet potato treats. Head back via Yokohama on the Tokyu Toyoko Line, which stops at Nakameguro." },
     { t: "18:00", id: "nakameguro", note: "Canal-side walk with lit-up cafes." } ]},
   { date: "Fri 12/4", full: "Friday, Dec 4", area: "Hakone", title: "Hakone day trip", stops: [
     { t: "08:30", id: "hakone", note: "Lake Ashi, Hakone Shrine, and a hot spring. Fuji may show on a clear day. Check the last train back." } ]},
@@ -931,7 +950,7 @@ function drawPins(day, fly = true) {
     const di = dayOf(id);
     if (di < 0) return;                      // not on any day: no pin
     const n = order[id];
-    const html = `<div class="pin${p.sushi ? " sushi" : ""}${n ? "" : " dim"}">${n || "·"}</div>`;
+    const html = `<div class="pin${p.sushi ? " sushi" : p.food ? " food" : ""}${n ? "" : " dim"}">${n || "·"}</div>`;
     const icon = L.divIcon({ className: "", html, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
     const m = L.marker([p.lat, p.lng], { icon, title: p.name, riseOnHover: true, zIndexOffset: n ? 1000 : 0 }).addTo(map);
     const stop = day.stops.find(s => s.id === id);
@@ -983,7 +1002,7 @@ function show(i, fly = true) {
       const p = PLACES[s.id];
       return `<li class="stop${map ? " clickable" : ""}" data-id="${esc(s.id)}">
         <span class="time">${esc(s.t)}</span>
-        <div><div class="stop-name"><span class="num${p.sushi ? " sushi" : ""}">${n + 1}</span>${esc(p.name)}${p.sushi ? `<span class="kind">Sushi · ${esc(p.sushi)}</span>` : ""}</div>
+        <div><div class="stop-name"><span class="num${p.sushi ? " sushi" : p.food ? " food" : ""}">${n + 1}</span>${esc(p.name)}${p.sushi ? `<span class="kind">Sushi · ${esc(p.sushi)}</span>` : p.food ? `<span class="kind food">Street food</span>` : ""}</div>
           <p class="stop-note">${esc(s.note)}</p>
           <a class="dir" href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>
       </li>`; }).join("")}</ol>`;
