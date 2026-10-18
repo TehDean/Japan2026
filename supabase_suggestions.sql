@@ -1,6 +1,8 @@
 -- Tokyo December Plan: "Suggest a change"
 -- Paste this whole file into Supabase > SQL Editor > New query, then click Run.
--- Uses the same Supabase project and review key as Adult Fun Finder.
+-- Run it in the japan2026 Supabase project.
+-- Before running, replace PUT-YOUR-REVIEW-KEY-HERE (at the bottom) with a long random password.
+-- That review key is needed to mark suggestions done. Never put it in the website or this repo.
 -- It is safe to run more than once.
 
 -- 1. Suggestions sent from the website
@@ -18,7 +20,7 @@ create table if not exists public.trip_suggestions (
 alter table public.trip_suggestions enable row level security;
 revoke all on public.trip_suggestions from anon, authenticated;
 
--- 2. The private review key (shared with Adult Fun Finder; nobody can read it from a website)
+-- 2. The private review key (nobody can read this table from the website)
 create table if not exists public.review_keys (key text primary key);
 alter table public.review_keys enable row level security;
 revoke all on public.review_keys from anon, authenticated;
@@ -61,3 +63,6 @@ revoke all on function public.mark_trip_suggestion(text, bigint, text, text) fro
 grant execute on function public.suggest_trip_change(uuid, text, text, text) to anon, authenticated;
 grant execute on function public.list_trip_suggestions() to anon, authenticated;
 grant execute on function public.mark_trip_suggestion(text, bigint, text, text) to anon, authenticated;
+
+-- 6. Your review key
+insert into public.review_keys (key) values ('PUT-YOUR-REVIEW-KEY-HERE') on conflict do nothing;

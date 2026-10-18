@@ -1072,13 +1072,13 @@ renderAll();
 
 
 // =====================================================================
-// Suggest a change: suggestions are saved in Supabase (same project as
-// Adult Fun Finder). The panel stays hidden until the database answers.
+// Suggest a change: suggestions are saved in the japan2026 Supabase project.
+// The panel stays hidden until the database answers.
 // =====================================================================
 (() => {
   const SB = {
-    url: "https://bsdoccpgsoyixsmtsvsu.supabase.co",
-    key: "sb_publishable_cXIVru9WF-qQ6Ir2rglK5Q_vvP3ffhA"   // public key; safe in a web page
+    url: "https://qsztbfixleqhxovkfaeg.supabase.co",
+    key: "sb_publishable_IfxPpo_h0HNGY5_maQyqlA_cdDjiWFE"   // public key; safe in a web page
   };
   const rpc = (fn, body) => fetch(SB.url + "/rest/v1/rpc/" + fn, {
     method: "POST",

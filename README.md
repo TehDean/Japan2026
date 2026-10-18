@@ -7,4 +7,4 @@ Day-by-day Tokyo plan for Nov 29 to Dec 5, 2026, with sights, sushi, street food
 ## Files
 
 - `index.html` – the website.
-- `supabase_suggestions.sql` – one-time database setup for the "Suggest a change" box (run in the Supabase SQL Editor of the Adult Fun Finder project). The box stays hidden until this has been run.
+- `supabase_suggestions.sql` – one-time database setup for the "Suggest a change" box (run in the Supabase SQL Editor of the japan2026 project). The box stays hidden until this has been run.
