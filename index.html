@@ -764,6 +764,42 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 .leaflet-popup-content a { color: var(--accent); }
 #map-note { display: none; margin-top: 10px; color: var(--muted); font-size: 12px; }
 @media (prefers-reduced-motion: reduce) { .pin { transition: none; } }
+.col { display: grid; gap: 24px; min-width: 0; align-content: start; }
+.chat h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
+.chat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.chat-sub { margin: 4px 0 12px; color: var(--muted); font-size: 13px; }
+.suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.suggest button, .ghost { font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; text-align: left; }
+.suggest button:hover, .ghost:hover { border-color: var(--accent); color: var(--accent); }
+.suggest button:disabled { opacity: .5; cursor: default; }
+.chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; margin-bottom: 12px; }
+.chat-log:empty { display: none; }
+.msg { padding: 8px 12px; border-radius: 10px; max-width: 88%; white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg.me { align-self: flex-end; background: var(--accent); color: #fff; }
+.msg.bot { align-self: flex-start; background: var(--bg); border: 1px solid var(--line); }
+.msg.note { align-self: stretch; max-width: none; font-size: 12px; color: var(--muted); background: none; padding: 2px 0; }
+.chat-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+.chat-form textarea { font: inherit; font-size: 16px; width: 100%; resize: vertical; min-height: 44px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.chat-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+#chatSend { font: inherit; font-weight: 600; padding: 10px 16px; border-radius: 8px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+#chatSend:disabled { opacity: .5; cursor: default; }
+#chatStop { padding: 10px 16px; border-radius: 8px; font-size: 14px; }
+@media (max-width: 760px) {
+  .col { display: contents; }
+  #dayPanel { order: 1; }
+  .map-wrap { order: 2; }
+  .chat { order: 3; }
+  .panel { padding: 16px; }
+  .dir { display: inline-flex; align-items: center; min-height: 40px; font-size: 13px; }
+  .stop-note { margin-bottom: 0; }
+  .suggest button, .ghost { min-height: 40px; padding: 8px 12px; font-size: 13px; }
+  .chat-log { max-height: 50vh; }
+  .msg { max-width: 92%; }
+  #chatSend, #chatStop { min-height: 44px; }
+}
+.leaflet-touch .leaflet-bar a { width: 36px; height: 36px; line-height: 36px; }
+.tab { min-height: 44px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 
 </head>
@@ -777,7 +813,9 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 <nav class="tabs" role="tablist" aria-label="Days" id="tabs"></nav>
 
 <main class="layout">
-  <section class="panel" id="dayPanel" role="tabpanel" aria-live="polite"></section>
+  <div class="col">
+    <section class="panel" id="dayPanel" role="tabpanel" aria-live="polite"></section>
+  </div>
   <section class="panel map-wrap" aria-label="Map">
     <h2>Map</h2>
     <p class="cap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span>Faded pins are other days. Tap a pin or a stop for details.</p>
@@ -787,7 +825,7 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 </main>
 
 <script>
-const PLACES = {
+const DEFAULT_PLACES = {
   sensoji:    { name: "Senso-ji", lat: 35.71477, lng: 139.79666 },
   tnm:        { name: "Tokyo National Museum", lat: 35.71883, lng: 139.77653 },
   yanaka:     { name: "Yanaka Ginza", lat: 35.72769, lng: 139.76579 },
@@ -818,7 +856,7 @@ const PLACES = {
   uogashi:    { name: "Uogashi Nihon-Ichi", lat: 35.68998, lng: 139.69730, sushi: "Casual" }
 };
 
-const DAYS = [
+const DEFAULT_DAYS = [
   { date: "Sun 11/29", full: "Sunday, Nov 29", area: "Asakusa · Ueno · Yanaka", title: "Old Tokyo in the northeast", stops: [
     { t: "09:00", id: "sensoji", note: "Go early; it fills up by late morning. Nakamise-dori is the shopping street on the way in." },
     { t: "11:30", id: "maguro", note: "Small counter a few minutes from Senso-ji serving tuna and salmon over rice (rated 4.9). Opens 10:30." },
@@ -855,15 +893,20 @@ const DAYS = [
     { t: "21:00", id: "goldengai", note: "About 10 minutes' walk east. Tiny bars; groups over four will struggle to fit." } ]}
 ];
 
+// The plan shown on the page. Starts as the built-in plan above; the shared saved copy replaces it once it loads.
+let PLACES = structuredClone(DEFAULT_PLACES);
+let DAYS = structuredClone(DEFAULT_DAYS);
+
 const tabs = document.getElementById("tabs");
 const panel = document.getElementById("dayPanel");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dirUrl = p => "https://www.google.com/maps/search/?api=1&query=" + p.lat + "," + p.lng;
+const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t).trim()); return m ? (+m[1]) * 60 + (+m[2]) : 9999; };
 let current = 0;
 
 // ---- Map: Leaflet with the street map stored alongside this page ----
 let map = null;
-const markers = {};
+let markers = {};
 if (typeof L !== "undefined") {
   map = L.map("map", { zoomControl: true, scrollWheelZoom: true }).setView([35.68, 139.75], 12);
   // Live street map (normal websites can load map images directly).
@@ -884,64 +927,69 @@ if (typeof L !== "undefined") {
   document.getElementById("map-note").style.display = "block";
 }
 
-function drawPins(day) {
+function dayOf(id) { return DAYS.findIndex(d => d.stops.some(s => s.id === id)); }
+
+function drawPins(day, fly = true) {
   if (!map) return;
+  Object.values(markers).forEach(m => m.remove());
+  markers = {};
   const order = {};
   day.stops.forEach((s, i) => order[s.id] = i + 1);
   Object.entries(PLACES).forEach(([id, p]) => {
+    const di = dayOf(id);
+    if (di < 0) return;                      // not on any day: no pin
     const n = order[id];
     const html = `<div class="pin${p.sushi ? " sushi" : ""}${n ? "" : " dim"}">${n || "·"}</div>`;
     const icon = L.divIcon({ className: "", html, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
-    if (!markers[id]) {
-      markers[id] = L.marker([p.lat, p.lng], { icon, title: p.name, riseOnHover: true }).addTo(map);
-      markers[id].on("click", () => {
-        // A faded pin belongs to another day: switch to that day.
-        if (!markers[id]._onDay) {
-          const di = DAYS.findIndex(d => d.stops.some(s => s.id === id));
-          if (di >= 0) { show(di); setTimeout(() => markers[id].openPopup(), 700); }
-        }
-      });
-    } else {
-      markers[id].setIcon(icon);
-    }
-    markers[id]._onDay = !!n;
-    markers[id].setZIndexOffset(n ? 1000 : 0);
+    const m = L.marker([p.lat, p.lng], { icon, title: p.name, riseOnHover: true, zIndexOffset: n ? 1000 : 0 }).addTo(map);
     const stop = day.stops.find(s => s.id === id);
-    const di = DAYS.findIndex(d => d.stops.some(s => s.id === id));
-    markers[id].bindPopup(`<b>${esc(p.name)}</b>${stop ? esc(stop.t) + " · " : esc(DAYS[di].date) + " · "}<a href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps</a>`);
+    m.bindPopup(`<b>${esc(p.name)}</b>${stop ? esc(stop.t) : esc(DAYS[di].date)} · <a href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps</a>`);
+    // A faded pin belongs to another day: switch to that day.
+    if (!n) m.on("click", () => { show(di); setTimeout(() => markers[id] && markers[id].openPopup(), 700); });
+    markers[id] = m;
   });
+  if (!fly || !day.stops.length) return;
   const pts = day.stops.map(s => [PLACES[s.id].lat, PLACES[s.id].lng]);
   if (pts.length === 1) map.flyTo(pts[0], 13, { duration: 0.6 });
   else map.flyToBounds(pts, { padding: [50, 50], maxZoom: 15, duration: 0.6 });
 }
 
 // ---- Tabs and day panel ----
-DAYS.forEach((d, i) => {
-  const b = document.createElement("button");
-  b.className = "tab"; b.id = "tab-" + i; b.type = "button";
-  b.setAttribute("role", "tab"); b.setAttribute("aria-selected", "false"); b.setAttribute("aria-controls", "dayPanel");
-  b.innerHTML = `<b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small>`;
-  b.addEventListener("click", () => show(i));
-  b.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-      const n = (i + (e.key === "ArrowRight" ? 1 : DAYS.length - 1)) % DAYS.length;
-      tabs.children[n].focus(); show(n);
-    }
+function buildTabs() {
+  tabs.innerHTML = "";
+  DAYS.forEach((d, i) => {
+    const b = document.createElement("button");
+    b.className = "tab"; b.id = "tab-" + i; b.type = "button";
+    b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "dayPanel");
+    b.innerHTML = `<b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small>`;
+    b.addEventListener("click", () => show(i));
+    b.addEventListener("keydown", e => {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        const n = (i + (e.key === "ArrowRight" ? 1 : DAYS.length - 1)) % DAYS.length;
+        tabs.children[n].focus(); show(n);
+      }
+    });
+    tabs.appendChild(b);
   });
-  tabs.appendChild(b);
-});
+}
 
-function show(i) {
-  current = i;
-  const d = DAYS[i];
-  [...tabs.children].forEach((t, j) => { t.setAttribute("aria-selected", String(j === i)); t.tabIndex = j === i ? 0 : -1; });
-  panel.setAttribute("aria-labelledby", "tab-" + i);
+function show(i, fly = true) {
+  current = Math.max(0, Math.min(i, DAYS.length - 1));
+  const d = DAYS[current];
+  [...tabs.children].forEach((t, j) => { t.setAttribute("aria-selected", String(j === current)); t.tabIndex = j === current ? 0 : -1; });
+  panel.setAttribute("aria-labelledby", "tab-" + current);
+  const sel = tabs.children[current];
+  if (sel) {
+    const l = sel.offsetLeft - tabs.offsetLeft, r = l + sel.offsetWidth;
+    if (l < tabs.scrollLeft) tabs.scrollLeft = l - 8;
+    else if (r > tabs.scrollLeft + tabs.clientWidth) tabs.scrollLeft = r - tabs.clientWidth + 8;
+  }
   panel.innerHTML = `
-    <div class="day-head"><div class="eyebrow">${esc(d.full)} · ${esc(d.area)}</div><h2>${esc(d.title)}</h2>
-      <p>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}${map ? ". Tap one to find it on the map." : ""}</p></div>
+    <div class="day-head"><div class="eyebrow">${esc(d.full)}${d.area ? " · " + esc(d.area) : ""}</div><h2>${esc(d.title)}</h2>
+      <p>${d.stops.length ? d.stops.length + " stop" + (d.stops.length === 1 ? "" : "s") + (map ? ". Tap one to find it on the map." : "") : "Nothing planned yet."}</p></div>
     <ol class="stops">${d.stops.map((s, n) => {
       const p = PLACES[s.id];
-      return `<li class="stop${map ? " clickable" : ""}" data-id="${s.id}">
+      return `<li class="stop${map ? " clickable" : ""}" data-id="${esc(s.id)}">
         <span class="time">${esc(s.t)}</span>
         <div><div class="stop-name"><span class="num${p.sushi ? " sushi" : ""}">${n + 1}</span>${esc(p.name)}${p.sushi ? `<span class="kind">Sushi · ${esc(p.sushi)}</span>` : ""}</div>
           <p class="stop-note">${esc(s.note)}</p>
@@ -950,12 +998,18 @@ function show(i) {
   panel.querySelectorAll(".stop.clickable").forEach(li => li.addEventListener("click", e => {
     if (e.target.closest("a")) return;
     const p = PLACES[li.dataset.id];
+    if (matchMedia("(max-width: 760px)").matches) {
+      document.getElementById("map").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    }
     map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
-    markers[li.dataset.id].openPopup();
+    markers[li.dataset.id] && markers[li.dataset.id].openPopup();
   }));
-  drawPins(d);
+  drawPins(d, fly);
 }
-show(0);
+
+function renderAll(fly = true) { buildTabs(); show(current, fly); }
+renderAll();
+
 </script>
 </body>
 </html>
