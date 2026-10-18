@@ -805,6 +805,33 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 }
 .leaflet-touch .leaflet-bar a { width: 36px; height: 36px; line-height: 36px; }
 .tab { min-height: 44px; }
+.sg-panel h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
+.sg-sub { margin: 4px 0 14px; color: var(--muted); font-size: 13px; }
+.sg-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 12px; }
+.sg-row { display: grid; gap: 4px; min-width: 0; }
+.sg-wide, .sg-err, #sgSend { grid-column: 1 / -1; }
+.sg-row label { font-size: 12px; font-weight: 600; color: var(--muted); }
+.sg-form input, .sg-form select, .sg-form textarea { font: inherit; font-size: 16px; width: 100%; padding: 9px 11px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg); min-height: 44px; }
+.sg-form textarea { resize: vertical; }
+.sg-form input:focus, .sg-form select:focus, .sg-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sg-err { margin: 0; color: var(--accent); font-size: 13px; }
+#sgSend { justify-self: start; font: inherit; font-weight: 600; min-height: 44px; padding: 10px 18px; border-radius: 8px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+#sgSend:disabled { opacity: .6; cursor: default; }
+.sg-listhead { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 6px; font-family: "IBM Plex Mono", monospace; }
+.sg-list { list-style: none; margin: 0; padding: 0; max-height: 420px; overflow-y: auto; }
+.sg-list li { padding: 10px 0; border-top: 1px solid var(--line); }
+.sg-list li:first-child { border-top: 0; }
+.sg-meta { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.sg-meta b { color: var(--fg); }
+.sg-chip { margin-left: auto; font: 500 11px "IBM Plex Mono", monospace; padding: 1px 7px; border-radius: 3px; }
+.sg-chip.wait { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+.sg-chip.done { color: var(--sushi); background: var(--sushi-soft); }
+.sg-chip.skip { color: var(--food); background: var(--food-soft); }
+.sg-body { margin: 4px 0 0; overflow-wrap: anywhere; }
+.sg-reply { margin: 6px 0 0; padding-left: 10px; border-left: 2px solid var(--line); color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.sg-empty { color: var(--muted); font-size: 13px; }
+@media (max-width: 760px) { .sg-panel { order: 3; } .sg-form { grid-template-columns: minmax(0, 1fr); } }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 
@@ -821,6 +848,28 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 <main class="layout">
   <div class="col">
     <section class="panel" id="dayPanel" role="tabpanel" aria-live="polite"></section>
+    <section class="panel sg-panel" id="sgPanel" aria-labelledby="sgTitle" hidden>
+      <h2 id="sgTitle">Suggest a change</h2>
+      <p class="sg-sub">Want to add, move or swap something? Send it here and it'll be worked into the plan.</p>
+      <form id="sgForm" class="sg-form" autocomplete="off" novalidate>
+        <div class="sg-row">
+          <label for="sgName">Your name</label>
+          <input id="sgName" maxlength="30" autocomplete="given-name" placeholder="First name">
+        </div>
+        <div class="sg-row">
+          <label for="sgDay">Which day?</label>
+          <select id="sgDay"><option value="">Any day</option></select>
+        </div>
+        <div class="sg-row sg-wide">
+          <label for="sgBody">Your suggestion</label>
+          <textarea id="sgBody" rows="3" maxlength="500" placeholder="e.g. Can we add a cat café on Sunday afternoon?"></textarea>
+        </div>
+        <p class="sg-err" id="sgErr" role="alert" hidden></p>
+        <button type="submit" id="sgSend">Send suggestion</button>
+      </form>
+      <h3 class="sg-listhead">Suggestions so far</h3>
+      <ul class="sg-list" id="sgList"></ul>
+    </section>
   </div>
   <section class="panel map-wrap" aria-label="Map">
     <h2>Map</h2>
@@ -1020,6 +1069,94 @@ function show(i, fly = true) {
 
 function renderAll(fly = true) { buildTabs(); show(current, fly); }
 renderAll();
+
+
+// =====================================================================
+// Suggest a change: suggestions are saved in Supabase (same project as
+// Adult Fun Finder). The panel stays hidden until the database answers.
+// =====================================================================
+(() => {
+  const SB = {
+    url: "https://bsdoccpgsoyixsmtsvsu.supabase.co",
+    key: "sb_publishable_cXIVru9WF-qQ6Ir2rglK5Q_vvP3ffhA"   // public key; safe in a web page
+  };
+  const rpc = (fn, body) => fetch(SB.url + "/rest/v1/rpc/" + fn, {
+    method: "POST",
+    headers: { apikey: SB.key, "Content-Type": "application/json" },
+    body: JSON.stringify(body || {})
+  }).then(r => r.ok ? (r.status === 204 ? null : r.text().then(t => t ? JSON.parse(t) : null))
+                    : r.text().then(t => { throw new Error("HTTP " + r.status + " " + t); }));
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+  };
+  let device = store.get("jp-device", null);
+  if (!device) {
+    device = (crypto.randomUUID ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); }));
+    store.set("jp-device", device);
+  }
+  const $ = id => document.getElementById(id);
+  const panel = $("sgPanel"), list = $("sgList"), err = $("sgErr"), btn = $("sgSend");
+  $("sgName").value = store.get("jp-name", "");
+  DAYS.forEach(d => { const o = document.createElement("option"); o.value = d.date; o.textContent = d.date + " · " + d.title; $("sgDay").appendChild(o); });
+
+  const ago = iso => {
+    const m = Math.round((Date.now() - new Date(iso)) / 60000);
+    if (m < 1) return "just now"; if (m < 60) return m + " min ago";
+    const h = Math.round(m / 60); if (h < 24) return h + " hr ago";
+    return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  };
+  const STATUS = { new: ["Waiting", "wait"], done: ["Added to the plan", "done"], skipped: ["Not added", "skip"] };
+
+  function render(rows) {
+    list.innerHTML = "";
+    if (!rows.length) {
+      const li = document.createElement("li"); li.className = "sg-empty";
+      li.textContent = "No suggestions yet. The first one will show up here.";
+      list.appendChild(li); return;
+    }
+    rows.forEach(r => {
+      const li = document.createElement("li");
+      const meta = document.createElement("div"); meta.className = "sg-meta";
+      const who = document.createElement("b"); who.textContent = r.suggested_by;
+      meta.append(who, document.createTextNode(" · " + (r.day ? r.day + " · " : "") + ago(r.created_at)));
+      const [label, cls] = STATUS[r.status] || STATUS.new;
+      const chip = document.createElement("span"); chip.className = "sg-chip " + cls; chip.textContent = label;
+      meta.appendChild(chip);
+      const body = document.createElement("p"); body.className = "sg-body"; body.textContent = r.body;
+      li.append(meta, body);
+      if (r.reply) { const rep = document.createElement("p"); rep.className = "sg-reply"; rep.textContent = r.reply; li.appendChild(rep); }
+      list.appendChild(li);
+    });
+  }
+  async function load() {
+    try { render((await rpc("list_trip_suggestions")) || []); panel.hidden = false; }
+    catch { panel.hidden = true; }   // database not set up yet: keep the page as it was
+  }
+
+  $("sgForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const name = $("sgName").value.trim(), body = $("sgBody").value.trim(), day = $("sgDay").value;
+    const say = (m, el) => { err.textContent = m; err.hidden = false; el && el.focus(); };
+    err.hidden = true;
+    if (!name) return say("Add your name so we know who suggested it.", $("sgName"));
+    if (body.length < 3) return say("Write what you'd like to change.", $("sgBody"));
+    btn.disabled = true; btn.textContent = "Sending…";
+    try {
+      await rpc("suggest_trip_change", { p_device: device, p_by: name.slice(0, 30), p_day: day.slice(0, 20), p_body: body.slice(0, 500) });
+      store.set("jp-name", name);
+      $("sgBody").value = "";
+      btn.textContent = "Sent!";
+      await load();
+      setTimeout(() => { btn.textContent = "Send suggestion"; }, 1800);
+    } catch (e2) {
+      btn.textContent = "Send suggestion";
+      say(/too many/i.test(String(e2 && e2.message)) ? "That's a lot of suggestions for one day. Try again tomorrow." : "Couldn't send that. Check your connection and try again.");
+    } finally { btn.disabled = false; }
+  });
+  load();
+})();
 
 </script>
 </body>
