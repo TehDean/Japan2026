@@ -1,0 +1,961 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tokyo December Plan</title>
+<meta name="description" content="Our day-by-day Tokyo plan, Nov 29 to Dec 5, 2026: sights, sushi and day trips on a map.">
+<meta name="robots" content="noindex">
+<meta property="og:title" content="Tokyo December Plan">
+<meta property="og:description" content="Day-by-day Tokyo plan, Nov 29 to Dec 5: sights, sushi and day trips on a map.">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+/* Leaflet's own stylesheet, inlined (outside stylesheets are blocked) */
+
+
+.leaflet-pane,
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-tile-container,
+.leaflet-pane > svg,
+.leaflet-pane > canvas,
+.leaflet-zoom-box,
+.leaflet-image-layer,
+.leaflet-layer {
+	position: absolute;
+	left: 0;
+	top: 0;
+	}
+.leaflet-container {
+	overflow: hidden;
+	}
+.leaflet-tile,
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	-webkit-user-select: none;
+	   -moz-user-select: none;
+	        user-select: none;
+	  -webkit-user-drag: none;
+	}
+
+.leaflet-tile::selection {
+	background: transparent;
+}
+
+.leaflet-safari .leaflet-tile {
+	image-rendering: -webkit-optimize-contrast;
+	}
+
+.leaflet-safari .leaflet-tile-container {
+	width: 1600px;
+	height: 1600px;
+	-webkit-transform-origin: 0 0;
+	}
+.leaflet-marker-icon,
+.leaflet-marker-shadow {
+	display: block;
+	}
+
+
+.leaflet-container .leaflet-overlay-pane svg {
+	max-width: none !important;
+	max-height: none !important;
+	}
+.leaflet-container .leaflet-marker-pane img,
+.leaflet-container .leaflet-shadow-pane img,
+.leaflet-container .leaflet-tile-pane img,
+.leaflet-container img.leaflet-image-layer,
+.leaflet-container .leaflet-tile {
+	max-width: none !important;
+	max-height: none !important;
+	width: auto;
+	padding: 0;
+	}
+
+.leaflet-container img.leaflet-tile {
+	
+	mix-blend-mode: plus-lighter;
+}
+
+.leaflet-container.leaflet-touch-zoom {
+	-ms-touch-action: pan-x pan-y;
+	touch-action: pan-x pan-y;
+	}
+.leaflet-container.leaflet-touch-drag {
+	-ms-touch-action: pinch-zoom;
+	
+	touch-action: none;
+	touch-action: pinch-zoom;
+}
+.leaflet-container.leaflet-touch-drag.leaflet-touch-zoom {
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.leaflet-container {
+	-webkit-tap-highlight-color: transparent;
+}
+.leaflet-container a {
+	-webkit-tap-highlight-color: rgba(51, 181, 229, 0.4);
+}
+.leaflet-tile {
+	filter: inherit;
+	visibility: hidden;
+	}
+.leaflet-tile-loaded {
+	visibility: inherit;
+	}
+.leaflet-zoom-box {
+	width: 0;
+	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	z-index: 800;
+	}
+
+.leaflet-overlay-pane svg {
+	-moz-user-select: none;
+	}
+
+.leaflet-pane         { z-index: 400; }
+
+.leaflet-tile-pane    { z-index: 200; }
+.leaflet-overlay-pane { z-index: 400; }
+.leaflet-shadow-pane  { z-index: 500; }
+.leaflet-marker-pane  { z-index: 600; }
+.leaflet-tooltip-pane   { z-index: 650; }
+.leaflet-popup-pane   { z-index: 700; }
+
+.leaflet-map-pane canvas { z-index: 100; }
+.leaflet-map-pane svg    { z-index: 200; }
+
+.leaflet-vml-shape {
+	width: 1px;
+	height: 1px;
+	}
+.lvml {
+	display: inline-block;
+	position: absolute;
+	}
+
+
+
+
+.leaflet-control {
+	position: relative;
+	z-index: 800;
+	pointer-events: visiblePainted; 
+	pointer-events: auto;
+	}
+.leaflet-top,
+.leaflet-bottom {
+	position: absolute;
+	z-index: 1000;
+	pointer-events: none;
+	}
+.leaflet-top {
+	top: 0;
+	}
+.leaflet-right {
+	right: 0;
+	}
+.leaflet-bottom {
+	bottom: 0;
+	}
+.leaflet-left {
+	left: 0;
+	}
+.leaflet-control {
+	float: left;
+	clear: both;
+	}
+.leaflet-right .leaflet-control {
+	float: right;
+	}
+.leaflet-top .leaflet-control {
+	margin-top: 10px;
+	}
+.leaflet-bottom .leaflet-control {
+	margin-bottom: 10px;
+	}
+.leaflet-left .leaflet-control {
+	margin-left: 10px;
+	}
+.leaflet-right .leaflet-control {
+	margin-right: 10px;
+	}
+
+
+
+
+.leaflet-fade-anim .leaflet-popup {
+	opacity: 0;
+	-webkit-transition: opacity 0.2s linear;
+	   -moz-transition: opacity 0.2s linear;
+	        transition: opacity 0.2s linear;
+	}
+.leaflet-fade-anim .leaflet-map-pane .leaflet-popup {
+	opacity: 1;
+	}
+.leaflet-zoom-animated {
+	-webkit-transform-origin: 0 0;
+	    -ms-transform-origin: 0 0;
+	        transform-origin: 0 0;
+	}
+svg.leaflet-zoom-animated {
+	will-change: transform;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+	-webkit-transition: -webkit-transform 0.25s cubic-bezier(0,0,0.25,1);
+	   -moz-transition:    -moz-transform 0.25s cubic-bezier(0,0,0.25,1);
+	        transition:         transform 0.25s cubic-bezier(0,0,0.25,1);
+	}
+.leaflet-zoom-anim .leaflet-tile,
+.leaflet-pan-anim .leaflet-tile {
+	-webkit-transition: none;
+	   -moz-transition: none;
+	        transition: none;
+	}
+
+.leaflet-zoom-anim .leaflet-zoom-hide {
+	visibility: hidden;
+	}
+
+
+
+
+.leaflet-interactive {
+	cursor: pointer;
+	}
+.leaflet-grab {
+	cursor: -webkit-grab;
+	cursor:    -moz-grab;
+	cursor:         grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-interactive {
+	cursor: crosshair;
+	}
+.leaflet-popup-pane,
+.leaflet-control {
+	cursor: auto;
+	}
+.leaflet-dragging .leaflet-grab,
+.leaflet-dragging .leaflet-grab .leaflet-interactive,
+.leaflet-dragging .leaflet-marker-draggable {
+	cursor: move;
+	cursor: -webkit-grabbing;
+	cursor:    -moz-grabbing;
+	cursor:         grabbing;
+	}
+
+
+.leaflet-marker-icon,
+.leaflet-marker-shadow,
+.leaflet-image-layer,
+.leaflet-pane > svg path,
+.leaflet-tile-container {
+	pointer-events: none;
+	}
+
+.leaflet-marker-icon.leaflet-interactive,
+.leaflet-image-layer.leaflet-interactive,
+.leaflet-pane > svg path.leaflet-interactive,
+svg.leaflet-image-layer.leaflet-interactive path {
+	pointer-events: visiblePainted; 
+	pointer-events: auto;
+	}
+
+
+
+.leaflet-container {
+	background: #ddd;
+	outline-offset: 1px;
+	}
+.leaflet-container a {
+	color: #0078A8;
+	}
+.leaflet-zoom-box {
+	border: 2px dotted #38f;
+	background: rgba(255,255,255,0.5);
+	}
+
+
+
+.leaflet-container {
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-size: 0.75rem;
+	line-height: 1.5;
+	}
+
+
+
+
+.leaflet-bar {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+	border-radius: 4px;
+	}
+.leaflet-bar a {
+	background-color: #fff;
+	border-bottom: 1px solid #ccc;
+	width: 26px;
+	height: 26px;
+	line-height: 26px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: black;
+	}
+.leaflet-bar a,
+.leaflet-control-layers-toggle {
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	display: block;
+	}
+.leaflet-bar a:hover,
+.leaflet-bar a:focus {
+	background-color: #f4f4f4;
+	}
+.leaflet-bar a:first-child {
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	}
+.leaflet-bar a:last-child {
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-bottom: none;
+	}
+.leaflet-bar a.leaflet-disabled {
+	cursor: default;
+	background-color: #f4f4f4;
+	color: #bbb;
+	}
+
+.leaflet-touch .leaflet-bar a {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
+	}
+.leaflet-touch .leaflet-bar a:first-child {
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+	}
+.leaflet-touch .leaflet-bar a:last-child {
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+	}
+
+
+
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out {
+	font: bold 18px 'Lucida Console', Monaco, monospace;
+	text-indent: 1px;
+	}
+
+.leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+	font-size: 22px;
+	}
+
+
+
+
+.leaflet-control-layers {
+	box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+	background: #fff;
+	border-radius: 5px;
+	}
+.leaflet-control-layers-toggle {
+	width: 36px;
+	height: 36px;
+	}
+.leaflet-retina .leaflet-control-layers-toggle {
+	background-size: 26px 26px;
+	}
+.leaflet-touch .leaflet-control-layers-toggle {
+	width: 44px;
+	height: 44px;
+	}
+.leaflet-control-layers .leaflet-control-layers-list,
+.leaflet-control-layers-expanded .leaflet-control-layers-toggle {
+	display: none;
+	}
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+	display: block;
+	position: relative;
+	}
+.leaflet-control-layers-expanded {
+	padding: 6px 10px 6px 6px;
+	color: #333;
+	background: #fff;
+	}
+.leaflet-control-layers-scrollbar {
+	overflow-y: scroll;
+	overflow-x: hidden;
+	padding-right: 5px;
+	}
+.leaflet-control-layers-selector {
+	margin-top: 2px;
+	position: relative;
+	top: 1px;
+	}
+.leaflet-control-layers label {
+	display: block;
+	font-size: 13px;
+	font-size: 1.08333em;
+	}
+.leaflet-control-layers-separator {
+	height: 0;
+	border-top: 1px solid #ddd;
+	margin: 5px -10px 5px -6px;
+	}
+
+
+.leaflet-default-icon-path {
+	}
+
+
+
+
+.leaflet-container .leaflet-control-attribution {
+	background: #fff;
+	background: rgba(255, 255, 255, 0.8);
+	margin: 0;
+	}
+.leaflet-control-attribution,
+.leaflet-control-scale-line {
+	padding: 0 5px;
+	color: #333;
+	line-height: 1.4;
+	}
+.leaflet-control-attribution a {
+	text-decoration: none;
+	}
+.leaflet-control-attribution a:hover,
+.leaflet-control-attribution a:focus {
+	text-decoration: underline;
+	}
+.leaflet-attribution-flag {
+	display: inline !important;
+	vertical-align: baseline !important;
+	width: 1em;
+	height: 0.6669em;
+	}
+.leaflet-left .leaflet-control-scale {
+	margin-left: 5px;
+	}
+.leaflet-bottom .leaflet-control-scale {
+	margin-bottom: 5px;
+	}
+.leaflet-control-scale-line {
+	border: 2px solid #777;
+	border-top: none;
+	line-height: 1.1;
+	padding: 2px 5px 1px;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
+	background: rgba(255, 255, 255, 0.8);
+	text-shadow: 1px 1px #fff;
+	}
+.leaflet-control-scale-line:not(:first-child) {
+	border-top: 2px solid #777;
+	border-bottom: none;
+	margin-top: -2px;
+	}
+.leaflet-control-scale-line:not(:first-child):not(:last-child) {
+	border-bottom: 2px solid #777;
+	}
+
+.leaflet-touch .leaflet-control-attribution,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	box-shadow: none;
+	}
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
+	border: 2px solid rgba(0,0,0,0.2);
+	background-clip: padding-box;
+	}
+
+
+
+
+.leaflet-popup {
+	position: absolute;
+	text-align: center;
+	margin-bottom: 20px;
+	}
+.leaflet-popup-content-wrapper {
+	padding: 1px;
+	text-align: left;
+	border-radius: 12px;
+	}
+.leaflet-popup-content {
+	margin: 13px 24px 13px 20px;
+	line-height: 1.3;
+	font-size: 13px;
+	font-size: 1.08333em;
+	min-height: 1px;
+	}
+.leaflet-popup-content p {
+	margin: 17px 0;
+	margin: 1.3em 0;
+	}
+.leaflet-popup-tip-container {
+	width: 40px;
+	height: 20px;
+	position: absolute;
+	left: 50%;
+	margin-top: -1px;
+	margin-left: -20px;
+	overflow: hidden;
+	pointer-events: none;
+	}
+.leaflet-popup-tip {
+	width: 17px;
+	height: 17px;
+	padding: 1px;
+
+	margin: -10px auto 0;
+	pointer-events: auto;
+
+	-webkit-transform: rotate(45deg);
+	   -moz-transform: rotate(45deg);
+	    -ms-transform: rotate(45deg);
+	        transform: rotate(45deg);
+	}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: white;
+	color: #333;
+	box-shadow: 0 3px 14px rgba(0,0,0,0.4);
+	}
+.leaflet-container a.leaflet-popup-close-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	border: none;
+	text-align: center;
+	width: 24px;
+	height: 24px;
+	font: 16px/24px Tahoma, Verdana, sans-serif;
+	color: #757575;
+	text-decoration: none;
+	background: transparent;
+	}
+.leaflet-container a.leaflet-popup-close-button:hover,
+.leaflet-container a.leaflet-popup-close-button:focus {
+	color: #585858;
+	}
+.leaflet-popup-scrolled {
+	overflow: auto;
+	}
+
+.leaflet-oldie .leaflet-popup-content-wrapper {
+	-ms-zoom: 1;
+	}
+.leaflet-oldie .leaflet-popup-tip {
+	width: 24px;
+	margin: 0 auto;
+
+	-ms-filter: "progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678)";
+	filter: progid:DXImageTransform.Microsoft.Matrix(M11=0.70710678, M12=0.70710678, M21=-0.70710678, M22=0.70710678);
+	}
+
+.leaflet-oldie .leaflet-control-zoom,
+.leaflet-oldie .leaflet-control-layers,
+.leaflet-oldie .leaflet-popup-content-wrapper,
+.leaflet-oldie .leaflet-popup-tip {
+	border: 1px solid #999;
+	}
+
+
+
+
+.leaflet-div-icon {
+	background: #fff;
+	border: 1px solid #666;
+	}
+
+
+
+
+.leaflet-tooltip {
+	position: absolute;
+	padding: 6px;
+	background-color: #fff;
+	border: 1px solid #fff;
+	border-radius: 3px;
+	color: #222;
+	white-space: nowrap;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	pointer-events: none;
+	box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+	}
+.leaflet-tooltip.leaflet-interactive {
+	cursor: pointer;
+	pointer-events: auto;
+	}
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	position: absolute;
+	pointer-events: none;
+	border: 6px solid transparent;
+	background: transparent;
+	content: "";
+	}
+
+
+
+.leaflet-tooltip-bottom {
+	margin-top: 6px;
+}
+.leaflet-tooltip-top {
+	margin-top: -6px;
+}
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-top:before {
+	left: 50%;
+	margin-left: -6px;
+	}
+.leaflet-tooltip-top:before {
+	bottom: 0;
+	margin-bottom: -12px;
+	border-top-color: #fff;
+	}
+.leaflet-tooltip-bottom:before {
+	top: 0;
+	margin-top: -12px;
+	margin-left: -6px;
+	border-bottom-color: #fff;
+	}
+.leaflet-tooltip-left {
+	margin-left: -6px;
+}
+.leaflet-tooltip-right {
+	margin-left: 6px;
+}
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+	top: 50%;
+	margin-top: -6px;
+	}
+.leaflet-tooltip-left:before {
+	right: 0;
+	margin-right: -12px;
+	border-left-color: #fff;
+	}
+.leaflet-tooltip-right:before {
+	left: 0;
+	margin-left: -12px;
+	border-right-color: #fff;
+	}
+
+
+
+@media print {
+	
+	.leaflet-control {
+		-webkit-print-color-adjust: exact;
+		print-color-adjust: exact;
+		}
+	}
+
+</style>
+<style>
+/* Layout: tab strip over a two-column body (day detail + street map), one column on phones. */
+:root {
+  --bg: #f5f1ea;
+  --surface: #fffdf9;
+  --fg: #1e1b1f;
+  --muted: #6d6670;
+  --line: #ddd5c8;
+  --accent: #b2412d;
+  --accent-soft: #f1d9cf;
+  --pin-ring: #ffffff;
+  --sushi: #23527c;
+  --sushi-soft: #dde8f2;
+  --map-filter: none;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151418; --surface: #1d1c22; --fg: #efe9e1; --muted: #a39ba5; --line: #36333c;
+    --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36;
+    --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151418; --surface: #1d1c22; --fg: #efe9e1; --muted: #a39ba5; --line: #36333c;
+  --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36;
+  --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: "IBM Plex Sans", system-ui, sans-serif; font-size: 14px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 40px;
+}
+header { max-width: 1100px; margin: 0 auto 20px; }
+.eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp(28px, 5vw, 40px); line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 60ch; }
+
+.tabs { max-width: 1100px; margin: 0 auto 16px; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+.tab { flex: 0 0 auto; appearance: none; background: none; border: 0; cursor: pointer; font: inherit; color: var(--muted);
+  padding: 10px 12px 12px; border-bottom: 2px solid transparent; margin-bottom: -1px; text-align: left; }
+.tab b { display: block; font-weight: 600; color: var(--fg); }
+.tab small { font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+.tab[aria-selected="true"] { border-bottom-color: var(--accent); }
+.tab[aria-selected="true"] b { color: var(--accent); }
+.tab:focus-visible, :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.layout { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px; align-items: start; }
+@media (max-width: 760px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; min-width: 0; }
+.day-head h2, .map-wrap h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 22px; margin: 4px 0; }
+.day-head p { margin: 0 0 16px; color: var(--muted); }
+.stops { list-style: none; margin: 0; padding: 0; }
+.stop { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.stop:first-child { border-top: 0; }
+.stop.clickable { cursor: pointer; }
+.stop.clickable:hover .stop-name { color: var(--accent); }
+.time { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); padding-top: 2px; }
+.num { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff;
+  font: 500 11px "IBM Plex Mono", monospace; margin-right: 6px; vertical-align: 1px; }
+.stop-name { font-weight: 600; }
+.stop-note { margin: 2px 0 6px; color: var(--muted); }
+.dir { font-size: 12px; color: var(--accent); text-decoration: none; }
+.dir:hover { text-decoration: underline; }
+
+.map-wrap p.cap { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+#map { height: 520px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); }
+@media (max-width: 760px) { #map { height: 60vh; min-height: 340px; } }
+#map .leaflet-tile-pane { filter: var(--map-filter); }
+.leaflet-container { font-family: "IBM Plex Sans", system-ui, sans-serif; }
+.leaflet-bar a, .leaflet-bar a:hover { background: var(--surface); color: var(--fg); border-bottom-color: var(--line); }
+.leaflet-control-attribution { font-size: 10px; }
+.pin { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; border: 2px solid var(--pin-ring);
+  display: grid; place-items: center; font: 600 12px "IBM Plex Mono", monospace; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: opacity .2s; }
+.pin.sushi { background: var(--sushi); }
+.pin.dim { opacity: .35; background: var(--muted); }
+.num.sushi { background: var(--sushi); }
+.kind { display: inline-block; margin-left: 6px; font: 500 11px "IBM Plex Mono", monospace; color: var(--sushi); background: var(--sushi-soft); border-radius: 3px; padding: 1px 6px; vertical-align: 1px; }
+.key { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+.key i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--fg); }
+.leaflet-popup-content { margin: 10px 14px; font-size: 13px; }
+.leaflet-popup-content b { display: block; margin-bottom: 2px; }
+.leaflet-popup-content a { color: var(--accent); }
+#map-note { display: none; margin-top: 10px; color: var(--muted); font-size: 12px; }
+@media (prefers-reduced-motion: reduce) { .pin { transition: none; } }
+</style>
+
+</head>
+<body>
+<header>
+  <div class="eyebrow">Tokyo · Nov 29 – Dec 5, 2026</div>
+  <h1>Tokyo December Plan</h1>
+  <p class="lede">Seven days, each kept to one part of town, plus two day trips. Pick a day to see its stops on the map. Times are suggestions.</p>
+</header>
+
+<nav class="tabs" role="tablist" aria-label="Days" id="tabs"></nav>
+
+<main class="layout">
+  <section class="panel" id="dayPanel" role="tabpanel" aria-live="polite"></section>
+  <section class="panel map-wrap" aria-label="Map">
+    <h2>Map</h2>
+    <p class="cap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span>Faded pins are other days. Tap a pin or a stop for details.</p>
+    <div id="map"></div>
+    <p id="map-note">The map library didn't load. The stop list and Google Maps links still work.</p>
+  </section>
+</main>
+
+<script>
+const PLACES = {
+  sensoji:    { name: "Senso-ji", lat: 35.71477, lng: 139.79666 },
+  tnm:        { name: "Tokyo National Museum", lat: 35.71883, lng: 139.77653 },
+  yanaka:     { name: "Yanaka Ginza", lat: 35.72769, lng: 139.76579 },
+  meiji:      { name: "Meiji Jingu", lat: 35.67640, lng: 139.69933 },
+  tower:      { name: "Tokyo Tower", lat: 35.65858, lng: 139.74543 },
+  mori:       { name: "Tokyo City View (Roppongi Hills)", lat: 35.66045, lng: 139.72928 },
+  gyoen:      { name: "Shinjuku Gyoen", lat: 35.68518, lng: 139.71007 },
+  shibuyasky: { name: "Shibuya Sky", lat: 35.65867, lng: 139.70198 },
+  tsukiji:    { name: "Tsukiji Outer Market", lat: 35.66477, lng: 139.77025 },
+  marunouchi: { name: "Marunouchi Illumination", lat: 35.68049, lng: 139.76301 },
+  keyakizaka: { name: "Keyakizaka Illumination", lat: 35.65913, lng: 139.72811 },
+  midtown:    { name: "Tokyo Midtown Christmas", lat: 35.66570, lng: 139.73100 },
+  teamlab:    { name: "teamLab Planets", lat: 35.64912, lng: 139.78977 },
+  azabudai:   { name: "Azabudai Hills Christmas Market", lat: 35.66050, lng: 139.74000 },
+  kamakura:   { name: "Kamakura Great Buddha", lat: 35.31670, lng: 139.53580 },
+  nakameguro: { name: "Nakameguro", lat: 35.64400, lng: 139.69900 },
+  hakone:     { name: "Hakone (Lake Ashi)", lat: 35.20500, lng: 139.02500 },
+  southern:   { name: "Shinjuku Southern Terrace", lat: 35.68620, lng: 139.70000 },
+  omoide:     { name: "Omoide Yokocho", lat: 35.69270, lng: 139.69958 },
+  goldengai:  { name: "Golden Gai", lat: 35.69411, lng: 139.70476 },
+  // Sushi
+  joe:        { name: "Osushi no Joe", lat: 35.66458, lng: 139.73005, sushi: "Splurge" },
+  maguro:     { name: "Maguro-to-Shari", lat: 35.71333, lng: 139.79360, sushi: "Casual" },
+  matsue:     { name: "Matsue (Shibuya Scramble Square)", lat: 35.65834, lng: 139.70205, sushi: "Mid-range" },
+  kyubey:     { name: "Ginza Kyubey", lat: 35.66847, lng: 139.76127, sushi: "Splurge" },
+  sushidai:   { name: "Sushi Dai (Toyosu Market)", lat: 35.64430, lng: 139.78245, sushi: "Mid-range" },
+  tatsuya:    { name: "Sushi Tatsuya Yoshikawa", lat: 35.64515, lng: 139.69850, sushi: "Splurge" },
+  uogashi:    { name: "Uogashi Nihon-Ichi", lat: 35.68998, lng: 139.69730, sushi: "Casual" }
+};
+
+const DAYS = [
+  { date: "Sun 11/29", full: "Sunday, Nov 29", area: "Asakusa · Ueno · Yanaka", title: "Old Tokyo in the northeast", stops: [
+    { t: "09:00", id: "sensoji", note: "Go early; it fills up by late morning. Nakamise-dori is the shopping street on the way in." },
+    { t: "11:30", id: "maguro", note: "Small counter a few minutes from Senso-ji serving tuna and salmon over rice (rated 4.9). Opens 10:30." },
+    { t: "13:00", id: "tnm", note: "About 10 minutes by subway to Ueno. Japan's national museum, in Ueno Park." },
+    { t: "15:30", id: "yanaka", note: "A 20-minute walk north through Yanaka's temple streets. Good for a slow walk before the 4:30 sunset." } ]},
+  { date: "Mon 11/30", full: "Monday, Nov 30", area: "Harajuku · Shibuya", title: "Meiji Jingu to Shibuya", stops: [
+    { t: "10:00", id: "meiji", note: "Forest path to the shrine from Harajuku Station. Then walk Takeshita-dori and Omotesando toward Shibuya." },
+    { t: "16:00", id: "shibuyasky", note: "Sunset is about 4:30. Book a sunset slot ahead; they sell out." },
+    { t: "17:30", id: "matsue", note: "On the 12th floor of the same building as Shibuya Sky (rated 4.9). Sit at the counter. Dinner from 5 PM." } ]},
+  { date: "Tue 12/1", full: "Tuesday, Dec 1", area: "Toyosu · Tsukiji · Ginza", title: "Market morning, Ginza night", stops: [
+    { t: "07:00", id: "sushidai", note: "Famous counter inside Toyosu Market; lines form early. The market closes Sundays, holidays, and some Wednesdays, which is why this is on a Tuesday." },
+    { t: "09:30", id: "teamlab", note: "About 15 minutes' walk from the market. You walk barefoot through water rooms. Book tickets weeks ahead." },
+    { t: "12:30", id: "tsukiji", note: "Short taxi or Yurikamome ride. Graze the stalls for lunch: tamagoyaki, grilled scallops. Most close by 2 PM. Bring cash." },
+    { t: "17:30", id: "marunouchi", note: "Walk through Ginza to the champagne-gold lights by Tokyo Station." },
+    { t: "19:00", id: "kyubey", note: "Classic Ginza sushi house, about 15 minutes' walk back from Marunouchi. The big night out; reserve well ahead." } ]},
+  { date: "Wed 12/2", full: "Wednesday, Dec 2", area: "Azabudai · Roppongi", title: "Tokyo Tower and Roppongi lights", stops: [
+    { t: "13:00", id: "tower", note: "Slow morning, then start here. Go up, or just see it from the park at its base." },
+    { t: "14:30", id: "azabudai", note: "Five minutes' walk. Christmas market and shops at Azabudai Hills." },
+    { t: "16:00", id: "mori", note: "About 15 minutes' walk to Roppongi Hills. Observation deck for the sunset, with the Mori Art Museum on the same ticket." },
+    { t: "17:00", id: "keyakizaka", note: "Right outside. Lights come on around 5 PM, with Tokyo Tower framing the slope." },
+    { t: "18:00", id: "midtown", note: "About 10 minutes' walk. Midtown's Christmas lights." },
+    { t: "19:00", id: "joe", note: "Lively omakase counter (rated 4.8) a few minutes from Midtown. Reserve ahead." } ]},
+  { date: "Thu 12/3", full: "Thursday, Dec 3", area: "Kamakura → Nakameguro", title: "Kamakura, then Nakameguro on the way back", stops: [
+    { t: "08:30", id: "kamakura", note: "About an hour by train. The Great Buddha, Hase-dera, and Komachi-dori. Return via Yokohama on the Tokyu Toyoko Line, which stops at Nakameguro." },
+    { t: "18:00", id: "nakameguro", note: "Canal-side walk with lit-up cafes." },
+    { t: "19:00", id: "tatsuya", note: "Quiet neighborhood omakase near the canal (rated 4.7). Reviewers mention about €80 a person. Reserve ahead." } ]},
+  { date: "Fri 12/4", full: "Friday, Dec 4", area: "Hakone", title: "Hakone day trip", stops: [
+    { t: "08:30", id: "hakone", note: "Lake Ashi, Hakone Shrine, and a hot spring. Fuji may show on a clear day. Check the last train back." } ]},
+  { date: "Sat 12/5", full: "Saturday, Dec 5", area: "Shinjuku", title: "Shinjuku, garden to bars", stops: [
+    { t: "13:00", id: "gyoen", note: "Big garden with some late autumn color left in early December. Small entry fee." },
+    { t: "16:30", id: "southern", note: "Ten minutes' walk. Southern Terrace lights by the station." },
+    { t: "18:00", id: "uogashi", note: "Standing sushi bar across the station: fast, cheap, and very fresh. No reservation needed." },
+    { t: "19:30", id: "omoide", note: "Two minutes away. Yakitori alleys by the tracks." },
+    { t: "21:00", id: "goldengai", note: "About 10 minutes' walk east. Tiny bars; groups over four will struggle to fit." } ]}
+];
+
+const tabs = document.getElementById("tabs");
+const panel = document.getElementById("dayPanel");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dirUrl = p => "https://www.google.com/maps/search/?api=1&query=" + p.lat + "," + p.lng;
+let current = 0;
+
+// ---- Map: Leaflet with the street map stored alongside this page ----
+let map = null;
+const markers = {};
+if (typeof L !== "undefined") {
+  map = L.map("map", { zoomControl: true, scrollWheelZoom: true }).setView([35.68, 139.75], 12);
+  // Live street map (normal websites can load map images directly).
+  const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
+    maxZoom: 19, attribution: "Map tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS"
+  }).addTo(map);
+  let fellBack = false, tileErrors = 0;
+  streets.on("tileerror", () => {
+    if (++tileErrors === 6 && !fellBack) {
+      fellBack = true; map.removeLayer(streets);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+    }
+  });
+  map.setMinZoom(8);
+  map.setMaxBounds([[34.7, 138.6], [36.2, 140.3]]);
+} else {
+  document.getElementById("map").hidden = true;
+  document.getElementById("map-note").style.display = "block";
+}
+
+function drawPins(day) {
+  if (!map) return;
+  const order = {};
+  day.stops.forEach((s, i) => order[s.id] = i + 1);
+  Object.entries(PLACES).forEach(([id, p]) => {
+    const n = order[id];
+    const html = `<div class="pin${p.sushi ? " sushi" : ""}${n ? "" : " dim"}">${n || "·"}</div>`;
+    const icon = L.divIcon({ className: "", html, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
+    if (!markers[id]) {
+      markers[id] = L.marker([p.lat, p.lng], { icon, title: p.name, riseOnHover: true }).addTo(map);
+      markers[id].on("click", () => {
+        // A faded pin belongs to another day: switch to that day.
+        if (!markers[id]._onDay) {
+          const di = DAYS.findIndex(d => d.stops.some(s => s.id === id));
+          if (di >= 0) { show(di); setTimeout(() => markers[id].openPopup(), 700); }
+        }
+      });
+    } else {
+      markers[id].setIcon(icon);
+    }
+    markers[id]._onDay = !!n;
+    markers[id].setZIndexOffset(n ? 1000 : 0);
+    const stop = day.stops.find(s => s.id === id);
+    const di = DAYS.findIndex(d => d.stops.some(s => s.id === id));
+    markers[id].bindPopup(`<b>${esc(p.name)}</b>${stop ? esc(stop.t) + " · " : esc(DAYS[di].date) + " · "}<a href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps</a>`);
+  });
+  const pts = day.stops.map(s => [PLACES[s.id].lat, PLACES[s.id].lng]);
+  if (pts.length === 1) map.flyTo(pts[0], 13, { duration: 0.6 });
+  else map.flyToBounds(pts, { padding: [50, 50], maxZoom: 15, duration: 0.6 });
+}
+
+// ---- Tabs and day panel ----
+DAYS.forEach((d, i) => {
+  const b = document.createElement("button");
+  b.className = "tab"; b.id = "tab-" + i; b.type = "button";
+  b.setAttribute("role", "tab"); b.setAttribute("aria-selected", "false"); b.setAttribute("aria-controls", "dayPanel");
+  b.innerHTML = `<b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small>`;
+  b.addEventListener("click", () => show(i));
+  b.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      const n = (i + (e.key === "ArrowRight" ? 1 : DAYS.length - 1)) % DAYS.length;
+      tabs.children[n].focus(); show(n);
+    }
+  });
+  tabs.appendChild(b);
+});
+
+function show(i) {
+  current = i;
+  const d = DAYS[i];
+  [...tabs.children].forEach((t, j) => { t.setAttribute("aria-selected", String(j === i)); t.tabIndex = j === i ? 0 : -1; });
+  panel.setAttribute("aria-labelledby", "tab-" + i);
+  panel.innerHTML = `
+    <div class="day-head"><div class="eyebrow">${esc(d.full)} · ${esc(d.area)}</div><h2>${esc(d.title)}</h2>
+      <p>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}${map ? ". Tap one to find it on the map." : ""}</p></div>
+    <ol class="stops">${d.stops.map((s, n) => {
+      const p = PLACES[s.id];
+      return `<li class="stop${map ? " clickable" : ""}" data-id="${s.id}">
+        <span class="time">${esc(s.t)}</span>
+        <div><div class="stop-name"><span class="num${p.sushi ? " sushi" : ""}">${n + 1}</span>${esc(p.name)}${p.sushi ? `<span class="kind">Sushi · ${esc(p.sushi)}</span>` : ""}</div>
+          <p class="stop-note">${esc(s.note)}</p>
+          <a class="dir" href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>
+      </li>`; }).join("")}</ol>`;
+  panel.querySelectorAll(".stop.clickable").forEach(li => li.addEventListener("click", e => {
+    if (e.target.closest("a")) return;
+    const p = PLACES[li.dataset.id];
+    map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+    markers[li.dataset.id].openPopup();
+  }));
+  drawPins(d);
+}
+show(0);
+</script>
+</body>
+</html>
