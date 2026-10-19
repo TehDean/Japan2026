@@ -9,7 +9,7 @@
 <meta property="og:title" content="Tokyo December Plan">
 <meta property="og:description" content="Day-by-day Tokyo plan, Nov 29 to Dec 5: sights, sushi and day trips on a map.">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* Leaflet's own stylesheet, inlined (outside stylesheets are blocked) */
@@ -674,54 +674,73 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </style>
 <style>
 /* Layout: tab strip over a two-column body (day detail + street map), one column on phones. */
+/* Theme: washi paper, sumi ink, shu (torii vermilion), ai (indigo) and kincha (gold).
+   Layout: tab strip of weekday kanji over a two-column body (day detail + map), one column on phones. */
 :root {
-  --bg: #f5f1ea;
-  --surface: #fffdf9;
-  --fg: #1e1b1f;
-  --muted: #6d6670;
-  --line: #ddd5c8;
-  --accent: #b2412d;
-  --accent-soft: #f1d9cf;
+  --bg: #f3ede1;
+  --surface: #fbf8f1;
+  --fg: #1f1c1a;
+  --muted: #6b6359;
+  --line: #ddd2bf;
+  --accent: #c0392b;
+  --accent-soft: #f4dcd3;
   --pin-ring: #ffffff;
-  --sushi: #23527c;
-  --sushi-soft: #dde8f2;
-  --food: #8a5a00;
-  --food-pin: #c27c0e;
-  --food-soft: #f6e7c8;
+  --sushi: #234a72;
+  --sushi-soft: #dfe7f0;
+  --food: #8a5d00;
+  --food-pin: #c0860f;
+  --food-soft: #f5e6c4;
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Ccircle cx='0' cy='10' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3C/svg%3E");
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   --map-filter: none;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #151418; --surface: #1d1c22; --fg: #efe9e1; --muted: #a39ba5; --line: #36333c;
-    --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36; --food: #e8b65a; --food-pin: #d4952a; --food-soft: #33280f;
+    --bg: #151312; --surface: #1d1a18; --fg: #efe8dc; --muted: #a59c90; --line: #39332d;
+    --accent: #e2654b; --accent-soft: #3b2420; --pin-ring: #1d1a18; --sushi: #8fb0dc; --sushi-soft: #1d2735; --food: #e3b65e; --food-pin: #cf9a30; --food-soft: #33280f; --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Ccircle cx='0' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3C/svg%3E");
+    --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #151418; --surface: #1d1c22; --fg: #efe9e1; --muted: #a39ba5; --line: #36333c;
-  --accent: #e98a6f; --accent-soft: #3a2a27; --pin-ring: #1d1c22; --sushi: #7fb2e5; --sushi-soft: #1f2a36; --food: #e8b65a; --food-pin: #d4952a; --food-soft: #33280f;
-  --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
-  color-scheme: dark;
+  --bg: #151312; --surface: #1d1a18; --fg: #efe8dc; --muted: #a59c90; --line: #39332d;
+    --accent: #e2654b; --accent-soft: #3b2420; --pin-ring: #1d1a18; --sushi: #8fb0dc; --sushi-soft: #1d2735; --food: #e3b65e; --food-pin: #cf9a30; --food-soft: #33280f; --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Ccircle cx='0' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3C/svg%3E");
+    --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
+    color-scheme: dark;
 }
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  margin: 0; background: var(--bg); color: var(--fg);
+  margin: 0; background-color: var(--bg); background-image: var(--paper); color: var(--fg);
   font-family: "IBM Plex Sans", system-ui, sans-serif; font-size: 14px; line-height: 1.55;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   padding-block: 24px 40px;
 }
-header { max-width: 1100px; margin: 0 auto 20px; }
+header { max-width: 1100px; margin: 0 auto; }
 .eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp(28px, 5vw, 40px); line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.title-row { display: flex; align-items: center; gap: 16px; }
+h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 600; font-size: clamp(28px, 5vw, 40px); line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.ja { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; letter-spacing: 0; }
 .lede { margin: 0; color: var(--muted); max-width: 60ch; }
+.hanko { flex: 0 0 auto; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  width: 38px; height: 58px; border-radius: 6px; background: var(--accent); color: var(--surface);
+  font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 700; font-size: 18px; line-height: 1;
+  box-shadow: inset 0 0 0 3px var(--accent), inset 0 0 0 4px var(--surface); transform: rotate(4deg); }
+@media (max-width: 480px) { .hanko { width: 32px; height: 50px; font-size: 15px; } }
+.seigaiha { max-width: 1100px; height: 40px; margin: 18px auto 4px; background: var(--wave) repeat; background-size: 40px 20px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
 
 .tabs { max-width: 1100px; margin: 0 auto 16px; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
 .tab { flex: 0 0 auto; appearance: none; background: none; border: 0; cursor: pointer; font: inherit; color: var(--muted);
   padding: 10px 12px 12px; border-bottom: 2px solid transparent; margin-bottom: -1px; text-align: left; }
+.tab { display: flex; align-items: center; gap: 9px; }
+.tab .kanji { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line);
+  font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 600; font-size: 15px; color: var(--muted); background: var(--surface); }
+.tab[aria-selected="true"] .kanji { background: var(--accent); border-color: var(--accent); color: var(--surface); }
 .tab b { display: block; font-weight: 600; color: var(--fg); }
 .tab small { font-family: "IBM Plex Mono", monospace; font-size: 11px; }
 .tab[aria-selected="true"] { border-bottom-color: var(--accent); }
@@ -731,7 +750,8 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 .layout { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px; align-items: start; }
 @media (max-width: 760px) { .layout { grid-template-columns: minmax(0, 1fr); } }
 .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; min-width: 0; }
-.day-head h2, .map-wrap h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 22px; margin: 4px 0; }
+.h-ja { font-size: 14px; color: var(--muted); margin-left: 6px; font-weight: 500; }
+.day-head h2, .map-wrap h2 { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 500; font-size: 22px; margin: 4px 0; }
 .day-head p { margin: 0 0 16px; color: var(--muted); }
 .stops { list-style: none; margin: 0; padding: 0; }
 .stop { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
@@ -771,7 +791,7 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 #map-note { display: none; margin-top: 10px; color: var(--muted); font-size: 12px; }
 @media (prefers-reduced-motion: reduce) { .pin { transition: none; } }
 .col { display: grid; gap: 24px; min-width: 0; align-content: start; }
-.chat h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
+.chat h2 { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
 .chat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .chat-sub { margin: 4px 0 12px; color: var(--muted); font-size: 13px; }
 .suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
@@ -805,7 +825,7 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 }
 .leaflet-touch .leaflet-bar a { width: 36px; height: 36px; line-height: 36px; }
 .tab { min-height: 44px; }
-.sg-panel h2 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
+.sg-panel h2 { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
 .sg-sub { margin: 4px 0 14px; color: var(--muted); font-size: 13px; }
 .sg-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 12px; }
 .sg-row { display: grid; gap: 4px; min-width: 0; }
@@ -838,18 +858,22 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
 </head>
 <body>
 <header>
-  <div class="eyebrow">Tokyo · Nov 29 – Dec 5, 2026</div>
-  <h1>Tokyo December Plan</h1>
+  <div class="eyebrow"><span lang="ja">東京</span> Tokyo · Nov 29 – Dec 5, 2026</div>
+  <div class="title-row">
+    <h1>Tokyo December Plan</h1>
+    <span class="hanko" lang="ja" aria-hidden="true"><span>東</span><span>京</span></span>
+  </div>
   <p class="lede">Seven days, each kept to one part of town, with street food along the way and two day trips. Pick a day to see its stops on the map. Times are suggestions.</p>
 </header>
 
+<div class="seigaiha" aria-hidden="true"></div>
 <nav class="tabs" role="tablist" aria-label="Days" id="tabs"></nav>
 
 <main class="layout">
   <div class="col">
     <section class="panel" id="dayPanel" role="tabpanel" aria-live="polite"></section>
     <section class="panel sg-panel" id="sgPanel" aria-labelledby="sgTitle" hidden>
-      <h2 id="sgTitle">Suggest a change</h2>
+      <h2 id="sgTitle">Suggest a change <span class="h-ja" lang="ja">ご提案</span></h2>
       <p class="sg-sub">Want to add, move or swap something? Send it here and it'll be worked into the plan.</p>
       <form id="sgForm" class="sg-form" autocomplete="off" novalidate>
         <div class="sg-row">
@@ -872,7 +896,7 @@ h1 { font-family: "Fraunces", Georgia, serif; font-weight: 600; font-size: clamp
     </section>
   </div>
   <section class="panel map-wrap" aria-label="Map">
-    <h2>Map</h2>
+    <h2>Map <span class="h-ja" lang="ja">地図</span></h2>
     <p class="cap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span><span class="key"><i style="background:var(--food-pin)"></i>Street food</span>Faded pins are other days. Tap a pin or a stop for details.</p>
     <div id="map"></div>
     <p id="map-note">The map library didn't load. The stop list and Google Maps links still work.</p>
@@ -961,6 +985,13 @@ const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">"
 const dirUrl = p => "https://www.google.com/maps/search/?api=1&query=" + p.lat + "," + p.lng;
 const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t).trim()); return m ? (+m[1]) * 60 + (+m[2]) : 9999; };
 let current = 0;
+const WEEKDAY_JA = { Sun: "日", Mon: "月", Tue: "火", Wed: "水", Thu: "木", Fri: "金", Sat: "土" };
+const AREA_JA = { Asakusa: "浅草", Ueno: "上野", Ikebukuro: "池袋", Yanaka: "谷中", Harajuku: "原宿", Shibuya: "渋谷", Ebisu: "恵比寿",
+  Toyosu: "豊洲", Tsukiji: "築地", Ginza: "銀座", Azabudai: "麻布台", Roppongi: "六本木", Kamakura: "鎌倉", Nakameguro: "中目黒",
+  Hakone: "箱根", Shinjuku: "新宿" };
+// "Asakusa · Ueno" -> "浅草 Asakusa · 上野 Ueno" (unknown names stay as written)
+const areaLabel = area => String(area).split(/(\s*[·→]\s*)/).map(part =>
+  AREA_JA[part.trim()] ? `<span lang="ja" class="ja">${AREA_JA[part.trim()]}</span> ${esc(part.trim())}` : esc(part)).join("");
 
 // ---- Map: Leaflet with the street map stored alongside this page ----
 let map = null;
@@ -1019,7 +1050,7 @@ function buildTabs() {
     const b = document.createElement("button");
     b.className = "tab"; b.id = "tab-" + i; b.type = "button";
     b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "dayPanel");
-    b.innerHTML = `<b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small>`;
+    b.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">${WEEKDAY_JA[d.date.slice(0, 3)] || ""}</span><span><b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small></span>`;
     b.addEventListener("click", () => show(i));
     b.addEventListener("keydown", e => {
       if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
@@ -1043,7 +1074,7 @@ function show(i, fly = true) {
     else if (r > tabs.scrollLeft + tabs.clientWidth) tabs.scrollLeft = r - tabs.clientWidth + 8;
   }
   panel.innerHTML = `
-    <div class="day-head"><div class="eyebrow">${esc(d.full)}${d.area ? " · " + esc(d.area) : ""}</div><h2>${esc(d.title)}</h2>
+    <div class="day-head"><div class="eyebrow">${esc(d.full)}${d.area ? " · " + areaLabel(d.area) : ""}</div><h2>${esc(d.title)}</h2>
       <p>${d.stops.length ? d.stops.length + " stop" + (d.stops.length === 1 ? "" : "s") + (map ? ". Tap one to find it on the map." : "") : "Nothing planned yet."}</p></div>
     <ol class="stops">${d.stops.map((s, n) => {
       const p = PLACES[s.id];
