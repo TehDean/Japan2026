@@ -8,6 +8,14 @@
 <meta name="robots" content="noindex">
 <meta property="og:title" content="Japan December Plan">
 <meta property="og:description" content="Day-by-day Tokyo plan, Nov 29 to Dec 5: sights, sushi and day trips on a map.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#c0392b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Japan Plan">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -852,6 +860,11 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 .sg-reply { margin: 6px 0 0; padding-left: 10px; border-left: 2px solid var(--line); color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
 .sg-empty { color: var(--muted); font-size: 13px; }
 @media (max-width: 760px) { .sg-panel { order: 3; } .sg-form { grid-template-columns: minmax(0, 1fr); } }
+.app-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 12px; }
+.app-row:not(:has(:not([hidden]))) { display: none; }
+.install-btn { font: inherit; font-weight: 600; font-size: 13px; min-height: 40px; padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--surface); }
+.install-tip { margin: 0; font-size: 13px; color: var(--muted); max-width: 60ch; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 
@@ -864,6 +877,10 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
     <span class="hanko" lang="ja" aria-hidden="true"><span>日</span><span>本</span></span>
   </div>
   <p class="lede">Seven days, each kept to one part of town, with street food along the way and two day trips. Pick a day to see its stops on the map. Times are suggestions.</p>
+  <div class="app-row">
+    <button type="button" id="installBtn" class="install-btn" hidden>Install app</button>
+    <p class="install-tip" id="installTip" hidden></p>
+  </div>
 </header>
 
 <div class="seigaiha" aria-hidden="true"></div>
@@ -1000,13 +1017,13 @@ if (typeof L !== "undefined") {
   map = L.map("map", { zoomControl: true, scrollWheelZoom: true }).setView([35.68, 139.75], 12);
   // Live street map (normal websites can load map images directly).
   const streets = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}", {
-    maxZoom: 19, attribution: "Map tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS"
+    maxZoom: 19, crossOrigin: true, attribution: "Map tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS"
   }).addTo(map);
   let fellBack = false, tileErrors = 0;
   streets.on("tileerror", () => {
     if (++tileErrors === 6 && !fellBack) {
       fellBack = true; map.removeLayer(streets);
-      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, crossOrigin: true, attribution: "&copy; OpenStreetMap contributors" }).addTo(map);
     }
   });
   map.setMinZoom(8);
@@ -1185,6 +1202,37 @@ renderAll();
     } finally { btn.disabled = false; }
   });
   load();
+})();
+
+
+// =====================================================================
+// Home-screen app: install button (Android/desktop Chrome), a tip for
+// iPhone, and offline support through the service worker (sw.js).
+// =====================================================================
+(() => {
+  if ("serviceWorker" in navigator && window.isSecureContext) {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  }
+  const standalone = matchMedia("(display-mode: standalone)").matches || navigator.standalone === true;
+  const btn = document.getElementById("installBtn"), tip = document.getElementById("installTip");
+  if (standalone) return;
+  const ua = navigator.userAgent;
+  if (/iphone|ipad|ipod/i.test(ua)) {
+    tip.innerHTML = "Keep this on your phone like an app: tap <b>Share</b>, then <b>Add to Home Screen</b>. It works offline too.";
+    tip.hidden = false;
+  } else if (/android/i.test(ua)) {
+    tip.innerHTML = "Keep this on your phone like an app: tap <b>Install app</b>, or tap <b>⋮</b> and choose <b>Add to Home screen</b>. It works offline too.";
+    tip.hidden = false;
+  }
+  let installEvt = null;
+  window.addEventListener("beforeinstallprompt", e => { e.preventDefault(); installEvt = e; btn.hidden = false; });
+  btn.addEventListener("click", async () => {
+    if (!installEvt) return;
+    installEvt.prompt();
+    try { await installEvt.userChoice; } catch {}
+    installEvt = null; btn.hidden = true;
+  });
+  window.addEventListener("appinstalled", () => { btn.hidden = true; tip.hidden = true; });
 })();
 
 </script>
