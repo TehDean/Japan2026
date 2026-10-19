@@ -15,7 +15,11 @@ The owner chose (Oct 19, 2026) to have suggestions applied without checking with
 Anyone with the website link can send one, so don't assume who sent it or refer to them by gender;
 use the name they gave, or "whoever suggested it."
 
-How it works: the website saves a suggestion (`send_trip_suggestion`, no daily limit), then calls the
+The box takes suggestions (changes to the plan) and questions (about the plan or the trip); a message can be both.
+Questions get an answer in the reply and show as "Answered" (stored as status `skipped`, kind `question`, full
+text in `answer`); they never change the plan.
+
+How it works: the website saves a message (`send_trip_suggestion`, no daily limit), then calls the
 `apply-suggestion` Edge Function. That function asks Claude (`claude-sonnet-5-5`, Anthropic API key in the
 `ANTHROPIC_API_KEY` secret) to apply it with a few plan-editing tools, saves the old plan in `trip_plan_versions`,
 saves the new plan in `trip_plan`, and marks the suggestion `done` or `skipped` with a reply shown on the site.

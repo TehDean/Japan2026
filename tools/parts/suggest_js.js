@@ -35,13 +35,13 @@
     const h = Math.round(m / 60); if (h < 24) return h + " hr ago";
     return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
   };
-  const STATUS = { new: ["Waiting", "wait"], working: ["Updating the plan…", "wait"], done: ["Added to the plan", "done"], skipped: ["Not added", "skip"] };
+  const STATUS = { new: ["Waiting", "wait"], working: ["Working on it…", "wait"], done: ["Added to the plan", "done"], answered: ["Answered", "ans"], skipped: ["Not added", "skip"] };
 
   function render(rows) {
     list.innerHTML = "";
     if (!rows.length) {
       const li = document.createElement("li"); li.className = "sg-empty";
-      li.textContent = "No suggestions yet. The first one will show up here.";
+      li.textContent = "Nothing here yet. Suggestions and questions will show up here.";
       list.appendChild(li); return;
     }
     rows.forEach(r => {
@@ -92,27 +92,28 @@
     const name = $("sgName").value.trim(), body = $("sgBody").value.trim(), day = $("sgDay").value;
     const say = (m, el) => { err.textContent = m; err.hidden = false; el && el.focus(); };
     err.hidden = true;
-    if (!name) return say("Add your name so we know who suggested it.", $("sgName"));
-    if (body.length < 3) return say("Write what you'd like to change.", $("sgBody"));
+    if (!name) return say("Add your name so everyone knows who sent it.", $("sgName"));
+    if (body.length < 3) return say("Write your suggestion or question.", $("sgBody"));
     btn.disabled = true; btn.textContent = "Sending…";
     try {
       const id = await rpc("send_trip_suggestion", { p_device: device, p_by: name.slice(0, 30), p_day: day.slice(0, 20), p_body: body.slice(0, 500) });
       store.set("jp-name", name);
       $("sgBody").value = "";
-      say2("Sent! Claude is updating the plan. This usually takes under a minute.");
-      btn.textContent = "Updating the plan…";
+      say2("Sent! Claude is working on it. This usually takes under a minute.");
+      btn.textContent = "Working on it…";
       const run = fetch(SB.url + "/functions/v1/apply-suggestion", {
         method: "POST", headers: { apikey: SB.key, "Content-Type": "application/json" }, body: JSON.stringify({ id })
       }).then(r => r.json()).catch(() => null);
       setTimeout(load, 1500);                       // show it as "Updating…" while it runs
       const res = await run;
       await loadPlan(); await load();
-      if (res && res.ok && res.status === "done") say2("Done! The plan is updated. " + (res.reply || ""));
-      else if (res && res.ok) say2(res.reply ? "No change made: " + res.reply : "No change made.");
-      else say2("Sent! It couldn't be applied automatically right now, so it's waiting in the list below.");
-      btn.textContent = "Send suggestion";
+      if (res && res.ok && res.status === "done") say2("Done! The plan is updated. See the reply below.");
+      else if (res && res.ok && res.status === "answered") say2("Answered! See the reply below.");
+      else if (res && res.ok) say2("No change made. See the reply below.");
+      else say2("Sent! It couldn't be handled automatically right now, so it's waiting in the list below.");
+      btn.textContent = "Send";
     } catch (e2) {
-      btn.textContent = "Send suggestion"; say2("");
+      btn.textContent = "Send"; say2("");
       say(/too many/i.test(String(e2 && e2.message)) ? "That's a lot of suggestions for one day. Try again tomorrow." : "Couldn't send that. Check your connection and try again.");
     } finally { btn.disabled = false; }
   });
