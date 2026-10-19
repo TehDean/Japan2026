@@ -876,7 +876,7 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
     <h1>Japan December Plan</h1>
     <span class="hanko" lang="ja" aria-hidden="true"><span>日</span><span>本</span></span>
   </div>
-  <p class="lede">Seven days, each kept to one part of town, with street food along the way and two day trips. Pick a day to see its stops on the map. Times are suggestions.</p>
+  <p class="lede">Five days in Tokyo and an overnight in Osaka, each day kept to one part of town, with street food along the way. Pick a day to see its stops on the map. Times are suggestions.</p>
   <div class="app-row">
     <button type="button" id="installBtn" class="install-btn" hidden>Install app</button>
     <p class="install-tip" id="installTip" hidden></p>
@@ -935,9 +935,6 @@ const DEFAULT_PLACES = {
   midtown:    { name: "Tokyo Midtown Christmas", lat: 35.66570, lng: 139.73100 },
   teamlab:    { name: "teamLab Planets", lat: 35.64912, lng: 139.78977 },
   azabudai:   { name: "Azabudai Hills Christmas Market", lat: 35.66050, lng: 139.74000 },
-  kamakura:   { name: "Kamakura Great Buddha", lat: 35.31670, lng: 139.53580 },
-  nakameguro: { name: "Nakameguro", lat: 35.64400, lng: 139.69900 },
-  hakone:     { name: "Hakone (Lake Ashi)", lat: 35.20500, lng: 139.02500 },
   southern:   { name: "Shinjuku Southern Terrace", lat: 35.68620, lng: 139.70000 },
   omoide:     { name: "Omoide Yokocho", lat: 35.69270, lng: 139.69958 },
   goldengai:  { name: "Golden Gai", lat: 35.69411, lng: 139.70476 },
@@ -950,8 +947,17 @@ const DEFAULT_PLACES = {
   takeshita:  { name: "Takeshita-dori", lat: 35.67155, lng: 139.70333, food: true },
   ebisuyoko:  { name: "Ebisu Yokocho", lat: 35.64822, lng: 139.71064, food: true },
   xmasmarket: { name: "Tokyo Christmas Market (Shin-Toyosu)", lat: 35.64873, lng: 139.79017, food: true },
-  komachi:    { name: "Komachi-dori, Kamakura", lat: 35.32166, lng: 139.55246, food: true },
-  musclegirls:{ name: "Muscle Girls (Ikebukuro)", lat: 35.73318, lng: 139.70977 }
+  musclegirls:{ name: "Muscle Girls (Ikebukuro)", lat: 35.73318, lng: 139.70977 },
+  // Osaka
+  shinosaka:  { name: "Shin-Osaka Station (bullet train)", lat: 34.73347, lng: 135.50025 },
+  kuromon:    { name: "Kuromon Market", lat: 34.66535, lng: 135.50624, food: true },
+  tsutenkaku: { name: "Shinsekai & Tsutenkaku Tower", lat: 34.65250, lng: 135.50631 },
+  daruma:     { name: "Kushikatsu Daruma (Shinsekai)", lat: 34.65157, lng: 135.50620, food: true },
+  dotonbori:  { name: "Dotonbori (Glico sign)", lat: 34.66892, lng: 135.50107, food: true },
+  hozenji:    { name: "Hozenji Yokocho", lat: 34.66812, lng: 135.50261 },
+  osakacastle:{ name: "Osaka Castle", lat: 34.68730, lng: 135.52586 },
+  umedasky:   { name: "Umeda Sky Building", lat: 34.70544, lng: 135.49033 },
+  shinosaka2: { name: "Shin-Osaka Station (train back)", lat: 34.73347, lng: 135.50025 }
 };
 
 const DEFAULT_DAYS = [
@@ -977,12 +983,17 @@ const DEFAULT_DAYS = [
     { t: "17:00", id: "keyakizaka", note: "Right outside. Lights come on around 5 PM, with Tokyo Tower framing the slope." },
     { t: "18:00", id: "midtown", note: "About 10 minutes' walk. Midtown's Christmas lights." },
     { t: "19:00", id: "joe", note: "Lively omakase counter (rated 4.8) a few minutes from Midtown. Reserve ahead." } ]},
-  { date: "Thu 12/3", full: "Thursday, Dec 3", area: "Kamakura → Nakameguro", title: "Kamakura street food, Nakameguro evening", stops: [
-    { t: "08:30", id: "kamakura", note: "About an hour by train. The Great Buddha and Hase-dera in the morning." },
-    { t: "12:00", id: "komachi", note: "Kamakura's snack street by the station: grilled seafood, croquettes, and sweet potato treats. Head back via Yokohama on the Tokyu Toyoko Line, which stops at Nakameguro." },
-    { t: "18:00", id: "nakameguro", note: "Canal-side walk with lit-up cafes." } ]},
-  { date: "Fri 12/4", full: "Friday, Dec 4", area: "Hakone", title: "Hakone day trip", stops: [
-    { t: "08:30", id: "hakone", note: "Lake Ashi, Hakone Shrine, and a hot spring. Fuji may show on a clear day. Check the last train back." } ]},
+  { date: "Thu 12/3", full: "Thursday, Dec 3", area: "Osaka · Namba · Shinsekai · Dotonbori", title: "Bullet train to Osaka, a street-food day", stops: [
+    { t: "10:30", id: "shinosaka", note: "Take a Nozomi bullet train from Tokyo Station around 8:00; it takes about 2.5 hours. A reserved seat is about ¥14,520 each way (2025 fare table). Book in the SmartEX app or at a station ticket machine. Sit in an E seat (right side) for a chance to see Mt. Fuji. Then the Midosuji subway line to Namba (about 15 minutes) to drop your bags; Namba is the handiest area to stay." },
+    { t: "12:00", id: "kuromon", note: "Osaka's Kitchen: graze grilled scallops, wagyu skewers, crab and fresh fruit. Open about 9 to 5, and the best stalls sell out by early afternoon." },
+    { t: "14:00", id: "tsutenkaku", note: "One stop south by subway, or a 20-minute walk. Retro neighborhood under a 1950s tower; go up for the view if the line is short." },
+    { t: "15:30", id: "daruma", note: "Shinsekai is the home of kushikatsu, fried skewers. No double-dipping in the shared sauce. Expect a line; it moves fast." },
+    { t: "17:30", id: "dotonbori", note: "Back north, about 10 minutes by subway. The neon canal at dusk: takoyaki from the street stands, and okonomiyaki at Mizuno (Michelin Bib Gourmand) if you're still hungry." },
+    { t: "20:00", id: "hozenji", note: "A two-minute walk. Quiet lantern-lit stone alley with a moss-covered Fudo statue; a calm end to the day." } ]},
+  { date: "Fri 12/4", full: "Friday, Dec 4", area: "Osaka · Umeda", title: "Osaka Castle, then back to Tokyo", stops: [
+    { t: "09:30", id: "osakacastle", note: "About 20 minutes by subway from Namba. Walk the moats and stone walls; the museum inside the main tower opens at 9. Bring your bags, or check them in a station locker." },
+    { t: "12:00", id: "umedasky", note: "About 20 minutes by train. Open-air rooftop deck between two towers, plus the retro food alley in the basement for lunch." },
+    { t: "14:30", id: "shinosaka2", note: "One stop from Osaka Station on the JR Kyoto Line. A Nozomi back gets to Tokyo Station around 5 PM; book the return in SmartEX too. Evening free in Tokyo; Nakameguro's canal is about 25 minutes from Tokyo Station if you want a walk." } ]},
   { date: "Sat 12/5", full: "Saturday, Dec 5", area: "Yanaka · Shinjuku", title: "Yanaka morning, Shinjuku night", stops: [
     { t: "10:30", id: "yanaka", note: "Old-Tokyo temple streets and a snack street; try the menchi-katsu croquettes. Shops open from about 10 or 11." },
     { t: "13:00", id: "gyoen", note: "About 30 minutes on the JR Yamanote Line from Nippori to Shinjuku, then a 10-minute walk. Big garden with some late autumn color left in early December. Small entry fee." },
@@ -1005,7 +1016,7 @@ let current = 0;
 const WEEKDAY_JA = { Sun: "日", Mon: "月", Tue: "火", Wed: "水", Thu: "木", Fri: "金", Sat: "土" };
 const AREA_JA = { Asakusa: "浅草", Ueno: "上野", Ikebukuro: "池袋", Yanaka: "谷中", Harajuku: "原宿", Shibuya: "渋谷", Ebisu: "恵比寿",
   Toyosu: "豊洲", Tsukiji: "築地", Ginza: "銀座", Azabudai: "麻布台", Roppongi: "六本木", Kamakura: "鎌倉", Nakameguro: "中目黒",
-  Hakone: "箱根", Shinjuku: "新宿" };
+  Hakone: "箱根", Shinjuku: "新宿", Osaka: "大阪", Namba: "難波", Shinsekai: "新世界", Dotonbori: "道頓堀", Umeda: "梅田" };
 // "Asakusa · Ueno" -> "浅草 Asakusa · 上野 Ueno" (unknown names stay as written)
 const areaLabel = area => String(area).split(/(\s*[·→]\s*)/).map(part =>
   AREA_JA[part.trim()] ? `<span lang="ja" class="ja">${AREA_JA[part.trim()]}</span> ${esc(part.trim())}` : esc(part)).join("");
@@ -1027,7 +1038,7 @@ if (typeof L !== "undefined") {
     }
   });
   map.setMinZoom(8);
-  map.setMaxBounds([[34.7, 138.6], [36.2, 140.3]]);
+  map.setMaxBounds([[34.2, 134.9], [36.2, 140.3]]);
 } else {
   document.getElementById("map").hidden = true;
   document.getElementById("map-note").style.display = "block";

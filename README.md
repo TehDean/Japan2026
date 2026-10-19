@@ -1,6 +1,6 @@
 # Japan 2026
 
-Day-by-day Tokyo plan for Nov 29 to Dec 5, 2026, with sights, sushi, street food, day trips and a live street map.
+Day-by-day Japan plan for Nov 29 to Dec 5, 2026: Tokyo plus an overnight in Osaka, with sights, sushi, street food and a live street map.
 
 **Live site:** https://tehdean.github.io/Japan2026/
 
