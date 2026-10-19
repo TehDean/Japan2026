@@ -1,6 +1,6 @@
     <section class="panel sg-panel" id="sgPanel" aria-labelledby="sgTitle" hidden>
       <h2 id="sgTitle">Suggest a change <span class="h-ja" lang="ja">ご提案</span></h2>
-      <p class="sg-sub">Want to add, move or swap something? Send it here and it'll be worked into the plan.</p>
+      <p class="sg-sub">Want to add, move or swap something? Send it here and Claude updates the plan, usually within a minute. Every change is saved, so it can be undone.</p>
       <form id="sgForm" class="sg-form" autocomplete="off" novalidate>
         <div class="sg-row">
           <label for="sgName">Your name</label>
@@ -15,6 +15,7 @@
           <textarea id="sgBody" rows="3" maxlength="500" placeholder="e.g. Can we add a cat café on Sunday afternoon?"></textarea>
         </div>
         <p class="sg-err" id="sgErr" role="alert" hidden></p>
+        <p class="sg-note" id="sgNote" role="status" aria-live="polite" hidden></p>
         <button type="submit" id="sgSend">Send suggestion</button>
       </form>
       <h3 class="sg-listhead">Suggestions so far</h3>

@@ -1,41 +1,51 @@
 # Japan December Plan: notes for Claude
 
 A day-by-day plan for a trip to Japan, Sun Nov 29 to Sat Dec 5, 2026: Tokyo, plus an overnight in Osaka (Thu 12/3 to Fri 12/4).
-It exists in two versions that must always show the same plan:
+It exists in two versions:
 
 - **Website:** https://tehdean.github.io/Japan2026/ (this repo, GitHub Pages from `main`, root). Live street map,
   "Suggest a change" box, installable as a home-screen app, works offline.
 - **Claude dashboard:** https://claude.ai/artifact/Y3MLUWwRPqTvWuurwHZghg (the owner's private Claude artifact).
-  Stored street map (Claude pages can't load outside map images), no suggestion box.
+  Stored street map (Claude pages can't load outside map images), no suggestion box. Since automatic suggestions,
+  the website is the main version; the dashboard is a snapshot refreshed when the owner asks.
 
-## Suggestions: always ask the owner before acting
+## Suggestions are applied automatically
 
-Anyone with the website link can send a suggestion, so don't assume who sent it or refer to them by gender;
+The owner chose (Oct 19, 2026) to have suggestions applied without checking with them first.
+Anyone with the website link can send one, so don't assume who sent it or refer to them by gender;
 use the name they gave, or "whoever suggested it."
 
-When asked to "check the suggestions":
-1. Read them (see Supabase below) and list the new ones: who sent it, which day, what they asked for,
-   what it would change in the plan, and anything to flag (cost, closures, travel time, conflicts).
-2. **Wait for the owner to choose** which to do, skip or adjust. Do not change the plan before they decide.
-3. Make only the approved changes, update **both** versions, then mark each suggestion `done` or `skipped`
-   with a short, friendly `reply` that is shown on the website.
-4. "Clear the suggestions" empties the list (`clear_trip_suggestions`).
+How it works: the website saves a suggestion (`send_trip_suggestion`, max 8 per phone per day), then calls the
+`apply-suggestion` Edge Function. That function asks Claude (`claude-sonnet-5-5`, Anthropic API key in the
+`ANTHROPIC_API_KEY` secret) to apply it with a few plan-editing tools, saves the old plan in `trip_plan_versions`,
+saves the new plan in `trip_plan`, and marks the suggestion `done` or `skipped` with a reply shown on the site.
+Limits: 40 processed suggestions a day in total, 12 edits and 4 removals per suggestion, places must be in Japan.
+Source: `supabase/functions/apply-suggestion/index.ts`; database setup: `supabase_auto_apply.sql`.
+
+When the owner asks to "check the suggestions": summarize what came in and what was changed automatically
+(read `trip_suggestions` and `trip_plan.note`), point out anything that looks wrong, and offer to undo it.
+To undo, copy the right row of `trip_plan_versions` back into `trip_plan` (ask the owner first).
+"Clear the suggestions" empties the list (`clear_trip_suggestions`, or delete from `trip_suggestions` via the connector).
 
 ## Supabase
 
 - Project: **Japan2026**, ref `qsztbfixleqhxovkfaeg`, URL `https://qsztbfixleqhxovkfaeg.supabase.co`.
   The publishable key in `tools/parts/suggest_js.js` is public and safe in the page.
 - The owner's account also has an **Adult Fun Finder** project. Never change it unless the owner asks.
-- Table `trip_suggestions`; functions `suggest_trip_change`, `list_trip_suggestions` (open to the website),
-  `mark_trip_suggestion(p_key, p_id, p_status, p_reply)` and `clear_trip_suggestions(p_key)` (need the review key).
+- Tables: `trip_plan` (the live plan, one row), `trip_plan_versions` (history), `trip_suggestions`.
+  Website functions: `get_trip_plan`, `send_trip_suggestion`, `list_trip_suggestions_v2`.
+  Key-protected: `mark_trip_suggestion(p_key, p_id, p_status, p_reply)`, `clear_trip_suggestions(p_key)`.
 - The review key is private and is **not** in this repo. Either ask the owner to paste it, or, if the Supabase
   connector is available, read and update `trip_suggestions` directly on the Japan2026 project.
-- Setup scripts: `supabase_suggestions.sql`, `supabase_clear.sql` (already run).
+- Setup scripts: `supabase_suggestions.sql`, `supabase_clear.sql`, `supabase_auto_apply.sql` (all already applied).
 
 ## Editing the plan
 
-- Source of truth: `tools/page_template.html` (the `DEFAULT_PLACES` and `DEFAULT_DAYS` data near the top of the script).
-  Website-only pieces are in `tools/parts/`. Don't edit `index.html` by hand; it is generated.
+- The live plan is `trip_plan.data` in Supabase ({places, days}); the website loads it on every visit.
+  Make manual plan changes there (save the old data to `trip_plan_versions` first). Also copy the result into
+  `DEFAULT_PLACES` / `DEFAULT_DAYS` in `tools/page_template.html` when updating the Claude dashboard, which is a
+  snapshot built from those (it can't read Supabase) and is the website's offline fallback.
+- Website-only pieces are in `tools/parts/`. Don't edit `index.html` by hand; it is generated.
 - Build both versions: `python3 tools/build.py` → `index.html` (website) and `tools/build/dashboard.html` (Claude).
 - Owner's preferences for the plan: keep each day's stops close together (no crossing town); sushi a few times,
   not daily; plenty of street food and markets; Sunday 11/29 starts around 5:30 PM (they land about 2 PM).

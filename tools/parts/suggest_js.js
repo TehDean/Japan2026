@@ -35,7 +35,7 @@
     const h = Math.round(m / 60); if (h < 24) return h + " hr ago";
     return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
   };
-  const STATUS = { new: ["Waiting", "wait"], done: ["Added to the plan", "done"], skipped: ["Not added", "skip"] };
+  const STATUS = { new: ["Waiting", "wait"], working: ["Updating the plan…", "wait"], done: ["Added to the plan", "done"], skipped: ["Not added", "skip"] };
 
   function render(rows) {
     list.innerHTML = "";
@@ -58,10 +58,34 @@
       list.appendChild(li);
     });
   }
+  let pollTimer = null;
   async function load() {
-    try { render((await rpc("list_trip_suggestions")) || []); panel.hidden = false; }
-    catch { panel.hidden = true; }   // database not set up yet: keep the page as it was
+    try {
+      const rows = (await rpc("list_trip_suggestions_v2")) || [];
+      render(rows); panel.hidden = false;
+      // While something is being worked on, check back every few seconds
+      clearTimeout(pollTimer);
+      if (rows.some(r => r.status === "working")) pollTimer = setTimeout(() => { load(); loadPlan(); }, 6000);
+    } catch { panel.hidden = true; }   // offline or not set up: keep the page as it was
   }
+
+  // The live plan is kept in the database; the copy built into the page is the fallback.
+  let planStamp = null;
+  function usePlan(data, stamp) {
+    if (!data || !Array.isArray(data.days) || !data.places || stamp === planStamp) return;
+    planStamp = stamp;
+    PLACES = data.places; DAYS = data.days;
+    renderAll(false);
+  }
+  try { const c = store.get("jp-plan", null); if (c) usePlan(c.data, c.updated_at); } catch {}
+  async function loadPlan() {
+    try {
+      const r = await rpc("get_trip_plan");
+      if (r && r.data) { usePlan(r.data, r.updated_at); store.set("jp-plan", r); }
+    } catch { /* offline: keep the saved or built-in plan */ }
+  }
+  const note = $("sgNote");
+  const say2 = t => { note.textContent = t; note.hidden = !t; };
 
   $("sgForm").addEventListener("submit", async e => {
     e.preventDefault();
@@ -72,16 +96,26 @@
     if (body.length < 3) return say("Write what you'd like to change.", $("sgBody"));
     btn.disabled = true; btn.textContent = "Sending…";
     try {
-      await rpc("suggest_trip_change", { p_device: device, p_by: name.slice(0, 30), p_day: day.slice(0, 20), p_body: body.slice(0, 500) });
+      const id = await rpc("send_trip_suggestion", { p_device: device, p_by: name.slice(0, 30), p_day: day.slice(0, 20), p_body: body.slice(0, 500) });
       store.set("jp-name", name);
       $("sgBody").value = "";
-      btn.textContent = "Sent!";
-      await load();
-      setTimeout(() => { btn.textContent = "Send suggestion"; }, 1800);
-    } catch (e2) {
+      say2("Sent! Claude is updating the plan. This usually takes under a minute.");
+      btn.textContent = "Updating the plan…";
+      const run = fetch(SB.url + "/functions/v1/apply-suggestion", {
+        method: "POST", headers: { apikey: SB.key, "Content-Type": "application/json" }, body: JSON.stringify({ id })
+      }).then(r => r.json()).catch(() => null);
+      setTimeout(load, 1500);                       // show it as "Updating…" while it runs
+      const res = await run;
+      await loadPlan(); await load();
+      if (res && res.ok && res.status === "done") say2("Done! The plan is updated. " + (res.reply || ""));
+      else if (res && res.ok) say2(res.reply ? "No change made: " + res.reply : "No change made.");
+      else say2("Sent! It couldn't be applied automatically right now, so it's waiting in the list below.");
       btn.textContent = "Send suggestion";
+    } catch (e2) {
+      btn.textContent = "Send suggestion"; say2("");
       say(/too many/i.test(String(e2 && e2.message)) ? "That's a lot of suggestions for one day. Try again tomorrow." : "Couldn't send that. Check your connection and try again.");
     } finally { btn.disabled = false; }
   });
+  loadPlan();
   load();
 })();

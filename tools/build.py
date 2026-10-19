@@ -66,6 +66,7 @@ rep("<title>Japan December Plan</title>",
     '<meta name="apple-mobile-web-app-status-bar-style" content="default">')
 rep('<script src="tile-index.js"></script>\n', "")
 rep("<header>", "</head>\n<body>\n<header>")
+rep("map.setMaxBounds([[34.2, 134.9], [36.2, 140.3]]);", "map.setMaxBounds([[24, 122], [46, 146]]);")   # live map: all of Japan
 rep("* { box-sizing: border-box; }", "* { box-sizing: border-box; }\nhtml { -webkit-text-size-adjust: 100%; }")
 a = w.index("  const IDX = window.TILE_INDEX || {};"); b = w.index("  map.setMinZoom(8);")
 w = w[:a] + '''  // Live street map (normal websites can load map images directly).
