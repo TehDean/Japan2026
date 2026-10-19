@@ -1147,40 +1147,41 @@ function buildTabs() {
     b.className = "tab"; b.id = "tab-" + i; b.type = "button";
     b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "dayPanel");
     b.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">${WEEKDAY_JA[d.date.slice(0, 3)] || ""}</span><span><b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small></span>`;
+    tabs.appendChild(b);
+  });
+  // Info tabs after the days (Hotels, eSIM)
+  INFO_TABS.forEach(t => {
+    const b = document.createElement("button");
+    b.className = "tab"; b.id = "tab-" + t.id; b.type = "button";
+    b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "dayPanel");
+    b.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">${t.kanji}</span><span><b>${esc(t.label)}</b><small>${esc(t.sub)}</small></span>`;
+    tabs.appendChild(b);
+  });
+  [...tabs.children].forEach((b, i) => {
     b.addEventListener("click", () => show(i));
     b.addEventListener("keydown", e => {
       if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-        const total = DAYS.length + 1;
+        const total = tabs.children.length;
         const n = (i + (e.key === "ArrowRight" ? 1 : total - 1)) % total;
         tabs.children[n].focus(); show(n);
       }
     });
-    tabs.appendChild(b);
   });
-  // Hotels tab (temporary)
-  const h = document.createElement("button");
-  h.className = "tab"; h.id = "tab-hotels"; h.type = "button";
-  h.setAttribute("role", "tab"); h.setAttribute("aria-controls", "dayPanel");
-  h.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">宿</span><span><b>Hotels</b><small>where to stay</small></span>`;
-  h.addEventListener("click", () => show(DAYS.length));
-  h.addEventListener("keydown", e => {
-    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const n = e.key === "ArrowRight" ? 0 : DAYS.length - 1; tabs.children[n].focus(); show(n); }
-  });
-  tabs.appendChild(h);
 }
 
 function show(i, fly = true) {
-  current = Math.max(0, Math.min(i, DAYS.length));
+  current = Math.max(0, Math.min(i, DAYS.length + INFO_TABS.length - 1));
   [...tabs.children].forEach((t, j) => { t.setAttribute("aria-selected", String(j === current)); t.tabIndex = j === current ? 0 : -1; });
-  panel.setAttribute("aria-labelledby", current === DAYS.length ? "tab-hotels" : "tab-" + current);
+  const info = INFO_TABS[current - DAYS.length];
+  panel.setAttribute("aria-labelledby", info ? "tab-" + info.id : "tab-" + current);
   const sel = tabs.children[current];
   if (sel) {
     const l = sel.offsetLeft - tabs.offsetLeft, r = l + sel.offsetWidth;
     if (l < tabs.scrollLeft) tabs.scrollLeft = l - 8;
     else if (r > tabs.scrollLeft + tabs.clientWidth) tabs.scrollLeft = r - tabs.clientWidth + 8;
   }
-  if (current === DAYS.length) { showHotels(fly); return; }
-  setCap(false);
+  if (info) { info.render(fly); return; }
+  setCap("day");
   const d = DAYS[current];
   panel.innerHTML = `
     <div class="day-head"><div class="eyebrow">${esc(d.full)}${d.area ? " · " + areaLabel(d.area) : ""}</div><h2>${esc(d.title)}</h2>
@@ -1207,9 +1208,10 @@ function show(i, fly = true) {
 
 // ---- Hotels tab (temporary) ----
 const capEl = document.getElementById("mapCap"), DAY_CAP = capEl.innerHTML;
-const setCap = hotels => { capEl.innerHTML = hotels ? '<span class="key"><i style="background:var(--fg)"></i>Hotels</span>Numbers match the list. Tap a hotel to find it on the map.' : DAY_CAP; };
+const setCap = kind => { capEl.innerHTML = kind === "hotels" ? '<span class="key"><i style="background:var(--fg)"></i>Hotels</span>Numbers match the list. Tap a hotel to find it on the map.'
+  : kind === "none" ? "Nothing to map on this tab. Pick a day to see its stops." : DAY_CAP; };
 function showHotels(fly = true) {
-  setCap(true);
+  setCap("hotels");
   let n = 0;
   const card = h => { n++; return `<li class="hotel-card${map ? " clickable" : ""}" data-id="${esc(h.id)}">
       <div class="hotel-name"><span class="num hotel">${n}</span>${esc(h.name)}<span class="hotel-tag${h.alt ? " alt" : ""}">${esc(h.tag)}</span></div>
@@ -1244,6 +1246,52 @@ function showHotels(fly = true) {
   // Tokyo hotels are close together; show them (Osaka is one tap away in the list)
   if (fly) map.flyToBounds(HOTEL_STAYS[0].hotels.concat(HOTEL_STAYS[2].hotels).map(h => [h.lat, h.lng]), { padding: [50, 50], maxZoom: 14, duration: 0.6 });
 }
+
+// ---- eSIM tab: what phone data to get and how to set it up ----
+const ESIM = {
+  pick: { name: "Sakura Mobile Unlimited eSIM", tag: "Get this", url: "https://www.sakuramobile.jp/travel/esim/",
+    facts: "au (KDDI) 5G · unlimited data · 7-day plan, one per phone · roughly $30–40 each",
+    text: "A Japanese company selling data straight on a Japanese carrier's 5G network, instead of reselling roaming data like most travel eSIMs, so it's usually faster and steadier. Truly unlimited: no daily cap or slowdown, where many cheaper “unlimited” eSIMs crawl after 1–3 GB a day. Sakura's own tests average about 180 Mbps." },
+  why: [
+    "Install it at home before the flight: the 7 days only start counting when you arrive in Japan, so you're online as soon as you land at Haneda.",
+    "Hotspot is included (about 6 GB on the 7-day plan), so one phone can share with the other in a pinch.",
+    "Buying two together gets 10% off. Prices are in yen; a 4-day plan is about ¥3,900 with tax, so check the 7-day price on their site.",
+  ],
+  steps: [
+    ["Now", "Check both phones are carrier-unlocked and support eSIM. On iPhone: Settings › General › About › Carrier Lock should say “No SIM restrictions.” Phones still being paid off through a carrier are sometimes locked; ask the carrier to unlock them."],
+    ["Anytime before the trip", "Buy two Unlimited eSIMs, 7 days each (Nov 29 – Dec 5), on Sakura Mobile's site. Each phone needs its own."],
+    ["A few days before you fly", "At home on Wi-Fi, install it: Settings › Cellular › Add eSIM, then scan the QR code from Sakura's email. Install it only once and don't delete it; it can't be reinstalled."],
+    ["When you land at Haneda", "Set the Sakura line as your cellular data line, and turn off data roaming on your US line so it can't charge you. Keep the US line switched on if you want texts like bank codes. If the Sakura line doesn't connect, follow the setup steps in Sakura's email (iPhones sometimes need a small extra setting)."],
+  ],
+  notes: [
+    "Data only: no Japanese phone number. Call and text each other with WhatsApp, FaceTime or iMessage.",
+    "There's no usage meter for the Unlimited plan, but there's nothing to run out of except the hotspot allowance.",
+    "Cheaper options (Airalo, Ubigi, Holafly) are fine for maps and messages, but most route data through overseas servers and slow down after heavy use.",
+  ],
+};
+function showEsim() {
+  setCap("none");
+  if (map) { Object.values(markers).forEach(m => m.remove()); markers = {}; }
+  const e = ESIM;
+  panel.innerHTML = `
+    <div class="day-head"><div class="eyebrow">Phone data · <span lang="ja" class="ja">通信</span></div><h2>eSIM for Japan</h2>
+      <p class="hotel-intro">One thing to buy before the trip so both phones have fast data the whole time.</p></div>
+    <ol class="stops"><li class="hotel-card">
+      <div class="hotel-name"><span class="num hotel">1</span>${esc(e.pick.name)}<span class="hotel-tag">${esc(e.pick.tag)}</span></div>
+      <div class="hotel-facts">${esc(e.pick.facts)}</div>
+      <p class="hotel-text">${esc(e.pick.text)}</p>
+      <ul class="hotel-why">${e.why.map(w => `<li>${esc(w)}</li>`).join("")}</ul>
+      <div class="hotel-links"><a class="dir" href="${e.pick.url}" target="_blank" rel="noopener">Plans &amp; prices on Sakura Mobile ↗</a></div></li></ol>
+    <section class="stay"><h3 class="stay-head">Checklist</h3>
+      <ol class="stops">${e.steps.map(([when, what], n) => `<li class="stop"><span class="time">${n + 1}</span>
+        <div><div class="stop-name">${esc(when)}</div><p class="stop-note">${esc(what)}</p></div></li>`).join("")}</ol></section>
+    <div class="tips"><h3>Good to know</h3><ul>${e.notes.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>`;
+}
+
+const INFO_TABS = [
+  { id: "hotels", kanji: "宿", label: "Hotels", sub: "where to stay", render: showHotels },
+  { id: "esim", kanji: "通", label: "eSIM", sub: "phone data", render: showEsim },
+];
 
 function renderAll(fly = true) { buildTabs(); show(current, fly); }
 renderAll();

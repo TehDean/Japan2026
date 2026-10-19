@@ -51,9 +51,10 @@ To undo, copy the right row of `trip_plan_versions` back into `trip_plan` (ask t
   Make manual plan changes there (save the old data to `trip_plan_versions` first). Also copy the result into
   `DEFAULT_PLACES` / `DEFAULT_DAYS` in `tools/page_template.html` when updating the Claude dashboard, which is a
   snapshot built from those (it can't read Supabase) and is the website's offline fallback.
-- **Hotels tab (temporary):** `HOTEL_STAYS` in `tools/page_template.html` (static, not in Supabase), added Oct 19, 2026 to
-  help the owner choose hotels. Remove it once hotels are booked: the `HOTEL_*` block, the hotel CSS, the hotel tab in
-  `buildTabs`, the hotels branch in `show`, `showHotels`/`setCap`, and the `Tokyo`/`Nipponbashi` entries are harmless to keep.
+- **Info tabs after the days:** `INFO_TABS` in `tools/page_template.html` (static, not in Supabase), added Oct 19, 2026.
+  **Hotels** (`HOTEL_STAYS`, `showHotels`; temporary, remove once hotels are booked) and **eSIM** (`ESIM`, `showEsim`;
+  recommends the Sakura Mobile Unlimited eSIM, 7 days, one per phone). To remove a tab, drop its `INFO_TABS` entry
+  and its data/render function; the shared hotel-card CSS is also used by the eSIM tab.
 - Website-only pieces are in `tools/parts/`. Don't edit `index.html` by hand; it is generated.
 - Build both versions: `python3 tools/build.py` → `index.html` (website) and `tools/build/dashboard.html` (Claude).
 - Owner's preferences for the plan: keep each day's stops close together (no crossing town); sushi a few times,
