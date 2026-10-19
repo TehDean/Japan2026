@@ -35,7 +35,7 @@
     const h = Math.round(m / 60); if (h < 24) return h + " hr ago";
     return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
   };
-  const STATUS = { new: ["Waiting", "wait"], working: ["Working on it…", "wait"], done: ["Added to the plan", "done"], answered: ["Answered", "ans"], skipped: ["Not added", "skip"] };
+  const STATUS = { new: ["Waiting", "wait"], working: ["🐉 The dragon is on it…", "wait"], done: ["Added to the plan", "done"], answered: ["Answered", "ans"], skipped: ["Not added", "skip"] };
 
   function render(rows) {
     list.innerHTML = "";
@@ -99,16 +99,16 @@
       const id = await rpc("send_trip_suggestion", { p_device: device, p_by: name.slice(0, 30), p_day: day.slice(0, 20), p_body: body.slice(0, 500) });
       store.set("jp-name", name);
       $("sgBody").value = "";
-      say2("Sent! Claude is working on it. This usually takes under a minute.");
-      btn.textContent = "Working on it…";
+      say2("Sent! 🐉 The trip dragon is on it. This usually takes under a minute.");
+      btn.textContent = "🐉 Dragon at work…";
       const run = fetch(SB.url + "/functions/v1/apply-suggestion", {
         method: "POST", headers: { apikey: SB.key, "Content-Type": "application/json" }, body: JSON.stringify({ id })
       }).then(r => r.json()).catch(() => null);
       setTimeout(load, 1500);                       // show it as "Updating…" while it runs
       const res = await run;
       await loadPlan(); await load();
-      if (res && res.ok && res.status === "done") say2("Done! The plan is updated. See the reply below.");
-      else if (res && res.ok && res.status === "answered") say2("Answered! See the reply below.");
+      if (res && res.ok && res.status === "done") say2("Done! The dragon updated the plan. See the reply below.");
+      else if (res && res.ok && res.status === "answered") say2("The dragon has spoken! See the answer below.");
       else if (res && res.ok) say2("No change made. See the reply below.");
       else say2("Sent! It couldn't be handled automatically right now, so it's waiting in the list below.");
       btn.textContent = "Send";
