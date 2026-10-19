@@ -2,13 +2,12 @@
 // saves the new plan (keeping the old one as a version) and posts a reply on the suggestion.
 //
 // Called by the website right after a suggestion is sent: POST { "id": <suggestion id> }.
-// Needs the ANTHROPIC_API_KEY secret. Safety limits: each suggestion is processed once,
-// at most DAILY_LIMIT suggestions a day are processed in total, and one suggestion can make
-// at most MAX_EDITS changes and remove at most MAX_REMOVALS stops.
+// Needs the ANTHROPIC_API_KEY secret. Spending is capped by the Anthropic workspace's monthly
+// spend limit; when it's reached, suggestions wait with a note. Each suggestion is processed once,
+// and one suggestion can make at most MAX_EDITS changes and remove at most MAX_REMOVALS stops.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MODEL = "claude-sonnet-5-5";
-const DAILY_LIMIT = 40;
 const MAX_ROUNDS = 8;
 const MAX_EDITS = 12;
 const MAX_REMOVALS = 4;
@@ -209,11 +208,6 @@ Deno.serve(async (req) => {
   const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) return new Response(JSON.stringify({ ok: false, reason: "not_configured" }), { headers });
 
-  // Daily cap on automatic processing, across everyone
-  const since = new Date(Date.now() - 864e5).toISOString();
-  const { count } = await db.from("trip_suggestions").select("id", { count: "exact", head: true }).gte("processing_at", since);
-  if ((count ?? 0) >= DAILY_LIMIT) return new Response(JSON.stringify({ ok: false, reason: "daily_limit" }), { headers });
-
   // Claim it: only a new, unclaimed suggestion from the last two days
   const { data: claimed } = await db.from("trip_suggestions")
     .update({ processing_at: new Date().toISOString() })
@@ -237,9 +231,14 @@ Deno.serve(async (req) => {
     await db.from("trip_suggestions").update({ status: result.status, reply: result.reply || null, reviewed_at: new Date().toISOString() }).eq("id", s.id);
     return new Response(JSON.stringify({ ok: true, status: result.status, reply: result.reply, changed: result.changes.length }), { headers });
   } catch (e) {
-    console.error("apply-suggestion failed", s.id, (e as Error).message);
-    // Release it so it can be tried again
-    await db.from("trip_suggestions").update({ processing_at: null }).eq("id", s.id);
-    return new Response(JSON.stringify({ ok: false, reason: "error" }), { status: 500, headers });
+    const msg = (e as Error).message;
+    console.error("apply-suggestion failed", s.id, msg);
+    // The monthly spend limit was reached: leave it waiting, with a note on the website
+    const budget = /usage limits|spend_limit|credit balance/i.test(msg);
+    await db.from("trip_suggestions").update({
+      processing_at: null,
+      ...(budget ? { reply: "Waiting: the plan's monthly budget for automatic updates has been reached." } : {}),
+    }).eq("id", s.id);
+    return new Response(JSON.stringify({ ok: false, reason: budget ? "budget" : "error" }), { status: budget ? 200 : 500, headers });
   }
 });

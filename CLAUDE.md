@@ -15,11 +15,13 @@ The owner chose (Oct 19, 2026) to have suggestions applied without checking with
 Anyone with the website link can send one, so don't assume who sent it or refer to them by gender;
 use the name they gave, or "whoever suggested it."
 
-How it works: the website saves a suggestion (`send_trip_suggestion`, max 8 per phone per day), then calls the
+How it works: the website saves a suggestion (`send_trip_suggestion`, no daily limit), then calls the
 `apply-suggestion` Edge Function. That function asks Claude (`claude-sonnet-5-5`, Anthropic API key in the
 `ANTHROPIC_API_KEY` secret) to apply it with a few plan-editing tools, saves the old plan in `trip_plan_versions`,
 saves the new plan in `trip_plan`, and marks the suggestion `done` or `skipped` with a reply shown on the site.
-Limits: 40 processed suggestions a day in total, 12 edits and 4 removals per suggestion, places must be in Japan.
+Spending is capped by a monthly spend limit on the Anthropic workspace that holds the API key (the owner asked
+for a spending cap rather than daily suggestion limits); when it's reached, suggestions wait with a note.
+Per-suggestion safeguards: 12 edits and 4 removals at most, places must be in Japan.
 Source: `supabase/functions/apply-suggestion/index.ts`; database setup: `supabase_auto_apply.sql`.
 
 When the owner asks to "check the suggestions": summarize what came in and what was changed automatically

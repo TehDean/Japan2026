@@ -29,13 +29,11 @@ grant execute on function public.get_trip_plan() to anon, authenticated;
 
 alter table public.trip_suggestions add column if not exists processing_at timestamptz;
 
+-- No daily limit: spending is capped by the Anthropic workspace's monthly spend limit instead.
 create or replace function public.send_trip_suggestion(p_device uuid, p_by text, p_day text, p_body text)
 returns bigint language plpgsql security definer set search_path = public as $$
 declare new_id bigint;
 begin
-  if (select count(*) from public.trip_suggestions where device_id = p_device and created_at > now() - interval '1 day') >= 8 then
-    raise exception 'Too many suggestions today' using errcode = 'P0001';
-  end if;
   insert into public.trip_suggestions (device_id, suggested_by, day, body)
   values (p_device, left(trim(p_by), 30), nullif(left(trim(p_day), 20), ''), left(trim(p_body), 500))
   returning id into new_id;
