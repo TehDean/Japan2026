@@ -867,6 +867,28 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 .install-btn { font: inherit; font-weight: 600; font-size: 13px; min-height: 40px; padding: 8px 14px; border-radius: 999px; cursor: pointer;
   border: 1px solid var(--accent); background: var(--accent); color: var(--surface); }
 .install-tip { margin: 0; font-size: 13px; color: var(--muted); max-width: 60ch; }
+/* Hotels tab (temporary: remove once hotels are booked) */
+.pin.hotel, .num.hotel { background: var(--fg); color: var(--surface); }
+.hotel-intro { margin: 0 0 6px; }
+.hotel-why { margin: 6px 0 4px; padding-left: 18px; color: var(--muted); }
+.hotel-why li { margin: 2px 0; }
+.stay { margin-top: 22px; }
+.stay-head { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 2px; }
+.stay-sub { margin: 0 0 6px; color: var(--muted); font-size: 13px; }
+.hotel-card { padding: 14px 0; border-top: 1px solid var(--line); }
+.hotel-name { font-weight: 600; font-size: 15px; }
+.hotel-tag { display: inline-block; margin-left: 6px; font: 500 11px "IBM Plex Mono", monospace; border-radius: 3px; padding: 1px 6px; vertical-align: 1px;
+  color: var(--accent); background: var(--accent-soft); }
+.hotel-tag.alt { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+.hotel-facts { margin: 3px 0 4px; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); }
+.hotel-card p.hotel-text { margin: 4px 0; }
+.hotel-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.hotel-card.clickable { cursor: pointer; }
+.hotel-card.clickable:hover .hotel-name { color: var(--accent); }
+.tips { margin-top: 22px; padding: 12px 14px; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); }
+.tips h3 { margin: 0 0 4px; font-size: 14px; }
+.tips ul { margin: 0; padding-left: 18px; }
+.tips li { margin: 3px 0; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 
@@ -917,7 +939,7 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
   </div>
   <section class="panel map-wrap" aria-label="Map">
     <h2>Map <span class="h-ja" lang="ja">地図</span></h2>
-    <p class="cap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span><span class="key"><i style="background:var(--food-pin)"></i>Street food</span>Faded pins are other days. Tap a pin or a stop for details.</p>
+    <p class="cap" id="mapCap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span><span class="key"><i style="background:var(--food-pin)"></i>Street food</span>Faded pins are other days. Tap a pin or a stop for details.</p>
     <div id="map"></div>
     <p id="map-note">The map library didn't load. The stop list and Google Maps links still work.</p>
   </section>
@@ -1008,6 +1030,47 @@ const DEFAULT_DAYS = [
     { t: "21:00", id: "goldengai", note: "About 10 minutes' walk east. Tiny bars; groups over four will struggle to fit." } ]}
 ];
 
+// ---- Hotels tab: recommendations to help decide where to stay. Temporary: delete this block,
+// the HOTEL CSS and the hotel lines in buildTabs/show once the hotels are booked. ----
+const HOTEL_STAYS = [
+  { head: "Tokyo · Ginza", sub: "Sun 11/29 – Thu 12/3 (4 nights), then Fri 12/4 (1 night)", hotels: [
+    { id: "tsuki", tag: "Top pick", name: "TSUKI Tokyo", lat: 35.6702, lng: 139.7720, approx: true,
+      facts: "Tsukiji, by Ginza · from about ¥20,000/night · rated 9.4/10 (Expedia, 259 reviews)",
+      text: "A small, calm Japanese-style hotel. Book a room “with furo”: it has its own wooden Japanese soaking tub, so you can have a hot bath together every night with no tattoo rules to worry about. Tsukiji Outer Market and Ginza are about a 10-minute walk, and Shintomicho subway station is 3 minutes away." },
+    { id: "mitsuiginza", tag: "Step up", name: "Mitsui Garden Hotel Ginza Premier", lat: 35.6669, lng: 139.7627, approx: true,
+      facts: "Ginza 8-chome · about ¥20,000–60,000/night",
+      text: "A polished, bigger hotel right in Ginza, close to Shimbashi and Ginza stations. Pick this if you'd rather have a full-service hotel with city views than a boutique stay. No soaking tub of your own, so the onsen nights would be Hakone and Osaka." },
+    { id: "peninsula", tag: "Splurge", name: "The Peninsula Tokyo", lat: 35.6747, lng: 139.7604,
+      facts: "Yurakucho, across from Hibiya Park · from about ¥50,000+/night",
+      text: "One of Tokyo's top luxury hotels, known for its service and views. It sits between Ginza and Tokyo Station, so it has the same easy access as the other two, just with a lot more pampering." },
+  ]},
+  { head: "Osaka · Nipponbashi", sub: "Thu 12/3 (1 night)", hotels: [
+    { id: "hinode", tag: "Top pick", name: "Hot Spring Osaka Hinode Hotel Nipponbashi", lat: 34.6560, lng: 135.5040, approx: true,
+      facts: "Naniwa, by Ebisucho Station · about $111/night for two (Expedia)",
+      text: "Thursday's whole route is walkable from here: Shinsekai and Kushikatsu Daruma are a few minutes south, and Kuromon Market and Dotonbori are a short walk or one subway stop north. It has its own hot spring with private family baths you can book for the two of you, a second private soak after Hakone. Reserve the private bath ahead, and email the hotel to confirm tattoos are fine in it." },
+  ]},
+  { head: "If you'd rather stay in Shinjuku", sub: "Alternative to Ginza", hotels: [
+    { id: "gracery", tag: "Alternative", alt: true, name: "Hotel Gracery Shinjuku", lat: 35.6950, lng: 139.7016,
+      facts: "Kabukicho, Shinjuku · mid-range",
+      text: "The fun one, with a giant Godzilla head on the roof, and steps from Golden Gai and Omoide Yokocho. Best if late nights out matter most. The trade-off: the east-side days (Asakusa, Toyosu, Tsukiji) are 30–40 minutes each way, and you're farther from Tokyo Station's bullet trains." },
+  ]},
+];
+const HOTEL_INTRO = "Our suggestion: stay in Ginza for every Tokyo night, plus one night in Osaka. Ginza is in the middle of this plan:";
+const HOTEL_WHY = [
+  "Asakusa, Ueno, Toyosu, Tsukiji and Roppongi are each about 10–15 minutes away; Shibuya and Shinjuku about 20–25.",
+  "Bullet trains to Osaka leave from Tokyo Station, and Friday's train back from Odawara (after the Hakone onsen) arrives there too.",
+  "Haneda Airport is about 30 minutes away for the flight home.",
+  "It's quiet at night, with the Tsukiji and Ginza food streets close by.",
+];
+const HOTEL_TIPS = [
+  "Book the Tokyo hotel as two stays (Nov 29 – Dec 3 and Dec 4 – 5) and ask them to keep your big bags while you're in Osaka and Hakone, so you only carry an overnight bag.",
+  "Pick refundable rates while the plan is still changing.",
+  "Prices are rough guides from travel sites; check your dates with the links.",
+];
+const HOTELS = {};
+HOTEL_STAYS.forEach(s => s.hotels.forEach(h => HOTELS[h.id] = h));
+const hotelSearch = h => "https://www.google.com/travel/search?q=" + encodeURIComponent(h.name);
+
 // The plan shown on the page. Starts as the built-in plan above; the shared saved copy replaces it once it loads.
 let PLACES = structuredClone(DEFAULT_PLACES);
 let DAYS = structuredClone(DEFAULT_DAYS);
@@ -1021,7 +1084,7 @@ let current = 0;
 const WEEKDAY_JA = { Sun: "日", Mon: "月", Tue: "火", Wed: "水", Thu: "木", Fri: "金", Sat: "土" };
 const AREA_JA = { Asakusa: "浅草", Ueno: "上野", Ikebukuro: "池袋", Yanaka: "谷中", Harajuku: "原宿", Shibuya: "渋谷", Ebisu: "恵比寿",
   Toyosu: "豊洲", Tsukiji: "築地", Ginza: "銀座", Azabudai: "麻布台", Roppongi: "六本木", Kamakura: "鎌倉", Nakameguro: "中目黒",
-  Hakone: "箱根", Shinjuku: "新宿", Osaka: "大阪", Namba: "難波", Shinsekai: "新世界", Dotonbori: "道頓堀", Umeda: "梅田" };
+  Hakone: "箱根", Shinjuku: "新宿", Osaka: "大阪", Namba: "難波", Shinsekai: "新世界", Dotonbori: "道頓堀", Umeda: "梅田", Tokyo: "東京", Nipponbashi: "日本橋" };
 // "Asakusa · Ueno" -> "浅草 Asakusa · 上野 Ueno" (unknown names stay as written)
 const areaLabel = area => String(area).split(/(\s*[·→]\s*)/).map(part =>
   AREA_JA[part.trim()] ? `<span lang="ja" class="ja">${AREA_JA[part.trim()]}</span> ${esc(part.trim())}` : esc(part)).join("");
@@ -1087,25 +1150,38 @@ function buildTabs() {
     b.addEventListener("click", () => show(i));
     b.addEventListener("keydown", e => {
       if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
-        const n = (i + (e.key === "ArrowRight" ? 1 : DAYS.length - 1)) % DAYS.length;
+        const total = DAYS.length + 1;
+        const n = (i + (e.key === "ArrowRight" ? 1 : total - 1)) % total;
         tabs.children[n].focus(); show(n);
       }
     });
     tabs.appendChild(b);
   });
+  // Hotels tab (temporary)
+  const h = document.createElement("button");
+  h.className = "tab"; h.id = "tab-hotels"; h.type = "button";
+  h.setAttribute("role", "tab"); h.setAttribute("aria-controls", "dayPanel");
+  h.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">宿</span><span><b>Hotels</b><small>where to stay</small></span>`;
+  h.addEventListener("click", () => show(DAYS.length));
+  h.addEventListener("keydown", e => {
+    if (e.key === "ArrowRight" || e.key === "ArrowLeft") { const n = e.key === "ArrowRight" ? 0 : DAYS.length - 1; tabs.children[n].focus(); show(n); }
+  });
+  tabs.appendChild(h);
 }
 
 function show(i, fly = true) {
-  current = Math.max(0, Math.min(i, DAYS.length - 1));
-  const d = DAYS[current];
+  current = Math.max(0, Math.min(i, DAYS.length));
   [...tabs.children].forEach((t, j) => { t.setAttribute("aria-selected", String(j === current)); t.tabIndex = j === current ? 0 : -1; });
-  panel.setAttribute("aria-labelledby", "tab-" + current);
+  panel.setAttribute("aria-labelledby", current === DAYS.length ? "tab-hotels" : "tab-" + current);
   const sel = tabs.children[current];
   if (sel) {
     const l = sel.offsetLeft - tabs.offsetLeft, r = l + sel.offsetWidth;
     if (l < tabs.scrollLeft) tabs.scrollLeft = l - 8;
     else if (r > tabs.scrollLeft + tabs.clientWidth) tabs.scrollLeft = r - tabs.clientWidth + 8;
   }
+  if (current === DAYS.length) { showHotels(fly); return; }
+  setCap(false);
+  const d = DAYS[current];
   panel.innerHTML = `
     <div class="day-head"><div class="eyebrow">${esc(d.full)}${d.area ? " · " + areaLabel(d.area) : ""}</div><h2>${esc(d.title)}</h2>
       <p>${d.stops.length ? d.stops.length + " stop" + (d.stops.length === 1 ? "" : "s") + (map ? ". Tap one to find it on the map." : "") : "Nothing planned yet."}</p></div>
@@ -1127,6 +1203,46 @@ function show(i, fly = true) {
     markers[li.dataset.id] && markers[li.dataset.id].openPopup();
   }));
   drawPins(d, fly);
+}
+
+// ---- Hotels tab (temporary) ----
+const capEl = document.getElementById("mapCap"), DAY_CAP = capEl.innerHTML;
+const setCap = hotels => { capEl.innerHTML = hotels ? '<span class="key"><i style="background:var(--fg)"></i>Hotels</span>Numbers match the list. Tap a hotel to find it on the map.' : DAY_CAP; };
+function showHotels(fly = true) {
+  setCap(true);
+  let n = 0;
+  const card = h => { n++; return `<li class="hotel-card${map ? " clickable" : ""}" data-id="${esc(h.id)}">
+      <div class="hotel-name"><span class="num hotel">${n}</span>${esc(h.name)}<span class="hotel-tag${h.alt ? " alt" : ""}">${esc(h.tag)}</span></div>
+      <div class="hotel-facts">${esc(h.facts)}</div>
+      <p class="hotel-text">${esc(h.text)}${h.approx ? " Pin is approximate." : ""}</p>
+      <div class="hotel-links"><a class="dir" href="${hotelSearch(h)}" target="_blank" rel="noopener">Prices &amp; booking ↗</a>
+        <a class="dir" href="${dirUrl(h)}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div></li>`; };
+  panel.innerHTML = `
+    <div class="day-head"><div class="eyebrow">Where to stay · <span lang="ja" class="ja">宿</span></div><h2>Hotel recommendations</h2>
+      <p class="hotel-intro">${esc(HOTEL_INTRO)}</p>
+      <ul class="hotel-why">${HOTEL_WHY.map(w => `<li>${esc(w)}</li>`).join("")}</ul></div>
+    ${HOTEL_STAYS.map(s => `<section class="stay"><h3 class="stay-head">${areaLabel(s.head)}</h3><p class="stay-sub">${esc(s.sub)}</p>
+      <ol class="stops">${s.hotels.map(card).join("")}</ol></section>`).join("")}
+    <div class="tips"><h3>Booking tips</h3><ul>${HOTEL_TIPS.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>`;
+  panel.querySelectorAll(".hotel-card.clickable").forEach(li => li.addEventListener("click", e => {
+    if (e.target.closest("a")) return;
+    const h = HOTELS[li.dataset.id];
+    if (matchMedia("(max-width: 760px)").matches) {
+      document.getElementById("map").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    }
+    map.flyTo([h.lat, h.lng], Math.max(map.getZoom(), 14), { duration: 0.6 });
+    markers[h.id] && markers[h.id].openPopup();
+  }));
+  if (!map) return;
+  Object.values(markers).forEach(m => m.remove());
+  markers = {};
+  Object.values(HOTELS).forEach((h, i) => {
+    const icon = L.divIcon({ className: "", html: `<div class="pin hotel">${i + 1}</div>`, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
+    markers[h.id] = L.marker([h.lat, h.lng], { icon, title: h.name, riseOnHover: true }).addTo(map)
+      .bindPopup(`<b>${esc(h.name)}</b>${esc(h.tag)} · <a href="${dirUrl(h)}" target="_blank" rel="noopener">Open in Google Maps</a>`);
+  });
+  // Tokyo hotels are close together; show them (Osaka is one tap away in the list)
+  if (fly) map.flyToBounds(HOTEL_STAYS[0].hotels.concat(HOTEL_STAYS[2].hotels).map(h => [h.lat, h.lng]), { padding: [50, 50], maxZoom: 14, duration: 0.6 });
 }
 
 function renderAll(fly = true) { buildTabs(); show(current, fly); }
