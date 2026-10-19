@@ -11,3 +11,5 @@ Day-by-day Japan plan for Nov 29 to Dec 5, 2026: Tokyo plus an overnight in Osak
 - `sw.js` – keeps the site working offline: the page, the map library and the map areas already viewed.
 - `supabase_suggestions.sql` – one-time database setup for the "Suggest a change" box (run in the Supabase SQL Editor of the japan2026 project). The box stays hidden until this has been run.
 - `supabase_clear.sql` – optional one-time setup that lets the review key clear the suggestion list.
+- `tools/` – the source the pages are built from (`python3 tools/build.py`).
+- `CLAUDE.md` – notes for Claude on how this project and its suggestion box work.

@@ -1,0 +1,454 @@
+<title>Japan December Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="tile-index.js"></script>
+<style>
+/* Leaflet's own stylesheet, inlined (outside stylesheets are blocked) */
+/*LEAFLET_CSS*/
+</style>
+<style>
+/* Layout: tab strip over a two-column body (day detail + street map), one column on phones. */
+/* Theme: washi paper, sumi ink, shu (torii vermilion), ai (indigo) and kincha (gold).
+   Layout: tab strip of weekday kanji over a two-column body (day detail + map), one column on phones. */
+:root {
+  --bg: #f3ede1;
+  --surface: #fbf8f1;
+  --fg: #1f1c1a;
+  --muted: #6b6359;
+  --line: #ddd2bf;
+  --accent: #c0392b;
+  --accent-soft: #f4dcd3;
+  --pin-ring: #ffffff;
+  --sushi: #234a72;
+  --sushi-soft: #dfe7f0;
+  --food: #8a5d00;
+  --food-pin: #c0860f;
+  --food-soft: #f5e6c4;
+  --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Ccircle cx='0' cy='10' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='20' fill='%23f3ede1' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='15' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='10' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='5' fill='none' stroke='%23d9cdb6' stroke-width='1.1'/%3E%3C/svg%3E");
+  --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .2 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  --map-filter: none;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #151312; --surface: #1d1a18; --fg: #efe8dc; --muted: #a59c90; --line: #39332d;
+    --accent: #e2654b; --accent-soft: #3b2420; --pin-ring: #1d1a18; --sushi: #8fb0dc; --sushi-soft: #1d2735; --food: #e3b65e; --food-pin: #cf9a30; --food-soft: #33280f; --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Ccircle cx='0' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3C/svg%3E");
+    --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #151312; --surface: #1d1a18; --fg: #efe8dc; --muted: #a59c90; --line: #39332d;
+    --accent: #e2654b; --accent-soft: #3b2420; --pin-ring: #1d1a18; --sushi: #8fb0dc; --sushi-soft: #1d2735; --food: #e3b65e; --food-pin: #cf9a30; --food-soft: #33280f; --wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='20' viewBox='0 0 40 20'%3E%3Ccircle cx='0' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='10' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='20' cy='20' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='0' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='20' fill='%23151312' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='15' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='10' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3Ccircle cx='40' cy='30' r='5' fill='none' stroke='%233a332c' stroke-width='1.1'/%3E%3C/svg%3E");
+    --paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --map-filter: invert(1) hue-rotate(180deg) brightness(.9) contrast(.9) saturate(.6);
+    color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background-color: var(--bg); background-image: var(--paper); color: var(--fg);
+  font-family: "IBM Plex Sans", system-ui, sans-serif; font-size: 14px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 24px 40px;
+}
+header { max-width: 1100px; margin: 0 auto; }
+.eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.title-row { display: flex; align-items: center; gap: 16px; }
+h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 600; font-size: clamp(28px, 5vw, 40px); line-height: 1.1; margin: 6px 0 8px; text-wrap: balance; }
+.ja { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; letter-spacing: 0; }
+.lede { margin: 0; color: var(--muted); max-width: 60ch; }
+.hanko { flex: 0 0 auto; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px;
+  width: 38px; height: 58px; border-radius: 6px; background: var(--accent); color: var(--surface);
+  font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 700; font-size: 18px; line-height: 1;
+  box-shadow: inset 0 0 0 3px var(--accent), inset 0 0 0 4px var(--surface); transform: rotate(4deg); }
+@media (max-width: 480px) { .hanko { width: 32px; height: 50px; font-size: 15px; } }
+.seigaiha { max-width: 1100px; height: 40px; margin: 18px auto 4px; background: var(--wave) repeat; background-size: 40px 20px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+
+.tabs { max-width: 1100px; margin: 0 auto 16px; display: flex; gap: 6px; overflow-x: auto; padding-bottom: 4px; border-bottom: 1px solid var(--line); }
+.tab { flex: 0 0 auto; appearance: none; background: none; border: 0; cursor: pointer; font: inherit; color: var(--muted);
+  padding: 10px 12px 12px; border-bottom: 2px solid transparent; margin-bottom: -1px; text-align: left; }
+.tab { display: flex; align-items: center; gap: 9px; }
+.tab .kanji { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line);
+  font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif; font-weight: 600; font-size: 15px; color: var(--muted); background: var(--surface); }
+.tab[aria-selected="true"] .kanji { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+.tab b { display: block; font-weight: 600; color: var(--fg); }
+.tab small { font-family: "IBM Plex Mono", monospace; font-size: 11px; }
+.tab[aria-selected="true"] { border-bottom-color: var(--accent); }
+.tab[aria-selected="true"] b { color: var(--accent); }
+.tab:focus-visible, :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+.layout { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 24px; align-items: start; }
+@media (max-width: 760px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 20px; min-width: 0; }
+.h-ja { font-size: 14px; color: var(--muted); margin-left: 6px; font-weight: 500; }
+.day-head h2, .map-wrap h2 { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 500; font-size: 22px; margin: 4px 0; }
+.day-head p { margin: 0 0 16px; color: var(--muted); }
+.stops { list-style: none; margin: 0; padding: 0; }
+.stop { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.stop:first-child { border-top: 0; }
+.stop.clickable { cursor: pointer; }
+.stop.clickable:hover .stop-name { color: var(--accent); }
+.time { font-family: "IBM Plex Mono", monospace; font-size: 12px; color: var(--muted); padding-top: 2px; }
+.num { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--accent); color: #fff;
+  font: 500 11px "IBM Plex Mono", monospace; margin-right: 6px; vertical-align: 1px; }
+.stop-name { font-weight: 600; }
+.stop-note { margin: 2px 0 6px; color: var(--muted); }
+.dir { font-size: 12px; color: var(--accent); text-decoration: none; }
+.dir:hover { text-decoration: underline; }
+
+.map-wrap p.cap { margin: 0 0 12px; color: var(--muted); font-size: 13px; }
+#map { height: 520px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); }
+@media (max-width: 760px) { #map { height: 60vh; min-height: 340px; } }
+#map .leaflet-tile-pane { filter: var(--map-filter); }
+.leaflet-container { font-family: "IBM Plex Sans", system-ui, sans-serif; }
+.leaflet-bar a, .leaflet-bar a:hover { background: var(--surface); color: var(--fg); border-bottom-color: var(--line); }
+.leaflet-control-attribution { font-size: 10px; }
+.pin { width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #fff; border: 2px solid var(--pin-ring);
+  display: grid; place-items: center; font: 600 12px "IBM Plex Mono", monospace; box-shadow: 0 2px 6px rgba(0,0,0,.35); transition: opacity .2s; }
+.pin.sushi { background: var(--sushi); }
+.pin.food { background: var(--food-pin); }
+.num.food { background: var(--food-pin); }
+.kind.food { color: var(--food); background: var(--food-soft); }
+.pin.dim { opacity: .35; background: var(--muted); }
+.num.sushi { background: var(--sushi); }
+.kind { display: inline-block; margin-left: 6px; font: 500 11px "IBM Plex Mono", monospace; color: var(--sushi); background: var(--sushi-soft); border-radius: 3px; padding: 1px 6px; vertical-align: 1px; }
+.key { display: inline-flex; align-items: center; gap: 6px; margin-right: 14px; }
+.key i { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
+.leaflet-popup-content-wrapper, .leaflet-popup-tip { background: var(--surface); color: var(--fg); }
+.leaflet-popup-content { margin: 10px 14px; font-size: 13px; }
+.leaflet-popup-content b { display: block; margin-bottom: 2px; }
+.leaflet-popup-content a { color: var(--accent); }
+#map-note { display: none; margin-top: 10px; color: var(--muted); font-size: 12px; }
+@media (prefers-reduced-motion: reduce) { .pin { transition: none; } }
+.col { display: grid; gap: 24px; min-width: 0; align-content: start; }
+.chat h2 { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
+.chat-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.chat-sub { margin: 4px 0 12px; color: var(--muted); font-size: 13px; }
+.suggest { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.suggest button, .ghost { font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; text-align: left; }
+.suggest button:hover, .ghost:hover { border-color: var(--accent); color: var(--accent); }
+.suggest button:disabled { opacity: .5; cursor: default; }
+.chat-log { display: flex; flex-direction: column; gap: 8px; max-height: 360px; overflow-y: auto; margin-bottom: 12px; }
+.chat-log:empty { display: none; }
+.msg { padding: 8px 12px; border-radius: 10px; max-width: 88%; white-space: pre-wrap; overflow-wrap: anywhere; }
+.msg.me { align-self: flex-end; background: var(--accent); color: #fff; }
+.msg.bot { align-self: flex-start; background: var(--bg); border: 1px solid var(--line); }
+.msg.note { align-self: stretch; max-width: none; font-size: 12px; color: var(--muted); background: none; padding: 2px 0; }
+.chat-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: end; }
+.chat-form textarea { font: inherit; font-size: 16px; width: 100%; resize: vertical; min-height: 44px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.chat-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+#chatSend { font: inherit; font-weight: 600; padding: 10px 16px; border-radius: 8px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+#chatSend:disabled { opacity: .5; cursor: default; }
+#chatStop { padding: 10px 16px; border-radius: 8px; font-size: 14px; }
+@media (max-width: 760px) {
+  .col { display: contents; }
+  #dayPanel { order: 1; }
+  .map-wrap { order: 2; }
+  .chat { order: 3; }
+  .panel { padding: 16px; }
+  .dir { display: inline-flex; align-items: center; min-height: 40px; font-size: 13px; }
+  .stop-note { margin-bottom: 0; }
+  .suggest button, .ghost { min-height: 40px; padding: 8px 12px; font-size: 13px; }
+  .chat-log { max-height: 50vh; }
+  .msg { max-width: 92%; }
+  #chatSend, #chatStop { min-height: 44px; }
+}
+.leaflet-touch .leaflet-bar a { width: 36px; height: 36px; line-height: 36px; }
+.tab { min-height: 44px; }
+.sg-panel h2 { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 500; font-size: 22px; margin: 0; }
+.sg-sub { margin: 4px 0 14px; color: var(--muted); font-size: 13px; }
+.sg-form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 12px; }
+.sg-row { display: grid; gap: 4px; min-width: 0; }
+.sg-wide, .sg-err, #sgSend { grid-column: 1 / -1; }
+.sg-row label { font-size: 12px; font-weight: 600; color: var(--muted); }
+.sg-form input, .sg-form select, .sg-form textarea { font: inherit; font-size: 16px; width: 100%; padding: 9px 11px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg); min-height: 44px; }
+.sg-form textarea { resize: vertical; }
+.sg-form input:focus, .sg-form select:focus, .sg-form textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.sg-err { margin: 0; color: var(--accent); font-size: 13px; }
+#sgSend { justify-self: start; font: inherit; font-weight: 600; min-height: 44px; padding: 10px 18px; border-radius: 8px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+#sgSend:disabled { opacity: .6; cursor: default; }
+.sg-listhead { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 22px 0 6px; font-family: "IBM Plex Mono", monospace; }
+.sg-list { list-style: none; margin: 0; padding: 0; max-height: 420px; overflow-y: auto; }
+.sg-list li { padding: 10px 0; border-top: 1px solid var(--line); }
+.sg-list li:first-child { border-top: 0; }
+.sg-meta { font-size: 12px; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+.sg-meta b { color: var(--fg); }
+.sg-chip { margin-left: auto; font: 500 11px "IBM Plex Mono", monospace; padding: 1px 7px; border-radius: 3px; }
+.sg-chip.wait { color: var(--muted); background: var(--bg); border: 1px solid var(--line); }
+.sg-chip.done { color: var(--sushi); background: var(--sushi-soft); }
+.sg-chip.skip { color: var(--food); background: var(--food-soft); }
+.sg-body { margin: 4px 0 0; overflow-wrap: anywhere; }
+.sg-reply { margin: 6px 0 0; padding-left: 10px; border-left: 2px solid var(--line); color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.sg-empty { color: var(--muted); font-size: 13px; }
+@media (max-width: 760px) { .sg-panel { order: 3; } .sg-form { grid-template-columns: minmax(0, 1fr); } }
+.app-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 12px; }
+.app-row:not(:has(:not([hidden]))) { display: none; }
+.install-btn { font: inherit; font-weight: 600; font-size: 13px; min-height: 40px; padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--surface); }
+.install-tip { margin: 0; font-size: 13px; color: var(--muted); max-width: 60ch; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+</style>
+
+<header>
+  <div class="eyebrow"><span lang="ja">日本</span> Japan · Nov 29 – Dec 5, 2026</div>
+  <div class="title-row">
+    <h1>Japan December Plan</h1>
+    <span class="hanko" lang="ja" aria-hidden="true"><span>日</span><span>本</span></span>
+  </div>
+  <p class="lede">Five days in Tokyo and an overnight in Osaka, each day kept to one part of town, with street food along the way. Pick a day to see its stops on the map. Times are suggestions.</p>
+<!--APP_HTML-->
+</header>
+
+<div class="seigaiha" aria-hidden="true"></div>
+<nav class="tabs" role="tablist" aria-label="Days" id="tabs"></nav>
+
+<main class="layout">
+  <div class="col">
+    <section class="panel" id="dayPanel" role="tabpanel" aria-live="polite"></section>
+<!--SUGGEST_HTML-->
+  </div>
+  <section class="panel map-wrap" aria-label="Map">
+    <h2>Map <span class="h-ja" lang="ja">地図</span></h2>
+    <p class="cap"><span class="key"><i style="background:var(--accent)"></i>Sights</span><span class="key"><i style="background:var(--sushi)"></i>Sushi</span><span class="key"><i style="background:var(--food-pin)"></i>Street food</span>Faded pins are other days. Tap a pin or a stop for details.</p>
+    <div id="map"></div>
+    <p id="map-note">The map library didn't load. The stop list and Google Maps links still work.</p>
+  </section>
+</main>
+
+<script>
+const DEFAULT_PLACES = {
+  sensoji:    { name: "Senso-ji", lat: 35.71477, lng: 139.79666 },
+  yanaka:     { name: "Yanaka Ginza", lat: 35.72769, lng: 139.76579 },
+  meiji:      { name: "Meiji Jingu", lat: 35.67640, lng: 139.69933 },
+  tower:      { name: "Tokyo Tower", lat: 35.65858, lng: 139.74543 },
+  mori:       { name: "Tokyo City View (Roppongi Hills)", lat: 35.66045, lng: 139.72928 },
+  gyoen:      { name: "Shinjuku Gyoen", lat: 35.68518, lng: 139.71007 },
+  shibuyasky: { name: "Shibuya Sky", lat: 35.65867, lng: 139.70198 },
+  tsukiji:    { name: "Tsukiji Outer Market", lat: 35.66477, lng: 139.77025 },
+  marunouchi: { name: "Marunouchi Illumination", lat: 35.68049, lng: 139.76301 },
+  keyakizaka: { name: "Keyakizaka Illumination", lat: 35.65913, lng: 139.72811 },
+  midtown:    { name: "Tokyo Midtown Christmas", lat: 35.66570, lng: 139.73100 },
+  teamlab:    { name: "teamLab Planets", lat: 35.64912, lng: 139.78977 },
+  azabudai:   { name: "Azabudai Hills Christmas Market", lat: 35.66050, lng: 139.74000 },
+  southern:   { name: "Shinjuku Southern Terrace", lat: 35.68620, lng: 139.70000 },
+  omoide:     { name: "Omoide Yokocho", lat: 35.69270, lng: 139.69958 },
+  goldengai:  { name: "Golden Gai", lat: 35.69411, lng: 139.70476 },
+  // Sushi
+  joe:        { name: "Osushi no Joe", lat: 35.66458, lng: 139.73005, sushi: "Splurge" },
+  sushidai:   { name: "Sushi Dai (Toyosu Market)", lat: 35.64430, lng: 139.78245, sushi: "Mid-range" },
+  uogashi:    { name: "Uogashi Nihon-Ichi", lat: 35.68998, lng: 139.69730, sushi: "Casual" },
+  // Street food and fun
+  ameyoko:    { name: "Ameyoko Market", lat: 35.71007, lng: 139.77460, food: true },
+  takeshita:  { name: "Takeshita-dori", lat: 35.67155, lng: 139.70333, food: true },
+  ebisuyoko:  { name: "Ebisu Yokocho", lat: 35.64822, lng: 139.71064, food: true },
+  xmasmarket: { name: "Tokyo Christmas Market (Shin-Toyosu)", lat: 35.64873, lng: 139.79017, food: true },
+  musclegirls:{ name: "Muscle Girls (Ikebukuro)", lat: 35.73318, lng: 139.70977 },
+  // Osaka
+  shinosaka:  { name: "Shin-Osaka Station (bullet train)", lat: 34.73347, lng: 135.50025 },
+  kuromon:    { name: "Kuromon Market", lat: 34.66535, lng: 135.50624, food: true },
+  tsutenkaku: { name: "Shinsekai & Tsutenkaku Tower", lat: 34.65250, lng: 135.50631 },
+  daruma:     { name: "Kushikatsu Daruma (Shinsekai)", lat: 34.65157, lng: 135.50620, food: true },
+  dotonbori:  { name: "Dotonbori (Glico sign)", lat: 34.66892, lng: 135.50107, food: true },
+  hozenji:    { name: "Hozenji Yokocho", lat: 34.66812, lng: 135.50261 },
+  osakacastle:{ name: "Osaka Castle", lat: 34.68730, lng: 135.52586 },
+  umedasky:   { name: "Umeda Sky Building", lat: 34.70544, lng: 135.49033 },
+  shinosaka2: { name: "Shin-Osaka Station (train back)", lat: 34.73347, lng: 135.50025 }
+};
+
+const DEFAULT_DAYS = [
+  { date: "Sun 11/29", full: "Sunday, Nov 29", area: "Asakusa · Ueno · Ikebukuro", title: "Arrival evening: lanterns, street food, muscle bar", stops: [
+    { t: "17:30", id: "sensoji", note: "You land around 2 PM; allow about 3 hours for immigration, bags and the hotel. Senso-ji's grounds stay open after dark and are lit up and much quieter than by day. Most Nakamise-dori stalls close around 5 PM." },
+    { t: "19:00", id: "ameyoko", note: "About 10 minutes by subway to Ueno. Dinner from the street stalls and the izakayas under the train tracks: skewers, takoyaki, seafood. Some stalls close early, but the bars stay open late." },
+    { t: "20:30", id: "musclegirls", note: "About 20 minutes on the JR Yamanote Line from Ueno. Bar where women bodybuilders host a show; a May 2026 review says about ¥6,000 a person for entry and 80 minutes of drinks, with games extra. Small, so reserve on Instagram or LINE. Open until 11 PM; closed Tuesdays." } ]},
+  { date: "Mon 11/30", full: "Monday, Nov 30", area: "Harajuku · Shibuya · Ebisu", title: "Meiji Jingu to Shibuya", stops: [
+    { t: "10:00", id: "meiji", note: "Forest path to the shrine from Harajuku Station." },
+    { t: "11:30", id: "takeshita", note: "Right across from the station. Crepes, giant cotton candy, and Harajuku snacks. Then wander down Omotesando toward Shibuya." },
+    { t: "16:00", id: "shibuyasky", note: "Sunset is about 4:30. Book a sunset slot ahead; they sell out." },
+    { t: "18:00", id: "ebisuyoko", note: "One stop from Shibuya on the JR line. A covered alley of small food stalls; graze from one to the next. Some stalls add a table charge, so ask before ordering." } ]},
+  { date: "Tue 12/1", full: "Tuesday, Dec 1", area: "Toyosu · Tsukiji · Ginza", title: "Market morning, Marunouchi lights", stops: [
+    { t: "07:00", id: "sushidai", note: "Famous counter inside Toyosu Market; lines form early. The market closes Sundays, holidays, and some Wednesdays, which is why this is on a Tuesday." },
+    { t: "09:30", id: "teamlab", note: "About 15 minutes' walk from the market. You walk barefoot through water rooms. Book tickets weeks ahead." },
+    { t: "11:30", id: "xmasmarket", note: "Next to teamLab, by Shin-Toyosu Station. German-style Christmas market with hot food and mulled wine. ¥1,000 on weekdays; buy tickets online. Pin is approximate." },
+    { t: "13:00", id: "tsukiji", note: "Short taxi or Yurikamome ride. Graze the stalls: tamagoyaki, grilled scallops, wagyu skewers. Many close around 2 PM, so go straight there. Bring cash." },
+    { t: "17:30", id: "marunouchi", note: "Walk through Ginza to the champagne-gold lights by Tokyo Station." } ]},
+  { date: "Wed 12/2", full: "Wednesday, Dec 2", area: "Azabudai · Roppongi", title: "Tokyo Tower and Roppongi lights", stops: [
+    { t: "13:00", id: "tower", note: "Slow morning, then start here. Go up, or just see it from the park at its base." },
+    { t: "14:30", id: "azabudai", note: "Five minutes' walk. Christmas market and shops at Azabudai Hills." },
+    { t: "16:00", id: "mori", note: "About 15 minutes' walk to Roppongi Hills. Observation deck for the sunset, with the Mori Art Museum on the same ticket." },
+    { t: "17:00", id: "keyakizaka", note: "Right outside. Lights come on around 5 PM, with Tokyo Tower framing the slope." },
+    { t: "18:00", id: "midtown", note: "About 10 minutes' walk. Midtown's Christmas lights." },
+    { t: "19:00", id: "joe", note: "Lively omakase counter (rated 4.8) a few minutes from Midtown. Reserve ahead." } ]},
+  { date: "Thu 12/3", full: "Thursday, Dec 3", area: "Osaka · Namba · Shinsekai · Dotonbori", title: "Bullet train to Osaka, a street-food day", stops: [
+    { t: "10:30", id: "shinosaka", note: "Take a Nozomi bullet train from Tokyo Station around 8:00; it takes about 2.5 hours. A reserved seat is about ¥14,520 each way (2025 fare table). Book in the SmartEX app or at a station ticket machine. Sit in an E seat (right side) for a chance to see Mt. Fuji. Then the Midosuji subway line to Namba (about 15 minutes) to drop your bags; Namba is the handiest area to stay." },
+    { t: "12:00", id: "kuromon", note: "Osaka's Kitchen: graze grilled scallops, wagyu skewers, crab and fresh fruit. Open about 9 to 5, and the best stalls sell out by early afternoon." },
+    { t: "14:00", id: "tsutenkaku", note: "One stop south by subway, or a 20-minute walk. Retro neighborhood under a 1950s tower; go up for the view if the line is short." },
+    { t: "15:30", id: "daruma", note: "Shinsekai is the home of kushikatsu, fried skewers. No double-dipping in the shared sauce. Expect a line; it moves fast." },
+    { t: "17:30", id: "dotonbori", note: "Back north, about 10 minutes by subway. The neon canal at dusk: takoyaki from the street stands, and okonomiyaki at Mizuno (Michelin Bib Gourmand) if you're still hungry." },
+    { t: "20:00", id: "hozenji", note: "A two-minute walk. Quiet lantern-lit stone alley with a moss-covered Fudo statue; a calm end to the day." } ]},
+  { date: "Fri 12/4", full: "Friday, Dec 4", area: "Osaka · Umeda", title: "Osaka Castle, then back to Tokyo", stops: [
+    { t: "09:30", id: "osakacastle", note: "About 20 minutes by subway from Namba. Walk the moats and stone walls; the museum inside the main tower opens at 9. Bring your bags, or check them in a station locker." },
+    { t: "12:00", id: "umedasky", note: "About 20 minutes by train. Open-air rooftop deck between two towers, plus the retro food alley in the basement for lunch." },
+    { t: "14:30", id: "shinosaka2", note: "One stop from Osaka Station on the JR Kyoto Line. A Nozomi back gets to Tokyo Station around 5 PM; book the return in SmartEX too. Evening free in Tokyo; Nakameguro's canal is about 25 minutes from Tokyo Station if you want a walk." } ]},
+  { date: "Sat 12/5", full: "Saturday, Dec 5", area: "Yanaka · Shinjuku", title: "Yanaka morning, Shinjuku night", stops: [
+    { t: "10:30", id: "yanaka", note: "Old-Tokyo temple streets and a snack street; try the menchi-katsu croquettes. Shops open from about 10 or 11." },
+    { t: "13:00", id: "gyoen", note: "About 30 minutes on the JR Yamanote Line from Nippori to Shinjuku, then a 10-minute walk. Big garden with some late autumn color left in early December. Small entry fee." },
+    { t: "16:30", id: "southern", note: "Ten minutes' walk. Southern Terrace lights by the station." },
+    { t: "18:00", id: "uogashi", note: "Standing sushi bar across the station: fast, cheap, and very fresh. No reservation needed." },
+    { t: "19:30", id: "omoide", note: "Two minutes away. Yakitori alleys by the tracks." },
+    { t: "21:00", id: "goldengai", note: "About 10 minutes' walk east. Tiny bars; groups over four will struggle to fit." } ]}
+];
+
+// The plan shown on the page. Starts as the built-in plan above; the shared saved copy replaces it once it loads.
+let PLACES = structuredClone(DEFAULT_PLACES);
+let DAYS = structuredClone(DEFAULT_DAYS);
+
+const tabs = document.getElementById("tabs");
+const panel = document.getElementById("dayPanel");
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dirUrl = p => "https://www.google.com/maps/search/?api=1&query=" + p.lat + "," + p.lng;
+const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t).trim()); return m ? (+m[1]) * 60 + (+m[2]) : 9999; };
+let current = 0;
+const WEEKDAY_JA = { Sun: "日", Mon: "月", Tue: "火", Wed: "水", Thu: "木", Fri: "金", Sat: "土" };
+const AREA_JA = { Asakusa: "浅草", Ueno: "上野", Ikebukuro: "池袋", Yanaka: "谷中", Harajuku: "原宿", Shibuya: "渋谷", Ebisu: "恵比寿",
+  Toyosu: "豊洲", Tsukiji: "築地", Ginza: "銀座", Azabudai: "麻布台", Roppongi: "六本木", Kamakura: "鎌倉", Nakameguro: "中目黒",
+  Hakone: "箱根", Shinjuku: "新宿", Osaka: "大阪", Namba: "難波", Shinsekai: "新世界", Dotonbori: "道頓堀", Umeda: "梅田" };
+// "Asakusa · Ueno" -> "浅草 Asakusa · 上野 Ueno" (unknown names stay as written)
+const areaLabel = area => String(area).split(/(\s*[·→]\s*)/).map(part =>
+  AREA_JA[part.trim()] ? `<span lang="ja" class="ja">${AREA_JA[part.trim()]}</span> ${esc(part.trim())}` : esc(part)).join("");
+
+// ---- Map: Leaflet with the street map stored alongside this page ----
+let map = null;
+let markers = {};
+if (typeof L !== "undefined") {
+  map = L.map("map", { zoomControl: true, scrollWheelZoom: true }).setView([35.68, 139.75], 12);
+  const IDX = window.TILE_INDEX || {};
+  window.MAP_TILES = window.MAP_TILES || {};
+  const loads = {};
+  const loadChunk = id => loads[id] || (loads[id] = new Promise(res => {
+    const s = document.createElement("script"); s.src = id + ".js"; s.onload = res; s.onerror = res; document.head.appendChild(s);
+  }));
+  // Use the stored tile, or enlarge the closest wider one when a close-up isn't stored.
+  function findTile(z, x, y) {
+    for (let k = 0; z - k >= 8; k++) {
+      const key = (z - k) + "/" + (x >> k) + "/" + (y >> k);
+      if (IDX[key]) return { key, k, ox: x - ((x >> k) << k), oy: y - ((y >> k) << k) };
+    }
+    return null;
+  }
+  const StoredTiles = L.GridLayer.extend({
+    createTile(c, done) {
+      const div = document.createElement("div");
+      const f = findTile(c.z, c.x, c.y);
+      if (!f) { setTimeout(() => done(null, div), 0); return div; }
+      loadChunk(IDX[f.key]).then(() => {
+        const url = window.MAP_TILES[f.key];
+        if (url) {
+          const n = 1 << f.k;
+          div.style.backgroundImage = "url(" + url + ")";
+          div.style.backgroundSize = (256 * n) + "px " + (256 * n) + "px";
+          div.style.backgroundPosition = (-f.ox * 256) + "px " + (-f.oy * 256) + "px";
+        }
+        done(null, div);
+      });
+      return div;
+    }
+  });
+  new StoredTiles({ minZoom: 8, maxZoom: 17, attribution: "Map tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS" }).addTo(map);
+  map.setMinZoom(8);
+  map.setMaxBounds([[34.2, 134.9], [36.2, 140.3]]);
+} else {
+  document.getElementById("map").hidden = true;
+  document.getElementById("map-note").style.display = "block";
+}
+
+function dayOf(id) { return DAYS.findIndex(d => d.stops.some(s => s.id === id)); }
+
+function drawPins(day, fly = true) {
+  if (!map) return;
+  Object.values(markers).forEach(m => m.remove());
+  markers = {};
+  const order = {};
+  day.stops.forEach((s, i) => order[s.id] = i + 1);
+  Object.entries(PLACES).forEach(([id, p]) => {
+    const di = dayOf(id);
+    if (di < 0) return;                      // not on any day: no pin
+    const n = order[id];
+    const html = `<div class="pin${p.sushi ? " sushi" : p.food ? " food" : ""}${n ? "" : " dim"}">${n || "·"}</div>`;
+    const icon = L.divIcon({ className: "", html, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
+    const m = L.marker([p.lat, p.lng], { icon, title: p.name, riseOnHover: true, zIndexOffset: n ? 1000 : 0 }).addTo(map);
+    const stop = day.stops.find(s => s.id === id);
+    m.bindPopup(`<b>${esc(p.name)}</b>${stop ? esc(stop.t) : esc(DAYS[di].date)} · <a href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps</a>`);
+    // A faded pin belongs to another day: switch to that day.
+    if (!n) m.on("click", () => { show(di); setTimeout(() => markers[id] && markers[id].openPopup(), 700); });
+    markers[id] = m;
+  });
+  if (!fly || !day.stops.length) return;
+  const pts = day.stops.map(s => [PLACES[s.id].lat, PLACES[s.id].lng]);
+  if (pts.length === 1) map.flyTo(pts[0], 13, { duration: 0.6 });
+  else map.flyToBounds(pts, { padding: [50, 50], maxZoom: 15, duration: 0.6 });
+}
+
+// ---- Tabs and day panel ----
+function buildTabs() {
+  tabs.innerHTML = "";
+  DAYS.forEach((d, i) => {
+    const b = document.createElement("button");
+    b.className = "tab"; b.id = "tab-" + i; b.type = "button";
+    b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "dayPanel");
+    b.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">${WEEKDAY_JA[d.date.slice(0, 3)] || ""}</span><span><b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small></span>`;
+    b.addEventListener("click", () => show(i));
+    b.addEventListener("keydown", e => {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        const n = (i + (e.key === "ArrowRight" ? 1 : DAYS.length - 1)) % DAYS.length;
+        tabs.children[n].focus(); show(n);
+      }
+    });
+    tabs.appendChild(b);
+  });
+}
+
+function show(i, fly = true) {
+  current = Math.max(0, Math.min(i, DAYS.length - 1));
+  const d = DAYS[current];
+  [...tabs.children].forEach((t, j) => { t.setAttribute("aria-selected", String(j === current)); t.tabIndex = j === current ? 0 : -1; });
+  panel.setAttribute("aria-labelledby", "tab-" + current);
+  const sel = tabs.children[current];
+  if (sel) {
+    const l = sel.offsetLeft - tabs.offsetLeft, r = l + sel.offsetWidth;
+    if (l < tabs.scrollLeft) tabs.scrollLeft = l - 8;
+    else if (r > tabs.scrollLeft + tabs.clientWidth) tabs.scrollLeft = r - tabs.clientWidth + 8;
+  }
+  panel.innerHTML = `
+    <div class="day-head"><div class="eyebrow">${esc(d.full)}${d.area ? " · " + areaLabel(d.area) : ""}</div><h2>${esc(d.title)}</h2>
+      <p>${d.stops.length ? d.stops.length + " stop" + (d.stops.length === 1 ? "" : "s") + (map ? ". Tap one to find it on the map." : "") : "Nothing planned yet."}</p></div>
+    <ol class="stops">${d.stops.map((s, n) => {
+      const p = PLACES[s.id];
+      return `<li class="stop${map ? " clickable" : ""}" data-id="${esc(s.id)}">
+        <span class="time">${esc(s.t)}</span>
+        <div><div class="stop-name"><span class="num${p.sushi ? " sushi" : p.food ? " food" : ""}">${n + 1}</span>${esc(p.name)}${p.sushi ? `<span class="kind">Sushi · ${esc(p.sushi)}</span>` : p.food ? `<span class="kind food">Street food</span>` : ""}</div>
+          <p class="stop-note">${esc(s.note)}</p>
+          <a class="dir" href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>
+      </li>`; }).join("")}</ol>`;
+  panel.querySelectorAll(".stop.clickable").forEach(li => li.addEventListener("click", e => {
+    if (e.target.closest("a")) return;
+    const p = PLACES[li.dataset.id];
+    if (matchMedia("(max-width: 760px)").matches) {
+      document.getElementById("map").scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "center" });
+    }
+    map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 15), { duration: 0.6 });
+    markers[li.dataset.id] && markers[li.dataset.id].openPopup();
+  }));
+  drawPins(d, fly);
+}
+
+function renderAll(fly = true) { buildTabs(); show(current, fly); }
+renderAll();
+
+/*SUGGEST_JS*/
+/*APP_JS*/
+</script>

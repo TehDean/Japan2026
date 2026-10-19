@@ -1,0 +1,22 @@
+    <section class="panel sg-panel" id="sgPanel" aria-labelledby="sgTitle" hidden>
+      <h2 id="sgTitle">Suggest a change <span class="h-ja" lang="ja">ご提案</span></h2>
+      <p class="sg-sub">Want to add, move or swap something? Send it here and it'll be worked into the plan.</p>
+      <form id="sgForm" class="sg-form" autocomplete="off" novalidate>
+        <div class="sg-row">
+          <label for="sgName">Your name</label>
+          <input id="sgName" maxlength="30" autocomplete="given-name" placeholder="First name">
+        </div>
+        <div class="sg-row">
+          <label for="sgDay">Which day?</label>
+          <select id="sgDay"><option value="">Any day</option></select>
+        </div>
+        <div class="sg-row sg-wide">
+          <label for="sgBody">Your suggestion</label>
+          <textarea id="sgBody" rows="3" maxlength="500" placeholder="e.g. Can we add a cat café on Sunday afternoon?"></textarea>
+        </div>
+        <p class="sg-err" id="sgErr" role="alert" hidden></p>
+        <button type="submit" id="sgSend">Send suggestion</button>
+      </form>
+      <h3 class="sg-listhead">Suggestions so far</h3>
+      <ul class="sg-list" id="sgList"></ul>
+    </section>
