@@ -259,7 +259,8 @@ const DEFAULT_PLACES = {
   hozenji:    { name: "Hozenji Yokocho", lat: 34.66812, lng: 135.50261 },
   osakacastle:{ name: "Osaka Castle", lat: 34.68730, lng: 135.52586 },
   umedasky:   { name: "Umeda Sky Building", lat: 34.70544, lng: 135.49033 },
-  shinosaka2: { name: "Shin-Osaka Station (train back)", lat: 34.73347, lng: 135.50025 }
+  shinosaka2: { name: "Shin-Osaka Station (train back)", lat: 34.73347, lng: 135.50025 },
+  hakoneyuryo: { name: "Hakone Yuryo (private onsen)", lat: 35.2297, lng: 139.0975 }
 };
 
 const DEFAULT_DAYS = [
@@ -292,10 +293,11 @@ const DEFAULT_DAYS = [
     { t: "15:30", id: "daruma", note: "Shinsekai is the home of kushikatsu, fried skewers. No double-dipping in the shared sauce. Expect a line; it moves fast." },
     { t: "17:30", id: "dotonbori", note: "Back north, about 10 minutes by subway. The neon canal at dusk: takoyaki from the street stands, and okonomiyaki at Mizuno (Michelin Bib Gourmand) if you're still hungry." },
     { t: "20:00", id: "hozenji", note: "A two-minute walk. Quiet lantern-lit stone alley with a moss-covered Fudo statue; a calm end to the day." } ]},
-  { date: "Fri 12/4", full: "Friday, Dec 4", area: "Osaka · Umeda", title: "Osaka Castle, then back to Tokyo", stops: [
+  { date: "Fri 12/4", full: "Friday, Dec 4", area: "Osaka · Umeda · Hakone", title: "Osaka Castle, then a private onsen in Hakone on the way back", stops: [
     { t: "09:30", id: "osakacastle", note: "About 20 minutes by subway from Namba. Walk the moats and stone walls; the museum inside the main tower opens at 9. Bring your bags, or check them in a station locker." },
-    { t: "12:00", id: "umedasky", note: "About 20 minutes by train. Open-air rooftop deck between two towers, plus the retro food alley in the basement for lunch." },
-    { t: "14:30", id: "shinosaka2", note: "One stop from Osaka Station on the JR Kyoto Line. A Nozomi back gets to Tokyo Station around 5 PM; book the return in SmartEX too. Evening free in Tokyo; Nakameguro's canal is about 25 minutes from Tokyo Station if you want a walk." } ]},
+    { t: "11:30", id: "umedasky", note: "About 20 minutes by train. Open-air rooftop deck between two towers, plus the retro food alley in the basement for lunch." },
+    { t: "14:00", id: "shinosaka2", note: "One stop from Osaka Station on the JR Kyoto Line. Take a Hikari (not a Nozomi, most of which skip Odawara) to Odawara, about 2 hr 20 min; book it in SmartEX. At Odawara, change to the Hakone Tozan or Odakyu line to Hakone-Yumoto (about 15 minutes)." },
+    { t: "17:00", id: "hakoneyuryo", note: "Day-use hot spring in the woods; tattoo restrictions were lifted in April 2025, so tattoos are fine. Rent a private open-air bath (Hanare Yuya Kaden) so you can soak together; book on hakoneyuryo.jp, up to one month ahead (from about Nov 4). Free 3-minute shuttle from Hakone-Yumoto Station; leave bags in the station lockers. Weekdays open until about 9 PM, last entry about 8 PM. Back to Tokyo: the Romancecar to Shinjuku (about 85 min), or back to Odawara for a bullet train to Tokyo (about 35 min). Pin is approximate." } ]},
   { date: "Sat 12/5", full: "Saturday, Dec 5", area: "Yanaka · Shinjuku", title: "Yanaka morning, Shinjuku night", stops: [
     { t: "10:30", id: "yanaka", note: "Old-Tokyo temple streets and a snack street; try the menchi-katsu croquettes. Shops open from about 10 or 11." },
     { t: "13:00", id: "gyoen", note: "About 30 minutes on the JR Yamanote Line from Nippori to Shinjuku, then a 10-minute walk. Big garden with some late autumn color left in early December. Small entry fee." },
