@@ -8,7 +8,7 @@
 // and one suggestion can make at most MAX_EDITS changes and remove at most MAX_REMOVALS stops.
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-const MODEL = "claude-sonnet-5-5";
+const MODEL = "claude-opus-5-5";
 const MAX_ROUNDS = 8;
 const MAX_EDITS = 12;
 const MAX_REMOVALS = 4;

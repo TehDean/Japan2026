@@ -20,7 +20,7 @@ Questions get an answer in the reply and show as "Answered" (stored as status `s
 text in `answer`); they never change the plan.
 
 How it works: the website saves a message (`send_trip_suggestion`, no daily limit), then calls the
-`apply-suggestion` Edge Function. That function asks Claude (`claude-sonnet-5-5`, Anthropic API key in the
+`apply-suggestion` Edge Function. That function asks Claude (`claude-opus-5-5`, chosen Oct 19, 2026; Anthropic API key in the
 `ANTHROPIC_API_KEY` secret) to apply it with a few plan-editing tools, saves the old plan in `trip_plan_versions`,
 saves the new plan in `trip_plan`, and marks the suggestion `done` or `skipped` with a reply shown on the site.
 Spending is capped by a monthly spend limit on the Anthropic workspace that holds the API key (the owner asked
