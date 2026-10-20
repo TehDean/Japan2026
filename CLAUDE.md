@@ -37,6 +37,8 @@ request to the shrine of Inari, its boss; Inari is the owner. Stored as `kind = 
 `done` if part of it was done), shown as "⛩️ Sent to Inari". When checking suggestions, list escalated ones first and
 ask the owner which to do. After doing one, set its `status` to `done`, `kind` to `change`, and `answer`/`reply` to a
 short note in the kitsune's voice (e.g. "Inari approved!").
+A scheduled task, "Inari's inbox (Japan plan approvals)", checks every hour (at :19) and sends the owner a
+push notification and email only when a new escalated request has arrived (read-only; it uses `list_trip_suggestions_v2`).
 "Clear the suggestions" empties the list (`clear_trip_suggestions`, or delete from `trip_suggestions` via the connector).
 
 ## Supabase
