@@ -35,7 +35,8 @@ part = lambda name: open(P("parts", name)).read()
 # Claude dashboard: stored map, no suggestion box or app pieces
 dash = (s.replace("/*LEAFLET_CSS*/", css)
          .replace("<!--SUGGEST_HTML-->\n", "").replace("\n/*SUGGEST_JS*/", "")
-         .replace("<!--APP_HTML-->\n", "").replace("\n/*APP_JS*/", ""))
+         .replace("<!--APP_HTML-->\n", "").replace("\n/*APP_JS*/", "")
+         .replace("\n/*PHOTOS_JS*/", ""))   # Claude pages can't load outside photos
 os.makedirs(P("build"), exist_ok=True)
 open(P("build", "dashboard.html"), "w").write(dash)
 
@@ -43,7 +44,8 @@ open(P("build", "dashboard.html"), "w").write(dash)
 w = (s.replace("<!--SUGGEST_HTML-->", part("suggest_html.html").rstrip("\n"))
       .replace("/*SUGGEST_JS*/", part("suggest_js.js"))
       .replace("<!--APP_HTML-->", part("app_install.html").rstrip("\n"))
-      .replace("/*APP_JS*/", part("app_js.js")))
+      .replace("/*APP_JS*/", part("app_js.js"))
+      .replace("/*PHOTOS_JS*/", part("photos_js.js")))
 def rep(a, b):
     global w
     if w.count(a) != 1: sys.exit("build.py: expected exactly one of: " + a[:70])

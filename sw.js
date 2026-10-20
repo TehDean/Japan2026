@@ -1,7 +1,7 @@
 // Japan December Plan: keeps the site working offline.
 // The page itself: try the network first (so updates show up), fall back to the saved copy.
 // Map pieces, fonts and the map library: use the saved copy, fetch and save it the first time.
-// Suggestions (Supabase) always go to the network and are never saved.
+// Suggestions (Supabase) and photo lookups (Wikipedia) always go to the network; the photos themselves are saved.
 const VERSION = "jp26-v1";
 const SHELL = "shell-" + VERSION;
 const ASSETS = "assets-" + VERSION;
@@ -61,6 +61,8 @@ self.addEventListener("fetch", e => {
   if (url.hostname === "server.arcgisonline.com" || url.hostname === "tile.openstreetmap.org") {
     e.respondWith(cacheFirst(req, TILES, true)); return;
   }
+  if (url.hostname === "upload.wikimedia.org") { e.respondWith(cacheFirst(req, ASSETS, false)); return; }   // stop photos
+  if (url.hostname.endsWith("wikipedia.org")) return;                         // photo lookups: always live
   if (url.hostname === "cdnjs.cloudflare.com" || url.hostname === "fonts.googleapis.com" || url.hostname === "fonts.gstatic.com" || url.origin === location.origin) {
     e.respondWith(cacheFirst(req, url.origin === location.origin ? SHELL : ASSETS, false));
   }

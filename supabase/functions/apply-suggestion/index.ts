@@ -29,7 +29,7 @@ function secretKey(): string {
   return Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 }
 
-type Place = { name: string; lat: number; lng: number; sushi?: string; food?: boolean };
+type Place = { name: string; lat: number; lng: number; sushi?: string; food?: boolean; photo?: string };
 type Stop = { t: string; id: string; note: string };
 type Day = { date: string; full: string; area?: string; title: string; stops: Stop[] };
 type Plan = { places: Record<string, Place>; days: Day[] };
@@ -43,7 +43,7 @@ function planForPrompt(p: Plan) {
     stops: d.stops.map((s, n) => {
       const pl = p.places[s.id];
       return { stop: n + 1, time: s.t, place: pl.name, type: pl.sushi ? "sushi " + pl.sushi : pl.food ? "street food" : "sight",
-               lat: pl.lat, lng: pl.lng, note: s.note };
+               lat: pl.lat, lng: pl.lng, note: s.note, ...(pl.photo ? { photo: pl.photo } : {}) };
     }),
   }));
 }
@@ -56,10 +56,11 @@ const TOOLS = [
       note: { type: "string", description: "1-2 short practical sentences, including how to get there from the previous stop" },
       kind: { type: "string", enum: ["sight", "street food", "sushi Casual", "sushi Mid-range", "sushi Splurge"] },
     }, required: ["day", "time", "place", "lat", "lng", "note", "kind"] } },
-  { name: "update_stop", description: "Change a stop's time, note, name or location. Only pass what changes. Returns the updated day.",
+  { name: "update_stop", description: "Change a stop's time, note, name, location or photo. Only pass what changes. Returns the updated day.",
     input_schema: { type: "object", properties: {
       day: { type: "integer" }, stop: { type: "integer" }, time: { type: "string" }, note: { type: "string" },
       place: { type: "string" }, lat: { type: "number" }, lng: { type: "number" },
+      photo: { type: "string", description: "Exact English Wikipedia article title whose main image to show for this stop, \"none\" to hide its photo, or \"\" to go back to finding one automatically" },
     }, required: ["day", "stop"] } },
   { name: "remove_stop", description: "Remove a stop from a day. Returns the updated day.",
     input_schema: { type: "object", properties: { day: { type: "integer" }, stop: { type: "integer" } }, required: ["day", "stop"] } },
@@ -86,6 +87,7 @@ Then call finish exactly once.
 
 Guidelines:
 - Keep each day's stops close together so nobody crosses town; mention travel time from the previous stop in the note.
+- The website shows a photo for each stop, found automatically on English Wikipedia (the article matching the place, or a nearby one). To use a better photo, set update_stop's photo to an exact Wikipedia article title you are sure exists; use "none" to hide a wrong photo. You can't upload pictures or change the website's design or code; for requests like that, say the owner can ask for it.
 - Keep the plan's style: plenty of street food and markets, sushi a few times rather than daily.
 - Tool times are 24-hour HH:MM (the website shows them as 12-hour). In notes and replies, write times the 12-hour way, like "5:30 PM". Notes are 1-2 short practical sentences. Use real coordinates in Japan, as precise as you know them; only add places you are confident exist. If unsure of the exact spot, say "Pin is approximate" in the note.
 - Don't invent prices, hours or reservation rules you aren't sure of; suggest checking instead.
@@ -141,6 +143,7 @@ function makeEditor(plan: Plan) {
         if (a.time != null) s.t = time(a.time);
         if (a.note != null) s.note = text(a.note, 400);
         if (a.place != null) p.name = text(a.place, 80);
+        if (a.photo != null) { const ph = text(a.photo, 100).trim(); if (ph) p.photo = ph; else delete p.photo; }
         if (a.lat != null && a.lng != null) { const lat = Number(a.lat), lng = Number(a.lng); inJapan(lat, lng); p.lat = lat; p.lng = lng; }
         const others = plan.days.some((d, j) => d.stops.some((x, k) => x.id === s.id && !(j === di && k === si)));
         if (others && (a.place != null || a.lat != null)) { const id = newId(plan, p.name); plan.places[id] = p; s.id = id; } else plan.places[s.id] = p;

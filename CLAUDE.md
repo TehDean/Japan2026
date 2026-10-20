@@ -55,6 +55,10 @@ To undo, copy the right row of `trip_plan_versions` back into `trip_plan` (ask t
   **Hotels** (`HOTEL_STAYS`, `showHotels`; temporary, remove once hotels are booked) and **eSIM** (`ESIM`, `showEsim`;
   recommends the Sakura Mobile Unlimited eSIM, 7 days, one per phone). To remove a tab, drop its `INFO_TABS` entry
   and its data/render function; the shared hotel-card CSS is also used by the eSIM tab.
+- **Stop photos (website only):** `tools/parts/photos_js.js` finds each stop's photo on English Wikipedia in the
+  visitor's browser (matching article near the pin, else nearest article, labeled "Nearby"). A place can set
+  `photo` to a Wikipedia article title, or `"none"` to hide it; the suggestion box can set this too. The Claude
+  dashboard has no photos (it can't load outside images).
 - Website-only pieces are in `tools/parts/`. Don't edit `index.html` by hand; it is generated.
 - Build both versions: `python3 tools/build.py` → `index.html` (website) and `tools/build/dashboard.html` (Claude).
 - Owner's preferences for the plan: keep each day's stops close together (no crossing town); sushi a few times,

@@ -215,6 +215,11 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 .tips h3 { margin: 0 0 4px; font-size: 14px; }
 .tips ul { margin: 0; padding-left: 18px; }
 .tips li { margin: 3px 0; }
+/* Stop photos (website only; filled in by parts/photos_js.js) */
+.stop-photo { margin: 6px 0 4px; max-width: 420px; }
+.stop-photo img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); }
+.stop-photo.loading { aspect-ratio: 16 / 9; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); }
+.photo-credit { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 
@@ -586,4 +591,5 @@ renderAll();
 
 /*SUGGEST_JS*/
 /*APP_JS*/
+/*PHOTOS_JS*/
 </script>
