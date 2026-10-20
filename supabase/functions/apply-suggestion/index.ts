@@ -9,7 +9,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MODEL = "claude-opus-5-5";
-const MAX_ROUNDS = 8;
+const MAX_ROUNDS = 12;
 const MAX_EDITS = 12;
 const MAX_REMOVALS = 4;
 const ALLOWED_ORIGINS = ["https://tehdean.github.io", "http://localhost:8765"];
@@ -176,7 +176,8 @@ async function askClaude(apiKey: string, plan: Plan, suggestion: { suggested_by:
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "x-api-key": apiKey, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-      body: JSON.stringify({ model: MODEL, max_tokens: 2000, tools: TOOLS, messages }),
+      // tool_choice "any": every turn must use a tool (an edit or finish), so it can't stop with a plain-text answer
+      body: JSON.stringify({ model: MODEL, max_tokens: 4000, tools: TOOLS, tool_choice: { type: "any" }, messages }),
     });
     if (!res.ok) throw new Error(`Claude API ${res.status}: ${(await res.text()).slice(0, 300)}`);
     const out = await res.json();
@@ -201,7 +202,7 @@ async function askClaude(apiKey: string, plan: Plan, suggestion: { suggested_by:
   }
   // No finish call: keep the changes if there were any
   return { status: editor.changes.length ? "done" : "skipped",
-           reply: editor.changes.length ? "Updated the plan: " + editor.changes.join("; ") + "." : "Couldn't work out a change for this one. Try wording it differently.",
+           reply: editor.changes.length ? "Updated the plan: " + editor.changes.join("; ") + "." : "Sorry, this one didn't go through. Try sending it again, or split it into smaller requests.",
            changes: editor.changes };
 }
 
