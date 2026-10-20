@@ -176,14 +176,18 @@ async function askClaude(apiKey: string, plan: Plan, suggestion: { suggested_by:
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: { "x-api-key": apiKey, "anthropic-version": "2023-06-01", "content-type": "application/json" },
-      // tool_choice "any": every turn must use a tool (an edit or finish), so it can't stop with a plain-text answer
-      body: JSON.stringify({ model: MODEL, max_tokens: 4000, tools: TOOLS, tool_choice: { type: "any" }, messages }),
+      body: JSON.stringify({ model: MODEL, max_tokens: 4000, tools: TOOLS, messages }),
     });
     if (!res.ok) throw new Error(`Claude API ${res.status}: ${(await res.text()).slice(0, 300)}`);
     const out = await res.json();
     messages.push({ role: "assistant", content: out.content });
     const calls = (out.content ?? []).filter((c: { type: string }) => c.type === "tool_use");
-    if (!calls.length) break;
+    if (!calls.length) {
+      // It answered in plain text instead of using the tools: ask it to finish properly (Opus doesn't support forcing tool use)
+      if (round >= MAX_ROUNDS - 1) break;
+      messages.push({ role: "user", content: "Please use the tools: make any plan changes, then call finish with your reply (put any answer in finish's reply)." });
+      continue;
+    }
     const results = [];
     for (const c of calls) {
       if (c.name === "finish") {
