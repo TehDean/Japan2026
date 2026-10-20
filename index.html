@@ -762,7 +762,7 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 .day-head h2, .map-wrap h2 { font-family: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; font-weight: 500; font-size: 22px; margin: 4px 0; }
 .day-head p { margin: 0 0 16px; color: var(--muted); }
 .stops { list-style: none; margin: 0; padding: 0; }
-.stop { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.stop { display: grid; grid-template-columns: 62px minmax(0, 1fr); gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
 .stop:first-child { border-top: 0; }
 .stop.clickable { cursor: pointer; }
 .stop.clickable:hover .stop-name { color: var(--accent); }
@@ -1079,6 +1079,9 @@ const tabs = document.getElementById("tabs");
 const panel = document.getElementById("dayPanel");
 const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const dirUrl = p => "https://www.google.com/maps/search/?api=1&query=" + p.lat + "," + p.lng;
+// Times are stored as 24-hour "17:30" and shown as "5:30 PM"
+const fmtTime = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t).trim()); if (!m) return String(t);
+  const h = +m[1]; return (h % 12 || 12) + ":" + m[2] + "\u00a0" + (h < 12 ? "AM" : "PM"); };
 const toMin = t => { const m = /^(\d{1,2}):(\d{2})$/.exec(String(t).trim()); return m ? (+m[1]) * 60 + (+m[2]) : 9999; };
 let current = 0;
 const WEEKDAY_JA = { Sun: "日", Mon: "月", Tue: "火", Wed: "水", Thu: "木", Fri: "金", Sat: "土" };
@@ -1128,7 +1131,7 @@ function drawPins(day, fly = true) {
     const icon = L.divIcon({ className: "", html, iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -14] });
     const m = L.marker([p.lat, p.lng], { icon, title: p.name, riseOnHover: true, zIndexOffset: n ? 1000 : 0 }).addTo(map);
     const stop = day.stops.find(s => s.id === id);
-    m.bindPopup(`<b>${esc(p.name)}</b>${stop ? esc(stop.t) : esc(DAYS[di].date)} · <a href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps</a>`);
+    m.bindPopup(`<b>${esc(p.name)}</b>${stop ? esc(fmtTime(stop.t)) : esc(DAYS[di].date)} · <a href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps</a>`);
     // A faded pin belongs to another day: switch to that day.
     if (!n) m.on("click", () => { show(di); setTimeout(() => markers[id] && markers[id].openPopup(), 700); });
     markers[id] = m;
@@ -1189,7 +1192,7 @@ function show(i, fly = true) {
     <ol class="stops">${d.stops.map((s, n) => {
       const p = PLACES[s.id];
       return `<li class="stop${map ? " clickable" : ""}" data-id="${esc(s.id)}">
-        <span class="time">${esc(s.t)}</span>
+        <span class="time">${esc(fmtTime(s.t))}</span>
         <div><div class="stop-name"><span class="num${p.sushi ? " sushi" : p.food ? " food" : ""}">${n + 1}</span>${esc(p.name)}${p.sushi ? `<span class="kind">Sushi · ${esc(p.sushi)}</span>` : p.food ? `<span class="kind food">Street food</span>` : ""}</div>
           <p class="stop-note">${esc(s.note)}</p>
           <a class="dir" href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>
