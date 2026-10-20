@@ -31,6 +31,12 @@ Source: `supabase/functions/apply-suggestion/index.ts`; database setup: `supabas
 When the owner asks to "check the suggestions": summarize what came in and what was changed automatically
 (read `trip_suggestions` and `trip_plan.note`), point out anything that looks wrong, and offer to undo it.
 To undo, copy the right row of `trip_plan_versions` back into `trip_plan` (ask the owner first).
+**Escalations ("Sent to Inari"):** requests the suggestion box can't do with its tools (website design, layout,
+features or code, anything needing a person) are escalated, not declined. The kitsune's reply says it carried the
+request to the shrine of Inari, its boss; Inari is the owner. Stored as `kind = 'escalated'` (status `skipped`, or
+`done` if part of it was done), shown as "⛩️ Sent to Inari". When checking suggestions, list escalated ones first and
+ask the owner which to do. After doing one, set its `status` to `done`, `kind` to `change`, and `answer`/`reply` to a
+short note in the kitsune's voice (e.g. "Inari approved!").
 "Clear the suggestions" empties the list (`clear_trip_suggestions`, or delete from `trip_suggestions` via the connector).
 
 ## Supabase

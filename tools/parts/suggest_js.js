@@ -35,7 +35,7 @@
     const h = Math.round(m / 60); if (h < 24) return h + " hr ago";
     return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
   };
-  const STATUS = { new: ["Waiting", "wait"], working: ["🦊 The kitsune is on it…", "wait"], done: ["Added to the plan", "done"], answered: ["Answered", "ans"], skipped: ["Not added", "skip"] };
+  const STATUS = { new: ["Waiting", "wait"], working: ["🦊 The kitsune is on it…", "wait"], done: ["Added to the plan", "done"], answered: ["Answered", "ans"], escalated: ["⛩️ Sent to Inari", "esc"], skipped: ["Not added", "skip"] };
 
   function render(rows) {
     list.innerHTML = "";
@@ -108,6 +108,7 @@
       const res = await run;
       await loadPlan(); await load();
       if (res && res.ok && res.status === "done") say2("Done! The kitsune updated the plan. See the reply below.");
+      else if (res && res.ok && res.status === "escalated") say2("⛩️ This one is above the kitsune's pay grade, so it carried it to Inari's shrine. See the note below.");
       else if (res && res.ok && res.status === "answered") say2("The kitsune has answered! See the answer below.");
       else if (res && res.ok) say2("No change made. See the reply below.");
       else say2("Sent! It couldn't be handled automatically right now, so it's waiting in the list below.");

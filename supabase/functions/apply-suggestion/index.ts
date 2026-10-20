@@ -69,10 +69,10 @@ const TOOLS = [
       required: ["from_day", "stop", "to_day"] } },
   { name: "set_day", description: "Change a day's title or its area label (neighborhoods separated by ' · ').",
     input_schema: { type: "object", properties: { day: { type: "integer" }, title: { type: "string" }, area: { type: "string" } }, required: ["day"] } },
-  { name: "finish", description: "Call once at the end. outcome: 'changed' if you changed the plan, 'answered' if it was only a question and you answered it, 'declined' if you didn't do what was asked. reply is shown to the person on the website.",
+  { name: "finish", description: "Call once at the end. outcome: 'changed' if you changed the plan, 'answered' if it was only a question and you answered it, 'escalated' if it needs something your tools can't do (it goes to the owner), 'declined' only for requests that are unsafe, offensive or unrelated to the trip. reply is shown to the person on the website.",
     input_schema: { type: "object", properties: {
-      outcome: { type: "string", enum: ["changed", "answered", "declined"] },
-      reply: { type: "string", description: "For changes: 1-2 sentences on what changed. For questions: a helpful answer, up to about 5 sentences (under 900 characters). For declines: why, briefly." } },
+      outcome: { type: "string", enum: ["changed", "answered", "escalated", "declined"] },
+      reply: { type: "string", description: "For changes: 1-2 sentences on what changed. For questions: a helpful answer, up to about 5 sentences (under 900 characters). For escalations: a playful 1-2 sentences in the kitsune's voice saying you've carried it to Inari's shrine for your boss to look at. For declines: why, briefly." } },
       required: ["outcome", "reply"] } },
 ];
 
@@ -87,7 +87,8 @@ Then call finish exactly once.
 
 Guidelines:
 - Keep each day's stops close together so nobody crosses town; mention travel time from the previous stop in the note.
-- The website shows a photo for each stop, found automatically on English Wikipedia (the article matching the place, or a nearby one). To use a better photo, set update_stop's photo to an exact Wikipedia article title you are sure exists; use "none" to hide a wrong photo. You can't upload pictures or change the website's design or code; for requests like that, say the owner can ask for it.
+- The website shows a photo for each stop, found automatically on English Wikipedia (the article matching the place, or a nearby one). To use a better photo, set update_stop's photo to an exact Wikipedia article title you are sure exists; use "none" to hide a wrong photo.
+- Some requests need more than your tools can do: changes to the website's design, layout, features or code, adding pictures yourself, booking things, or anything else that needs a person. Don't turn those down. Do any part you can with the tools, then call finish with outcome "escalated" and a short, playful reply in character: you are the trip's kitsune (fox spirit), and you've carried the request to the shrine of Inari, your boss, who decides on things like this. Don't promise it will be done or say when. Example: "The kitsune bowed low and carried this one to Inari's shrine. It's a job for the boss!"
 - Keep the plan's style: plenty of street food and markets, sushi a few times rather than daily.
 - Tool times are 24-hour HH:MM (the website shows them as 12-hour). In notes and replies, write times the 12-hour way, like "5:30 PM". Notes are 1-2 short practical sentences. Use real coordinates in Japan, as precise as you know them; only add places you are confident exist. If unsure of the exact spot, say "Pin is approximate" in the note.
 - Don't invent prices, hours or reservation rules you aren't sure of; suggest checking instead.
@@ -197,8 +198,8 @@ async function askClaude(apiKey: string, plan: Plan, suggestion: { suggested_by:
         const outcome = String(c.input?.outcome ?? "");
         const reply = String(c.input?.reply ?? "").slice(0, 1000);
         // Whatever finish says, a change only counts if the plan actually changed
-        const status = editor.changes.length ? "done" : outcome === "answered" ? "answered" : "skipped";
-        return { status, reply, changes: editor.changes };
+        const status = editor.changes.length ? "done" : outcome === "answered" ? "answered" : outcome === "escalated" ? "escalated" : "skipped";
+        return { status, reply, changes: editor.changes, escalated: outcome === "escalated" };
       }
       let content: string, is_error = false;
       try { content = JSON.stringify(editor.run(c.name, c.input ?? {})); }
@@ -248,7 +249,8 @@ Deno.serve(async (req) => {
       if (e2) throw e2;
     }
     // Stored status stays done/skipped; kind tells a question apart, and the full answer goes in `answer`
-    const kind = result.status === "answered" ? "question" : result.status === "done" ? "change" : null;
+    // kind "escalated" = needs the owner (Inari); it can also be partly done
+    const kind = (result as { escalated?: boolean }).escalated ? "escalated" : result.status === "answered" ? "question" : result.status === "done" ? "change" : null;
     await db.from("trip_suggestions").update({
       status: result.status === "done" ? "done" : "skipped",
       kind, answer: result.reply || null, reply: (result.reply || "").slice(0, 300) || null,
