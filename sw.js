@@ -2,7 +2,7 @@
 // The page itself: try the network first (so updates show up), fall back to the saved copy.
 // Map pieces, fonts and the map library: use the saved copy, fetch and save it the first time.
 // Suggestions (Supabase) and photo lookups (Wikipedia) always go to the network; the photos themselves are saved.
-const VERSION = "jp26-v1";
+const VERSION = "jp26-v2";   // bump to make installed copies drop their saved page
 const SHELL = "shell-" + VERSION;
 const ASSETS = "assets-" + VERSION;
 const TILES = "tiles-" + VERSION;
