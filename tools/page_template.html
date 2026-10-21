@@ -1,6 +1,6 @@
 <title>Japan December Plan</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Klee+One:wght@400;600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="tile-index.js"></script>
 <style>
@@ -221,6 +221,81 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 .stop-photo img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); }
 .stop-photo.loading { aspect-ratio: 16 / 9; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); }
 .photo-credit { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
+/* ---- Ema Wall (shared trip notes), countdown and omikuji ---- */
+.countdown { display: inline-flex; align-items: center; gap: 8px; margin: 2px 0 10px; padding: 4px 12px 4px 6px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--fg); font-size: 13px; }
+.countdown b { font-family: "Shippori Mincho", "Hiragino Mincho ProN", serif; font-size: 18px; color: var(--accent); }
+.countdown .cd-fox { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--surface); font-size: 15px; }
+.ema-boards { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+.ema-boards button { font: inherit; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 12px 6px 6px;
+  border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+.ema-boards button .k { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line);
+  font-family: "Shippori Mincho", serif; font-size: 14px; background: var(--surface); }
+.ema-boards button .n { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); }
+.ema-boards button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.ema-boards button[aria-pressed="true"] .k { background: var(--accent); border-color: var(--accent); color: #fff; }
+.ema-hint { margin: 4px 0 12px; color: var(--muted); font-size: 13px; }
+.ema-banner { margin: 0 0 12px; padding: 8px 12px; border-radius: 6px; font-size: 13px; background: var(--sushi-soft); color: var(--fg); }
+.ema-banner button, .ema-banner a { font: inherit; font-weight: 600; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.ema-compose { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px; border: 1px dashed var(--line); border-radius: 8px; margin-bottom: 16px; }
+.ema-compose .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ema-compose input, .ema-compose textarea, .ema-edit input, .ema-edit textarea { font: inherit; font-size: 16px; width: 100%; padding: 9px 11px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg); min-height: 44px; }
+.ema-compose input { flex: 1 1 140px; width: auto; }
+.ema-compose textarea, .ema-edit textarea { resize: vertical; min-height: 70px; }
+.ema-count { font: 11px "IBM Plex Mono", monospace; color: var(--muted); margin-left: auto; }
+.ema-count.over { color: var(--accent); font-weight: 600; }
+.ema-btn { font: inherit; font-weight: 600; min-height: 44px; padding: 9px 16px; border-radius: 8px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.ema-btn:disabled { opacity: .55; cursor: default; }
+.ema-btn.ghost { background: none; color: var(--fg); border: 1px solid var(--line); font-weight: 500; }
+.ema-btn.danger { background: none; color: var(--accent); border: 1px solid var(--accent); font-weight: 500; }
+.ema-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 22px 12px; padding: 10px 0 0; margin: 0; list-style: none; }
+.ema-empty { color: var(--muted); font-size: 13px; padding: 6px 0 4px; }
+.ema { position: relative; transform-origin: 50% -10px; display: flex; flex-direction: column; }
+.ema > .ema-wood { flex: 1; }
+.ema.sway { animation: ema-sway 2.6s ease-in-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes ema-sway { 0% { transform: rotate(-2.5deg); } 35% { transform: rotate(1.8deg); } 65% { transform: rotate(-0.8deg); } 100% { transform: rotate(0); } }
+.ema-cord { position: absolute; left: 50%; top: -12px; width: 22px; height: 18px; margin-left: -11px; z-index: 1; pointer-events: none;
+  border: 2px solid #c0392b; border-bottom: 0; border-radius: 11px 11px 0 0; }
+.ema-wood { position: relative; width: 100%; min-height: 150px; display: flex; flex-direction: column; text-align: left; cursor: pointer;
+  padding: 30px 12px 10px; border: 0; color: #3a2614; font: 15px/1.45 "Klee One", "IBM Plex Sans", system-ui, sans-serif;
+  clip-path: polygon(50% 0, 100% 16%, 100% 100%, 0 100%, 0 16%);
+  background: repeating-linear-gradient(94deg, rgba(120,72,30,.07) 0 2px, transparent 2px 9px), linear-gradient(160deg, #e9c894, #d7a96a 60%, #c99556); }
+.ema-wood::before { content: ""; position: absolute; left: 50%; top: 14px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #5b3a1d; }
+.ema-wood:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.ema-body { white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+.ema-by { margin-top: 8px; font: 11px "IBM Plex Mono", monospace; color: #6d4a28; }
+.ema.check .ema-wood { padding-bottom: 54px; }
+.ema.done .ema-wood { filter: saturate(.55) brightness(.97); }
+.ema.done .ema-body { text-decoration: line-through; text-decoration-color: rgba(192,57,43,.55); }
+.ema-stamp { position: absolute; right: 10px; bottom: 8px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font: 600 16px "Shippori Mincho", serif;
+  display: grid; place-items: center; border: 2px dashed rgba(91,58,29,.55); background: rgba(255,255,255,.35); color: #5b3a1d; }
+.ema-stamp:hover { border-color: #c0392b; color: #c0392b; }
+.ema.done .ema-stamp { border: 2px solid #c0392b; background: #c0392b; color: #fff; transform: rotate(-12deg); box-shadow: inset 0 0 0 2px #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ema-wood { background: repeating-linear-gradient(94deg, rgba(60,35,12,.12) 0 2px, transparent 2px 9px), linear-gradient(160deg, #d6b17a, #bf9052 60%, #a97a42); } }
+:root[data-theme="dark"] .ema-wood { background: repeating-linear-gradient(94deg, rgba(60,35,12,.12) 0 2px, transparent 2px 9px), linear-gradient(160deg, #d6b17a, #bf9052 60%, #a97a42); }
+.ema-edit-wrap { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 16px; background: rgba(20,14,8,.45); }
+.ema-edit { width: min(480px, 100%); max-height: 90vh; overflow: auto; background: var(--surface); color: var(--fg); border-radius: 10px; border: 1px solid var(--line); padding: 18px; display: grid; gap: 10px; }
+.ema-edit h3 { margin: 0; font-family: "Shippori Mincho", serif; font-weight: 500; font-size: 20px; }
+.ema-edit .meta { margin: 0; font-size: 12px; color: var(--muted); }
+.ema-edit .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ema-edit .actions .danger { margin-right: auto; }
+.ema-toast { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 2100; max-width: calc(100% - 32px);
+  display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 999px; background: var(--fg); color: var(--surface); font-size: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+.ema-toast button { font: inherit; font-weight: 600; background: none; border: 0; color: var(--food-pin); cursor: pointer; padding: 4px; }
+.omikuji { margin-top: 26px; padding: 16px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); text-align: center; }
+.omikuji h3 { margin: 0 0 4px; font-family: "Shippori Mincho", serif; font-weight: 500; font-size: 18px; }
+.omikuji p { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+.omikuji-box { display: inline-grid; place-items: center; width: 64px; height: 84px; margin-bottom: 10px; border-radius: 8px; background: #8c2b1f; color: #f6e7c8;
+  font: 600 30px/1 "Shippori Mincho", serif; box-shadow: inset 0 0 0 3px #b8892f; }
+.omikuji-box.shake { animation: kuji-shake .7s ease-in-out; }
+@keyframes kuji-shake { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-14deg); } 40% { transform: rotate(12deg); } 60% { transform: rotate(-9deg); } 80% { transform: rotate(6deg); } }
+.omikuji-slip { margin: 12px auto 0; max-width: 340px; padding: 14px 16px; background: #fffaf0; color: #2a1d12; border: 1px solid #e3d3b5; border-radius: 4px; text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,.12); font-family: "Klee One", serif; }
+.omikuji-slip .lvl { font: 700 34px/1.1 "Shippori Mincho", serif; color: #c0392b; }
+.omikuji-slip .lvl-en { font: 500 12px "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: #8a6a45; margin-bottom: 8px; }
+@media (prefers-reduced-motion: reduce) { .ema.sway, .omikuji-box.shake { animation: none; } }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 
@@ -230,6 +305,7 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
     <h1>Japan December Plan</h1>
     <span class="hanko" lang="ja" aria-hidden="true"><span>日</span><span>本</span></span>
   </div>
+  <p class="countdown" id="countdown" hidden></p>
   <p class="lede">Five days in Tokyo and an overnight in Osaka, each day kept to one part of town, with street food along the way. Pick a day to see its stops on the map. Times are suggestions.</p>
 <!--APP_HTML-->
 </header>
@@ -582,7 +658,10 @@ function showEsim() {
     <div class="tips"><h3>Good to know</h3><ul>${e.notes.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>`;
 }
 
+/*EMA_JS*/
+
 const INFO_TABS = [
+  { id: "ema", kanji: "絵", label: "Ema Wall", sub: "shared notes", render: fly => window.EMA ? EMA.show(fly) : showEsim() },
   { id: "hotels", kanji: "宿", label: "Hotels", sub: "where to stay", render: showHotels },
   { id: "esim", kanji: "通", label: "eSIM", sub: "phone data", render: showEsim },
 ];

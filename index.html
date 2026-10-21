@@ -17,7 +17,7 @@
 <meta name="apple-mobile-web-app-title" content="Japan Plan">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Klee+One:wght@400;600&display=swap">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <style>
 /* Leaflet's own stylesheet, inlined (outside stylesheets are blocked) */
@@ -895,6 +895,81 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 .stop-photo img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); }
 .stop-photo.loading { aspect-ratio: 16 / 9; border-radius: 6px; background: var(--bg); border: 1px solid var(--line); }
 .photo-credit { display: block; margin-top: 3px; font-size: 11px; color: var(--muted); }
+/* ---- Ema Wall (shared trip notes), countdown and omikuji ---- */
+.countdown { display: inline-flex; align-items: center; gap: 8px; margin: 2px 0 10px; padding: 4px 12px 4px 6px; border-radius: 999px;
+  background: var(--accent-soft); color: var(--fg); font-size: 13px; }
+.countdown b { font-family: "Shippori Mincho", "Hiragino Mincho ProN", serif; font-size: 18px; color: var(--accent); }
+.countdown .cd-fox { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--surface); font-size: 15px; }
+.ema-boards { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 6px; }
+.ema-boards button { font: inherit; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 6px 12px 6px 6px;
+  border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+.ema-boards button .k { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--line);
+  font-family: "Shippori Mincho", serif; font-size: 14px; background: var(--surface); }
+.ema-boards button .n { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: var(--muted); }
+.ema-boards button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-soft); }
+.ema-boards button[aria-pressed="true"] .k { background: var(--accent); border-color: var(--accent); color: #fff; }
+.ema-hint { margin: 4px 0 12px; color: var(--muted); font-size: 13px; }
+.ema-banner { margin: 0 0 12px; padding: 8px 12px; border-radius: 6px; font-size: 13px; background: var(--sushi-soft); color: var(--fg); }
+.ema-banner button, .ema-banner a { font: inherit; font-weight: 600; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.ema-compose { display: grid; grid-template-columns: minmax(0, 1fr); gap: 8px; padding: 12px; border: 1px dashed var(--line); border-radius: 8px; margin-bottom: 16px; }
+.ema-compose .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ema-compose input, .ema-compose textarea, .ema-edit input, .ema-edit textarea { font: inherit; font-size: 16px; width: 100%; padding: 9px 11px; border-radius: 8px;
+  border: 1px solid var(--line); background: var(--bg); color: var(--fg); min-height: 44px; }
+.ema-compose input { flex: 1 1 140px; width: auto; }
+.ema-compose textarea, .ema-edit textarea { resize: vertical; min-height: 70px; }
+.ema-count { font: 11px "IBM Plex Mono", monospace; color: var(--muted); margin-left: auto; }
+.ema-count.over { color: var(--accent); font-weight: 600; }
+.ema-btn { font: inherit; font-weight: 600; min-height: 44px; padding: 9px 16px; border-radius: 8px; border: 0; background: var(--accent); color: #fff; cursor: pointer; }
+.ema-btn:disabled { opacity: .55; cursor: default; }
+.ema-btn.ghost { background: none; color: var(--fg); border: 1px solid var(--line); font-weight: 500; }
+.ema-btn.danger { background: none; color: var(--accent); border: 1px solid var(--accent); font-weight: 500; }
+.ema-wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(132px, 1fr)); gap: 22px 12px; padding: 10px 0 0; margin: 0; list-style: none; }
+.ema-empty { color: var(--muted); font-size: 13px; padding: 6px 0 4px; }
+.ema { position: relative; transform-origin: 50% -10px; display: flex; flex-direction: column; }
+.ema > .ema-wood { flex: 1; }
+.ema.sway { animation: ema-sway 2.6s ease-in-out both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes ema-sway { 0% { transform: rotate(-2.5deg); } 35% { transform: rotate(1.8deg); } 65% { transform: rotate(-0.8deg); } 100% { transform: rotate(0); } }
+.ema-cord { position: absolute; left: 50%; top: -12px; width: 22px; height: 18px; margin-left: -11px; z-index: 1; pointer-events: none;
+  border: 2px solid #c0392b; border-bottom: 0; border-radius: 11px 11px 0 0; }
+.ema-wood { position: relative; width: 100%; min-height: 150px; display: flex; flex-direction: column; text-align: left; cursor: pointer;
+  padding: 30px 12px 10px; border: 0; color: #3a2614; font: 15px/1.45 "Klee One", "IBM Plex Sans", system-ui, sans-serif;
+  clip-path: polygon(50% 0, 100% 16%, 100% 100%, 0 100%, 0 16%);
+  background: repeating-linear-gradient(94deg, rgba(120,72,30,.07) 0 2px, transparent 2px 9px), linear-gradient(160deg, #e9c894, #d7a96a 60%, #c99556); }
+.ema-wood::before { content: ""; position: absolute; left: 50%; top: 14px; width: 9px; height: 9px; margin-left: -4.5px; border-radius: 50%; background: #5b3a1d; }
+.ema-wood:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.ema-body { white-space: pre-wrap; overflow-wrap: anywhere; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; flex: 1; }
+.ema-by { margin-top: 8px; font: 11px "IBM Plex Mono", monospace; color: #6d4a28; }
+.ema.check .ema-wood { padding-bottom: 54px; }
+.ema.done .ema-wood { filter: saturate(.55) brightness(.97); }
+.ema.done .ema-body { text-decoration: line-through; text-decoration-color: rgba(192,57,43,.55); }
+.ema-stamp { position: absolute; right: 10px; bottom: 8px; z-index: 2; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; font: 600 16px "Shippori Mincho", serif;
+  display: grid; place-items: center; border: 2px dashed rgba(91,58,29,.55); background: rgba(255,255,255,.35); color: #5b3a1d; }
+.ema-stamp:hover { border-color: #c0392b; color: #c0392b; }
+.ema.done .ema-stamp { border: 2px solid #c0392b; background: #c0392b; color: #fff; transform: rotate(-12deg); box-shadow: inset 0 0 0 2px #fff; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ema-wood { background: repeating-linear-gradient(94deg, rgba(60,35,12,.12) 0 2px, transparent 2px 9px), linear-gradient(160deg, #d6b17a, #bf9052 60%, #a97a42); } }
+:root[data-theme="dark"] .ema-wood { background: repeating-linear-gradient(94deg, rgba(60,35,12,.12) 0 2px, transparent 2px 9px), linear-gradient(160deg, #d6b17a, #bf9052 60%, #a97a42); }
+.ema-edit-wrap { position: fixed; inset: 0; z-index: 2000; display: grid; place-items: center; padding: 16px; background: rgba(20,14,8,.45); }
+.ema-edit { width: min(480px, 100%); max-height: 90vh; overflow: auto; background: var(--surface); color: var(--fg); border-radius: 10px; border: 1px solid var(--line); padding: 18px; display: grid; gap: 10px; }
+.ema-edit h3 { margin: 0; font-family: "Shippori Mincho", serif; font-weight: 500; font-size: 20px; }
+.ema-edit .meta { margin: 0; font-size: 12px; color: var(--muted); }
+.ema-edit .actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ema-edit .actions .danger { margin-right: auto; }
+.ema-toast { position: fixed; left: 50%; bottom: max(18px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 2100; max-width: calc(100% - 32px);
+  display: flex; gap: 12px; align-items: center; padding: 10px 14px; border-radius: 999px; background: var(--fg); color: var(--surface); font-size: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+.ema-toast button { font: inherit; font-weight: 600; background: none; border: 0; color: var(--food-pin); cursor: pointer; padding: 4px; }
+.omikuji { margin-top: 26px; padding: 16px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); text-align: center; }
+.omikuji h3 { margin: 0 0 4px; font-family: "Shippori Mincho", serif; font-weight: 500; font-size: 18px; }
+.omikuji p { margin: 0 0 12px; font-size: 13px; color: var(--muted); }
+.omikuji-box { display: inline-grid; place-items: center; width: 64px; height: 84px; margin-bottom: 10px; border-radius: 8px; background: #8c2b1f; color: #f6e7c8;
+  font: 600 30px/1 "Shippori Mincho", serif; box-shadow: inset 0 0 0 3px #b8892f; }
+.omikuji-box.shake { animation: kuji-shake .7s ease-in-out; }
+@keyframes kuji-shake { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-14deg); } 40% { transform: rotate(12deg); } 60% { transform: rotate(-9deg); } 80% { transform: rotate(6deg); } }
+.omikuji-slip { margin: 12px auto 0; max-width: 340px; padding: 14px 16px; background: #fffaf0; color: #2a1d12; border: 1px solid #e3d3b5; border-radius: 4px; text-align: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,.12); font-family: "Klee One", serif; }
+.omikuji-slip .lvl { font: 700 34px/1.1 "Shippori Mincho", serif; color: #c0392b; }
+.omikuji-slip .lvl-en { font: 500 12px "IBM Plex Mono", monospace; letter-spacing: .08em; text-transform: uppercase; color: #8a6a45; margin-bottom: 8px; }
+@media (prefers-reduced-motion: reduce) { .ema.sway, .omikuji-box.shake { animation: none; } }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 
@@ -906,6 +981,7 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
     <h1>Japan December Plan</h1>
     <span class="hanko" lang="ja" aria-hidden="true"><span>日</span><span>本</span></span>
   </div>
+  <p class="countdown" id="countdown" hidden></p>
   <p class="lede">Five days in Tokyo and an overnight in Osaka, each day kept to one part of town, with street food along the way. Pick a day to see its stops on the map. Times are suggestions.</p>
   <div class="app-row">
     <button type="button" id="installBtn" class="install-btn" hidden>Install app</button>
@@ -1261,7 +1337,287 @@ function showEsim() {
     <div class="tips"><h3>Good to know</h3><ul>${e.notes.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>`;
 }
 
+// Ema Wall data on the website: straight to the Japan2026 Supabase project (public key, safe in the page).
+// The last copy of the wall is kept on the phone, so it still shows (read-only) when offline.
+window.EMA_BACKEND = (() => {
+  const URL_ = "https://qsztbfixleqhxovkfaeg.supabase.co/rest/v1/rpc/";
+  const KEY = "sb_publishable_IfxPpo_h0HNGY5_maQyqlA_cdDjiWFE";
+  const get = (k, d) => { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } };
+  const set = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+  let device = get("jp-device", null);
+  if (!device) {
+    device = crypto.randomUUID ? crypto.randomUUID() : "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0; return (c === "x" ? r : (r & 3 | 8)).toString(16); });
+    set("jp-device", device);
+  }
+  async function rpc(fn, body) {
+    let r;
+    try {
+      r = await fetch(URL_ + fn, { method: "POST", headers: { apikey: KEY, "Content-Type": "application/json" }, body: JSON.stringify(body || {}) });
+    } catch { throw Object.assign(new Error("offline"), { offline: true, userMessage: "🦊 No connection right now. Try again when you're back online." }); }
+    const t = await r.text();
+    if (!r.ok) {
+      let msg = ""; try { msg = JSON.parse(t).message || ""; } catch {}
+      throw Object.assign(new Error(msg || "HTTP " + r.status), { userMessage: /Slow down/.test(msg) ? "🦊 Whoa, slow down! Too many changes this hour. Try again a bit later." : undefined });
+    }
+    return t ? JSON.parse(t) : null;
+  }
+  return {
+    pollMs: 15000,
+    async list() {
+      try {
+        const notes = await rpc("ema_list");
+        set("jp-ema-cache", notes);
+        return { notes };
+      } catch (e) {
+        const cached = get("jp-ema-cache", null);
+        if (e.offline && cached) return { notes: cached, readOnly: true, banner: "You're offline, so this is the last saved wall. Adding and editing are paused until you're back online." };
+        throw e;
+      }
+    },
+    add: (author, board, body) => rpc("ema_add", { p_device: device, p_author: author, p_board: board, p_body: body }),
+    edit: (id, body, author) => rpc("ema_edit", { p_device: device, p_id: id, p_body: body, p_author: author }),
+    setDone: (id, done) => rpc("ema_set_done", { p_device: device, p_id: id, p_done: done }),
+    remove: id => rpc("ema_remove", { p_device: device, p_id: id }),
+    restore: id => rpc("ema_restore", { p_device: device, p_id: id }),
+  };
+})();
+// =====================================================================
+// Ema Wall: shared trip notes on wooden plaques (絵馬), plus the trip countdown and omikuji.
+// Data comes from EMA_BACKEND (website: Supabase directly; Claude dashboard: the owner's Supabase connector).
+// =====================================================================
+const EMA = (() => {
+  const BOARDS = {
+    wish: { k: "願", label: "Wishes", hint: "Something you hope to do, eat or see on the trip.", empty: "No wishes yet. Hang the first one!", word: "wish", max: 280, check: false },
+    book: { k: "予", label: "To book", hint: "Things to reserve or buy before the trip. Tap the circle to stamp it booked.", empty: "Nothing left to book. Nice!", word: "to-do", max: 280, check: true, stamp: "済" },
+    pack: { k: "荷", label: "Packing", hint: "What to bring, and who's bringing it. Tap the circle once it's packed.", empty: "Nothing on the packing list yet.", word: "packing item", max: 280, check: true, stamp: "済" },
+    note: { k: "記", label: "Notes", hint: "Addresses, confirmation codes, phrases, anything else worth keeping.", empty: "No notes yet.", word: "note", max: 1000, check: false },
+  };
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  };
+  const B = window.EMA_BACKEND;
+  let notes = null, board = BOARDS[store.get("jp-ema-board", "")] ? store.get("jp-ema-board", "") : "book";
+  let banner = "", readOnly = false, open = false, timer = null, known = null, mine = new Set(), swayNext = true, busy = false;
+
+  const ago = iso => {
+    const m = Math.round((Date.now() - new Date(iso)) / 60000);
+    if (m < 1) return "just now"; if (m < 60) return m + " min ago";
+    const h = Math.round(m / 60); if (h < 24) return h + " hr ago";
+    return new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  };
+
+  // ---- toasts (the kitsune talks) ----
+  let toastTimer = null;
+  function toast(text, action) {
+    document.querySelectorAll(".ema-toast").forEach(t => t.remove());
+    const t = document.createElement("div");
+    t.className = "ema-toast"; t.setAttribute("role", "status");
+    t.innerHTML = `<span>${esc(text)}</span>` + (action ? `<button type="button">${esc(action.label)}</button>` : "");
+    if (action) t.querySelector("button").addEventListener("click", () => { t.remove(); action.run(); });
+    document.body.appendChild(t);
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.remove(), action ? 7000 : 3500);
+  }
+
+  // ---- data ----
+  async function load(quiet) {
+    if (!B) { banner = "The Ema Wall isn't available here."; readOnly = true; render(); return; }
+    try {
+      const r = await B.list();
+      readOnly = !!r.readOnly; banner = r.banner || "";
+      const fresh = r.notes || [];
+      if (known && quiet) {
+        const added = fresh.filter(n => !known.has(n.id) && !mine.has(n.id));
+        if (added.length) {
+          const n = added[added.length - 1], b = BOARDS[n.board] || BOARDS.note;
+          toast(added.length > 1 ? `🦊 ${added.length} new plaques just went up on the wall!` : `🦊 ${n.author} hung a new ${b.word} on the wall!`);
+          swayNext = true;
+        }
+      }
+      known = new Set(fresh.map(n => n.id));
+      notes = fresh;
+    } catch (e) {
+      banner = (e && e.userMessage) || "Couldn't reach the wall just now. It'll try again shortly.";
+      if (e && e.action) banner = { text: banner, action: e.action };
+      if (!notes) notes = [];
+    }
+    if (open) render();
+  }
+
+  async function act(fn, okText, undo) {
+    if (busy) return; busy = true;
+    try { const r = await fn(); await load(false); if (okText) toast(okText, undo && { label: "Undo", run: undo }); return r; }
+    catch (e) { toast((e && e.userMessage) || "🦊 The kitsune tripped over its tail. Try that again in a moment."); }
+    finally { busy = false; }
+  }
+
+  // ---- rendering ----
+  function plaque(n, i) {
+    const b = BOARDS[n.board];
+    return `<li class="ema${b.check ? " check" : ""}${n.done ? " done" : ""}${swayNext ? " sway" : ""}" style="--i:${i}">
+      <span class="ema-cord" aria-hidden="true"></span>
+      <button type="button" class="ema-wood" data-id="${n.id}" aria-label="${esc(b.label)} by ${esc(n.author)}: ${esc(n.body.slice(0, 80))}. Tap to open">
+        <span class="ema-body">${esc(n.body)}</span>
+        <span class="ema-by">${esc(n.author)} · ${esc(ago(n.updated_at || n.created_at))}</span>
+      </button>
+      ${b.check ? `<button type="button" class="ema-stamp" data-stamp="${n.id}" aria-pressed="${n.done}" aria-label="${n.done ? "Done. Tap to undo" : "Mark done"}">${n.done ? b.stamp : "✓"}</button>` : ""}
+    </li>`;
+  }
+
+  function render() {
+    if (!open) return;
+    const b = BOARDS[board];
+    const counts = Object.fromEntries(Object.keys(BOARDS).map(k => [k, (notes || []).filter(n => n.board === k && !n.done).length]));
+    let list = (notes || []).filter(n => n.board === board);
+    list = b.check ? list.sort((x, y) => (x.done - y.done) || (new Date(x.created_at) - new Date(y.created_at)))
+                   : list.sort((x, y) => new Date(y.created_at) - new Date(x.created_at));
+    const ban = !banner ? "" : typeof banner === "string" ? `<p class="ema-banner">${esc(banner)}</p>`
+      : `<p class="ema-banner">${esc(banner.text)} <button type="button" id="emaFix">${esc(banner.action.label)}</button></p>`;
+    const name = store.get("jp-name", "");
+    panel.innerHTML = `
+      <div class="day-head"><div class="eyebrow">Shared notes · <span lang="ja" class="ja">絵馬</span></div><h2>The Ema Wall</h2>
+        <p class="hotel-intro">At shrines, people write wishes on little wooden plaques called ema and hang them up. This is ours: anyone with the link can hang, edit or take down a plaque.</p></div>
+      <div class="ema-boards" role="group" aria-label="Boards">${Object.entries(BOARDS).map(([k, x]) =>
+        `<button type="button" data-board="${k}" aria-pressed="${k === board}"><span class="k" lang="ja" aria-hidden="true">${x.k}</span>${esc(x.label)}<span class="n">${notes ? counts[k] : "…"}</span></button>`).join("")}</div>
+      <p class="ema-hint">${esc(b.hint)}</p>
+      ${ban}
+      ${readOnly ? "" : `<form class="ema-compose" id="emaForm">
+        <textarea id="emaBody" maxlength="${b.max}" rows="2" placeholder="Write a ${esc(b.word)}…" aria-label="New ${esc(b.word)}" required></textarea>
+        <div class="row"><input id="emaName" maxlength="30" placeholder="Your name" aria-label="Your name" value="${esc(name)}" required>
+          <span class="ema-count" id="emaCount">0 / ${b.max}</span>
+          <button class="ema-btn" type="submit">Hang it 🦊</button></div>
+      </form>`}
+      ${notes == null ? `<p class="ema-empty">The kitsune is fetching the plaques…</p>`
+        : list.length ? `<ul class="ema-wall" role="list">${list.map(plaque).join("")}</ul>` : `<p class="ema-empty">${esc(b.empty)}</p>`}
+      <section class="omikuji" aria-label="Omikuji fortune">
+        <h3><span lang="ja">おみくじ</span> Draw a fortune</h3>
+        <p>Shake the box like at Senso-ji and see what the trip has in store.</p>
+        <div class="omikuji-box" id="kujiBox" aria-hidden="true" lang="ja">籤</div><br>
+        <button type="button" class="ema-btn ghost" id="kujiBtn">Shake the box</button>
+        <div id="kujiSlip" aria-live="polite"></div>
+      </section>`;
+    swayNext = false;
+    panel.querySelectorAll("[data-board]").forEach(x => x.addEventListener("click", () => {
+      board = x.dataset.board; store.set("jp-ema-board", board); swayNext = true; render();
+    }));
+    const fix = panel.querySelector("#emaFix"); if (fix) fix.addEventListener("click", () => banner.action.run());
+    const form = panel.querySelector("#emaForm");
+    if (form) {
+      const body = form.querySelector("#emaBody"), count = form.querySelector("#emaCount");
+      body.addEventListener("input", () => { count.textContent = body.value.length + " / " + b.max; count.classList.toggle("over", body.value.length >= b.max); });
+      form.addEventListener("submit", e => {
+        e.preventDefault();
+        const text = body.value.trim(), who = form.querySelector("#emaName").value.trim();
+        if (!text || !who) return;
+        store.set("jp-name", who);
+        act(async () => { const id = await B.add(who, board, text); if (id != null) mine.add(Number(id)); body.value = ""; swayNext = true; },
+            `🦊 Your ${b.word} is hanging on the wall!`);
+      });
+    }
+    panel.querySelectorAll(".ema-wood").forEach(x => x.addEventListener("click", () => openEditor(Number(x.dataset.id))));
+    panel.querySelectorAll("[data-stamp]").forEach(x => x.addEventListener("click", () => {
+      const n = notes.find(m => m.id === Number(x.dataset.stamp)); if (!n || readOnly) return;
+      act(() => B.setDone(n.id, !n.done), n.done ? "Un-stamped. Back on the list." : (board === "pack" ? "🦊 Packed! 済" : "🦊 Booked! The kitsune stamps it 済"));
+    }));
+    panel.querySelector("#kujiBtn").addEventListener("click", drawFortune);
+  }
+
+  function openEditor(id) {
+    const n = notes.find(m => m.id === id); if (!n) return;
+    const b = BOARDS[n.board];
+    const wrap = document.createElement("div");
+    wrap.className = "ema-edit-wrap";
+    wrap.innerHTML = `<div class="ema-edit" role="dialog" aria-modal="true" aria-labelledby="emaEditTitle">
+      <h3 id="emaEditTitle"><span lang="ja">${b.k}</span> ${esc(b.label)}</h3>
+      <p class="meta">Hung by ${esc(n.author)} · ${esc(ago(n.created_at))}${n.updated_at && n.updated_at !== n.created_at ? " · edited " + esc(ago(n.updated_at)) : ""}</p>
+      <textarea id="emaEditBody" maxlength="${b.max}" rows="5" ${readOnly ? "readonly" : ""} aria-label="Plaque text">${esc(n.body)}</textarea>
+      ${readOnly ? "" : `<input id="emaEditName" maxlength="30" value="${esc(store.get("jp-name", "") || n.author)}" aria-label="Your name (shown as the last editor)">`}
+      <div class="actions">${readOnly ? "" : `<button type="button" class="ema-btn danger" id="emaDel">Take it down</button>`}
+        <button type="button" class="ema-btn ghost" id="emaCancel">${readOnly ? "Close" : "Cancel"}</button>
+        ${readOnly ? "" : `<button type="button" class="ema-btn" id="emaSave">Save</button>`}</div></div>`;
+    const close = () => { wrap.remove(); document.removeEventListener("keydown", onKey); };
+    const onKey = e => { if (e.key === "Escape") close(); };
+    document.addEventListener("keydown", onKey);
+    wrap.addEventListener("click", e => { if (e.target === wrap) close(); });
+    document.body.appendChild(wrap);
+    wrap.querySelector("#emaCancel").addEventListener("click", close);
+    const ta = wrap.querySelector("#emaEditBody"); ta.focus();
+    if (readOnly) return;
+    wrap.querySelector("#emaSave").addEventListener("click", () => {
+      const text = ta.value.trim(), who = wrap.querySelector("#emaEditName").value.trim();
+      if (!text) return;
+      if (who) store.set("jp-name", who);
+      close();
+      if (text !== n.body) act(() => B.edit(n.id, text, who || n.author), "🦊 Plaque updated.");
+    });
+    wrap.querySelector("#emaDel").addEventListener("click", () => {
+      close();
+      act(() => B.remove(n.id), "The plaque was taken down.", () => act(() => B.restore(n.id), "🦊 Back on the wall!"));
+    });
+  }
+
+  // ---- omikuji ----
+  const FORTUNES = [
+    ["大吉", "Great blessing", "Every train arrives the moment you reach the platform."],
+    ["大吉", "Great blessing", "The best bite of the trip will come from a stall with no English menu. Point and trust."],
+    ["大吉", "Great blessing", "Sunset at Shibuya Sky will be exactly as good as the photos. Better, even."],
+    ["大吉", "Great blessing", "A vending machine will surprise you with the perfect hot drink on a cold night."],
+    ["中吉", "Middle blessing", "Your karaoke song choice will be legendary. Commit to it fully."],
+    ["中吉", "Middle blessing", "Get lost in a side street on purpose. Something wonderful is down there."],
+    ["中吉", "Middle blessing", "The kitsune predicts at least one perfect bowl of ramen. Possibly two."],
+    ["吉", "Blessing", "Bring a coin purse: fortune favors those with exact change."],
+    ["吉", "Blessing", "A stranger's kindness will turn a wrong turn into a highlight."],
+    ["吉", "Blessing", "Say yes to the thing on the menu you can't pronounce."],
+    ["小吉", "Small blessing", "Your feet will complain, your heart will not. Wear the comfy shoes."],
+    ["小吉", "Small blessing", "One of you will buy something completely unnecessary and adorable. Allow it."],
+    ["末吉", "Future blessing", "The best part of the trip hasn't been planned yet. Leave room for it."],
+    ["末吉", "Future blessing", "A small delay will lead somewhere great. The fox is never late; everyone else is early."],
+  ];
+  function drawFortune() {
+    const box = panel.querySelector("#kujiBox"), slip = panel.querySelector("#kujiSlip");
+    box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake");
+    slip.innerHTML = "";
+    setTimeout(() => {
+      const [lvl, en, msg] = FORTUNES[Math.floor(Math.random() * FORTUNES.length)];
+      slip.innerHTML = `<div class="omikuji-slip"><div class="lvl" lang="ja">${lvl}</div><div class="lvl-en">${en}</div>${esc(msg)}</div>`;
+    }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700);
+  }
+
+  // ---- tab lifecycle ----
+  function show() {
+    open = true; setCap("none");
+    if (map) { Object.values(markers).forEach(m => m.remove()); markers = {}; }
+    swayNext = true; render();
+    load(false);
+    clearInterval(timer);
+    timer = setInterval(() => { if (!document.hidden && open && !busy) load(true); }, (B && B.pollMs) || 15000);
+  }
+  // Leaving the tab: stop polling (show() is called again when it's picked)
+  new MutationObserver(() => { if (open && !panel.querySelector(".ema-boards")) { open = false; clearInterval(timer); } })
+    .observe(panel, { childList: true });
+  return { show };
+})();
+window.EMA = EMA;
+
+// ---- Trip countdown in the header ----
+(() => {
+  const el = document.getElementById("countdown"); if (!el) return;
+  const start = new Date(2026, 10, 29), end = new Date(2026, 11, 5);      // Nov 29 – Dec 5, local dates
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const days = Math.round((start - today) / 864e5);
+  let html;
+  if (days > 1) html = `<b>${days}</b> days until Japan`;
+  else if (days === 1) html = `<b>1</b> day until Japan. Pack the bags!`;
+  else if (today <= end) html = `Day <b>${Math.round((today - start) / 864e5) + 1}</b> in Japan. Enjoy it!`;
+  else html = `<span lang="ja">おかえり</span> Welcome home!`;
+  el.innerHTML = `<span class="cd-fox" aria-hidden="true">🦊</span><span>${html}</span>`;
+  el.hidden = false;
+})();
+
+
 const INFO_TABS = [
+  { id: "ema", kanji: "絵", label: "Ema Wall", sub: "shared notes", render: fly => window.EMA ? EMA.show(fly) : showEsim() },
   { id: "hotels", kanji: "宿", label: "Hotels", sub: "where to stay", render: showHotels },
   { id: "esim", kanji: "通", label: "eSIM", sub: "phone data", render: showEsim },
 ];

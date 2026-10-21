@@ -63,6 +63,14 @@ push notification and email only when a new escalated request has arrived (read-
   **Hotels** (`HOTEL_STAYS`, `showHotels`; temporary, remove once hotels are booked) and **eSIM** (`ESIM`, `showEsim`;
   recommends the Sakura Mobile Unlimited eSIM, 7 days, one per phone). To remove a tab, drop its `INFO_TABS` entry
   and its data/render function; the shared hotel-card CSS is also used by the eSIM tab.
+- **Ema Wall (shared notes, added Oct 21, 2026):** the first info tab. Anyone with the link can hang, edit, stamp done
+  or take down plaques on four boards (wish, book, pack, note; 280 characters, notes 1,000). Tables `ema_notes` and
+  `ema_history` (every change logged; deletes are soft, `deleted_at`). Functions: `ema_list`, `ema_add`, `ema_edit`,
+  `ema_set_done`, `ema_remove`, `ema_restore` (60 changes per device per hour). To restore something, use `ema_history`
+  or clear `deleted_at`. UI: `tools/parts/ema_ui.js` (both builds; also the header countdown and the omikuji).
+  Data: `tools/parts/ema_web.js` (website, direct) and `tools/parts/ema_dash.js` (dashboard, through the owner's
+  Supabase connector, `execute_sql` with base64-encoded text). Publish the dashboard with
+  `capabilities: {mcp: {servers: [{server: "Supabase", tools: ["execute_sql"]}]}}` (omit on later republishes to keep it).
 - **Stop photos (website only):** `tools/parts/photos_js.js` finds each stop's photo on English Wikipedia in the
   visitor's browser (matching article near the pin, else nearest article, labeled "Nearby"). A place can set
   `photo` to a Wikipedia article title, or `"none"` to hide it; the suggestion box can set this too. The Claude
