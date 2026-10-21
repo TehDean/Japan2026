@@ -1,6 +1,8 @@
 # Japan December Plan: notes for Claude
 
-A day-by-day plan for a trip to Japan, Sun Nov 29 to Sat Dec 5, 2026: Tokyo, plus an overnight in Osaka (Thu 12/3 to Fri 12/4).
+A day-by-day plan for a trip to Japan, Sun Nov 29 to Mon Dec 7, 2026 (changed Oct 21 from a Sat Dec 5 return): Tokyo (staying in Ginza),
+three nights in Osaka (Thu 12/3 to Sun 12/6) with day trips to Kyoto (Fri) and Nara (Sat), Hakone onsen and Shinjuku on Sun 12/6,
+and a 4 PM flight home from Haneda on Mon 12/7.
 It exists in two versions:
 
 - **Website:** https://tehdean.github.io/Japan2026/ (this repo, GitHub Pages from `main`, root). Live street map,
@@ -61,7 +63,7 @@ push notification and email only when a new escalated request has arrived (read-
   snapshot built from those (it can't read Supabase) and is the website's offline fallback.
 - **Info tabs after the days:** `INFO_TABS` in `tools/page_template.html` (static, not in Supabase), added Oct 19, 2026.
   **Hotels** (`HOTEL_STAYS`, `showHotels`; temporary, remove once hotels are booked) and **eSIM** (`ESIM`, `showEsim`;
-  recommends the Sakura Mobile Unlimited eSIM, 7 days, one per phone). To remove a tab, drop its `INFO_TABS` entry
+  recommends the Sakura Mobile Unlimited eSIM, 9 days, one per phone). To remove a tab, drop its `INFO_TABS` entry
   and its data/render function; the shared hotel-card CSS is also used by the eSIM tab.
 - **Ema Wall (shared notes, added Oct 21, 2026):** the leftmost tab (`first: true` in `INFO_TABS`; the page still opens on Sunday). Anyone with the link can hang, edit, stamp done
   or take down plaques on four boards (wish, book, pack, note; 280 characters, notes 1,000). Tables `ema_notes` and
@@ -78,9 +80,9 @@ push notification and email only when a new escalated request has arrived (read-
 - Website-only pieces are in `tools/parts/`. Don't edit `index.html` by hand; it is generated.
 - Build both versions: `python3 tools/build.py` → `index.html` (website) and `tools/build/dashboard.html` (Claude).
 - Owner's preferences for the plan: keep each day's stops close together (no crossing town); sushi a few times,
-  not daily; plenty of street food and markets; Sunday 11/29 starts around 5:30 PM (they land about 2 PM).
+  not daily; plenty of street food and markets; Sunday 11/29 starts around 6 PM (they land about 2 PM); Monday 12/7 ends at Haneda by about 1:30 PM.
 - Every stop needs real coordinates; mark ones placed from general knowledge as approximate in its note.
-- The stored dashboard map covers greater Tokyo and Osaka. A stop outside those areas needs new map pieces:
+- The stored dashboard map covers greater Tokyo, Osaka, Kyoto, Nara and Hakone. A stop outside those areas needs new map pieces:
   add the area to `tools/fetch_tiles.py`, run `python3 tools/fetch_tiles.py tools/build/tiles tools/build/tiles_raw`,
   and publish the regenerated `t*.js` and `tile-index.js` files with the dashboard. Also widen `map.setMaxBounds`.
 - Publish the dashboard by republishing `tools/build/dashboard.html` to the artifact URL above (its map files are

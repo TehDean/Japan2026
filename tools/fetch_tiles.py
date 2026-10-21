@@ -23,6 +23,11 @@ for z in (8, 9, 10, 11): want.update(box(z, *osaka))
 want.update(box(12, 34.60, 135.44, 34.76, 135.56))
 for z in (13, 14, 15): want.update(box(z, 34.645, 135.485, 34.740, 135.530))
 want.update(box(8, 34.30, 135.00, 36.00, 140.30))   # the corridor between, for zoomed-out views
+# Kyoto and Nara (added Oct 21, 2026 for the 3-night Osaka stay with day trips)
+for z in (9, 10, 11): want.update(box(z, 34.60, 135.60, 35.10, 135.95))
+for z in (12, 13, 14): want.update(box(z, 34.945, 135.755, 35.012, 135.795))   # Fushimi Inari to Nishiki and Gion
+want.update(box(15, 34.990, 135.760, 35.008, 135.790))                          # central Kyoto close-ups
+for z in (12, 13, 14, 15): want.update(box(z, 34.678, 135.825, 34.693, 135.848)) # Nara Park and Todai-ji
 want = sorted(want)
 print("tiles:", len(want))
 def get(t):

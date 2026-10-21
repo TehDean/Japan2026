@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Japan December Plan</title>
-<meta name="description" content="Our day-by-day Tokyo plan, Nov 29 to Dec 5, 2026: sights, sushi and day trips on a map.">
+<meta name="description" content="Our day-by-day Japan plan, Nov 29 to Dec 7, 2026: Tokyo, Osaka, Kyoto, Nara and Hakone on a map.">
 <meta name="robots" content="noindex">
 <meta property="og:title" content="Japan December Plan">
-<meta property="og:description" content="Day-by-day Tokyo plan, Nov 29 to Dec 5: sights, sushi and day trips on a map.">
+<meta property="og:description" content="Day-by-day Japan plan, Nov 29 to Dec 7: Tokyo, Osaka, Kyoto, Nara and Hakone on a map.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -976,13 +976,13 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 </head>
 <body>
 <header>
-  <div class="eyebrow"><span lang="ja">日本</span> Japan · Nov 29 – Dec 5, 2026</div>
+  <div class="eyebrow"><span lang="ja">日本</span> Japan · Nov 29 – Dec 7, 2026</div>
   <div class="title-row">
     <h1>Japan December Plan</h1>
     <span class="hanko" lang="ja" aria-hidden="true"><span>日</span><span>本</span></span>
   </div>
   <p class="countdown" id="countdown" hidden></p>
-  <p class="lede">Five days in Tokyo and an overnight in Osaka, each day kept to one part of town, with street food along the way. Pick a day to see its stops on the map. Times are suggestions.</p>
+  <p class="lede">Tokyo, three nights in Osaka with day trips to Kyoto and Nara, and a hot-spring stop in Hakone on the way back, each day kept to one part of town, with street food along the way. Pick a day to see its stops on the map. Times are suggestions.</p>
   <div class="app-row">
     <button type="button" id="installBtn" class="install-btn" hidden>Install app</button>
     <p class="install-tip" id="installTip" hidden></p>
@@ -1057,17 +1057,22 @@ const DEFAULT_PLACES = {
   "daruma": {"lat": 34.65157, "lng": 135.5062, "food": true, "name": "Kushikatsu Daruma (Shinsekai)"},
   "dotonbori": {"lat": 34.66892, "lng": 135.50107, "food": true, "name": "Dotonbori (Glico sign)"},
   "hozenji": {"lat": 34.66812, "lng": 135.50261, "name": "Hozenji Yokocho"},
+  "fushimiinari": {"lat": 34.9676945, "lng": 135.7791876, "name": "Fushimi Inari Taisha"},
+  "nishiki": {"lat": 35.0050258, "lng": 135.764723, "food": true, "name": "Nishiki Market"},
+  "kiyomizu": {"lat": 34.9946662, "lng": 135.784661, "name": "Kiyomizu-dera"},
+  "hanamikoji": {"lat": 35.003611, "lng": 135.775037, "name": "Hanamikoji Street (Gion)"},
+  "narapark": {"lat": 34.685047, "lng": 135.843012, "name": "Nara Park (bowing deer)"},
+  "todaiji": {"lat": 34.6889851, "lng": 135.8398158, "name": "Todai-ji"},
   "osakacastle": {"lat": 34.6873, "lng": 135.52586, "name": "Osaka Castle"},
   "umedasky": {"lat": 34.70544, "lng": 135.49033, "name": "Umeda Sky Building"},
   "shinosaka2": {"lat": 34.73347, "lng": 135.50025, "name": "Shin-Osaka Station (train back)"},
   "hakoneyuryo": {"lat": 35.2297, "lng": 139.0975, "name": "Hakone Yuryo (private onsen)"},
-  "yanaka": {"lat": 35.72769, "lng": 139.76579, "name": "Yanaka Ginza"},
-  "gyoen": {"lat": 35.68518, "lng": 139.71007, "name": "Shinjuku Gyoen"},
-  "southern": {"lat": 35.6862, "lng": 139.7, "name": "Shinjuku Southern Terrace"},
   "himawari": {"lat": 35.6886, "lng": 139.6979, "name": "Himawari Sushi (Nishi-Shinjuku)", "sushi": "Casual"},
   "omoide": {"lat": 35.6927, "lng": 139.69958, "name": "Omoide Yokocho"},
   "don-quijote-shinjuku-kabukicho": {"lat": 35.6937, "lng": 139.7027, "name": "Don Quijote Shinjuku Kabukicho"},
-  "goldengai": {"lat": 35.69411, "lng": 139.70476, "name": "Golden Gai"}
+  "goldengai": {"lat": 35.69411, "lng": 139.70476, "name": "Golden Gai"},
+  "ginzastroll": {"lat": 35.6717, "lng": 139.765, "name": "Ginza (last-morning stroll)"},
+  "haneda": {"lat": 35.5454613, "lng": 139.7687222, "name": "Haneda Airport, Terminal 3"}
 };
 
 const DEFAULT_DAYS = [
@@ -1076,14 +1081,16 @@ const DEFAULT_DAYS = [
   {"area": "Toyosu · Tsukiji · Asakusa", "date": "Tue 12/1", "full": "Tuesday, Dec 1", "stops": [{"t": "07:00", "id": "ryusushi", "note": "Edo-style sushi counter in Toyosu Market's Management Facilities Building (3rd floor), run by chefs from the Tsukiji days. Sushi for the sushi fan; for the no-raw-fish eater, the anago-don (simmered, glazed eel over rice) or the rolls. Odayasu Tonkatsu, also in the market, does fried prawn and scallop if you want a fully cooked breakfast. Cash only; closed Sundays and some Wednesdays. Pin is approximate."}, {"t": "09:30", "id": "teamlab", "note": "About 15 minutes' walk from the market. You walk barefoot through water rooms. Book tickets weeks ahead."}, {"t": "11:30", "id": "xmasmarket", "note": "Next to teamLab, by Shin-Toyosu Station. German-style Christmas market with hot food and mulled wine. ¥1,000 on weekdays; buy tickets online. Pin is approximate."}, {"t": "13:00", "id": "tsukiji", "note": "Short taxi or Yurikamome ride. Graze the stalls: tamagoyaki, grilled scallops, wagyu skewers. Many close around 2 PM, so go straight there. Bring cash."}, {"t": "15:30", "id": "sensoji", "note": "About 15 minutes on the Toei Asakusa Line from Higashi-Ginza (10 minutes' walk from the market), no transfers. Snack up Nakamise-dori (ningyo-yaki cakes, fried manju, rice crackers) before most stalls close around 5 PM, watch the sunset (about 4:30) at the temple, then stay as the gate and pagoda light up."}, {"t": "18:00", "id": "hoppystreet", "note": "A few minutes' walk west of Senso-ji. A lane of old-school izakayas with outdoor seats, known for gyu-suji nikomi (slow-simmered beef stew) and skewers. Then the Ginza Line back toward the hotel. Pin is approximate."}], "title": "Market morning, Asakusa at dusk"},
   {"area": "Marunouchi · Azabudai · Roppongi", "date": "Wed 12/2", "full": "Wednesday, Dec 2", "stops": [{"t": "11:00", "id": "intermediatheque", "note": "Optional, for a slow morning: a free, beautifully designed University of Tokyo collection of skeletons, taxidermy birds and curiosities on the 2nd and 3rd floors of KITTE, a minute from Tokyo Station and an easy walk from Ginza. Opens at 11 AM (closed Mondays). 30 to 45 minutes is plenty. Pin is approximate."}, {"t": "13:00", "id": "tower", "note": "About 20 minutes from Tokyo Station: JR Yamanote Line to Hamamatsucho, then a 15-minute walk; grab lunch on the way. Go up, or just see it from the park at its base."}, {"t": "14:30", "id": "azabudai", "note": "Five minutes' walk. Christmas market and shops at Azabudai Hills."}, {"t": "16:00", "id": "mori", "note": "About 15 minutes' walk to Roppongi Hills. Observation deck for the sunset, with the Mori Art Museum on the same ticket."}, {"t": "17:00", "id": "keyakizaka", "note": "Right outside. Lights come on around 5 PM, with Tokyo Tower framing the slope."}, {"t": "18:00", "id": "midtown", "note": "About 10 minutes' walk. Midtown's Christmas lights."}, {"t": "19:00", "id": "gonpachi", "note": "The \"Kill Bill\" restaurant: a big wooden hall serving yakitori, grilled dishes, soba and rice bowls, so it's mostly cooked food. About 15 to 20 minutes' walk from Midtown past Roppongi Crossing, or a short taxi. It gets lines at peak times, so try to reserve at gonpachi.jp. Pin is approximate."}], "title": "Tokyo Tower and Roppongi lights"},
   {"area": "Osaka · Namba · Shinsekai · Dotonbori", "date": "Thu 12/3", "full": "Thursday, Dec 3", "stops": [{"t": "10:30", "id": "shinosaka", "note": "Take a Nozomi bullet train from Tokyo Station around 8:00; it takes about 2.5 hours. A reserved seat is about ¥14,520 each way (2025 fare table). Book in the SmartEX app or at a station ticket machine. Sit in an E seat (right side) for a chance to see Mt. Fuji. Then the Midosuji subway line to Namba (about 15 minutes) to drop your bags; Namba is the handiest area to stay."}, {"t": "12:00", "id": "kuromon", "note": "Osaka's Kitchen: graze grilled scallops, wagyu skewers, crab and fresh fruit. Open about 9 to 5, and the best stalls sell out by early afternoon."}, {"t": "14:00", "id": "tsutenkaku", "note": "One stop south by subway, or a 20-minute walk. Retro neighborhood under a 1950s tower; go up for the view if the line is short."}, {"t": "15:30", "id": "daruma", "note": "Shinsekai is the home of kushikatsu, fried skewers. No double-dipping in the shared sauce. Expect a line; it moves fast."}, {"t": "17:30", "id": "dotonbori", "note": "Back north, about 10 minutes by subway. The neon canal at dusk: takoyaki from the street stands, and okonomiyaki at Mizuno (Michelin Bib Gourmand) if you're still hungry."}, {"t": "20:00", "id": "hozenji", "note": "A two-minute walk. Quiet lantern-lit stone alley with a moss-covered Fudo statue; a calm end to the day."}], "title": "Bullet train to Osaka, a street-food day"},
-  {"area": "Osaka · Umeda · Hakone", "date": "Fri 12/4", "full": "Friday, Dec 4", "stops": [{"t": "09:30", "id": "osakacastle", "note": "About 20 minutes by subway from Namba. Walk the moats and stone walls; the museum inside the main tower opens at 9. Bring your bags, or check them in a station locker."}, {"t": "11:30", "id": "umedasky", "note": "About 20 minutes by train. Open-air rooftop deck between two towers, plus the retro food alley in the basement for lunch."}, {"t": "14:00", "id": "shinosaka2", "note": "One stop from Osaka Station on the JR Kyoto Line. Take a Hikari (not a Nozomi, most of which skip Odawara) to Odawara, about 2 hr 20 min; book it in SmartEX. At Odawara, change to the Hakone Tozan or Odakyu line to Hakone-Yumoto (about 15 minutes)."}, {"t": "17:00", "id": "hakoneyuryo", "note": "Day-use hot spring in the woods; tattoo restrictions were lifted in April 2025, so tattoos are fine. Rent a private open-air bath (Hanare Yuya Kaden) so you can soak together; book on hakoneyuryo.jp, up to one month ahead (from about Nov 4). Free 3-minute shuttle from Hakone-Yumoto Station; leave bags in the station lockers. Weekdays open until about 9 PM, last entry about 8 PM. Back to Tokyo: the Romancecar to Shinjuku (about 85 min), or back to Odawara for a bullet train to Tokyo (about 35 min). Pin is approximate."}], "title": "Osaka Castle, then a private onsen in Hakone on the way back"},
-  {"area": "Yanaka · Shinjuku", "date": "Sat 12/5", "full": "Saturday, Dec 5", "stops": [{"t": "10:30", "id": "yanaka", "note": "Old-Tokyo temple streets and a snack street; try the menchi-katsu croquettes. Shops open from about 10 or 11."}, {"t": "13:00", "id": "gyoen", "note": "About 30 minutes on the JR Yamanote Line from Nippori to Shinjuku, then a 10-minute walk. Big garden with some late autumn color left in early December. Small entry fee."}, {"t": "16:30", "id": "southern", "note": "Ten minutes' walk. Southern Terrace lights by the station."}, {"t": "18:00", "id": "himawari", "note": "Conveyor-belt sushi a few minutes from the Southern Terrace: grab the plates you like, including cooked ones like chawanmushi (savory egg custard) and seared pieces. Cheap and quick; no reservation needed. Pin is approximate."}, {"t": "19:30", "id": "omoide", "note": "About 5 minutes' walk north. Yakitori alleys by the tracks."}, {"t": "20:30", "id": "don-quijote-shinjuku-kabukicho", "note": "About 5 minutes' walk east from Omoide Yokocho, across Yasukuni-dori. Packed discount store for last-night souvenirs, snacks and KitKat flavors; bring your passport for tax-free. Pin is approximate."}, {"t": "21:30", "id": "goldengai", "note": "About 5 minutes' walk east from Don Quijote. Tiny bars; groups over four will struggle to fit."}], "title": "Yanaka morning, Shinjuku night"}
+  {"area": "Kyoto · Fushimi · Gion", "date": "Fri 12/4", "full": "Friday, Dec 4", "stops": [{"t": "08:30", "id": "fushimiinari", "note": "About an hour from Namba: Midosuji Line to Yodoyabashi, then the Keihan Line to Fushimi-Inari. Thousands of red torii gates up the mountain; this is the head shrine of Inari, whose messengers are the kitsune, so look for fox statues everywhere. Go early; the gates get quieter the higher you climb. If you get Nintendo Museum tickets, it's in Uji, a few stops south (closed Tuesdays): swap it in for Nishiki."}, {"t": "12:00", "id": "nishiki", "note": "Keihan Line to Gion-Shijo (about 10 minutes), then a 10-minute walk. Kyoto's covered food street: graze on skewers, tamagoyaki, pickles and sweets. Many stalls are cash only, and eat at the stall rather than while walking."}, {"t": "14:30", "id": "kiyomizu", "note": "About 20 minutes' walk east through Gion, or a short taxi. Hillside temple with a huge wooden stage over the trees; walk up the old Ninenzaka and Sannenzaka lanes lined with snack and souvenir shops. About ¥500; open until 6 PM."}, {"t": "17:00", "id": "hanamikoji", "note": "About 15 minutes' walk downhill. Lantern-lit lane of wooden teahouses at dusk; you might glimpse a geiko or maiko. Be respectful: don't block their way, and no photos where signs say so. Then the Keihan Line from Gion-Shijo back to Osaka, about 50 minutes, for dinner in Namba."}], "title": "Day trip to Kyoto: the fox shrine, a food market and old Gion"},
+  {"area": "Nara · Osaka · Umeda", "date": "Sat 12/5", "full": "Saturday, Dec 5", "stops": [{"t": "09:30", "id": "narapark", "note": "About 40 minutes from Osaka-Namba on the Kintetsu Line to Kintetsu-Nara, then a 5-minute walk. Hundreds of friendly deer that bow for crackers (shika senbei, sold in the park). Feed them only inside the park, and keep maps and snacks out of reach."}, {"t": "10:30", "id": "todaiji", "note": "About 10 minutes' walk through the park. A giant wooden hall around an enormous bronze Buddha; squeeze through the pillar hole said to be the size of his nostril for good luck. Open 7:30 AM to 5:30 PM. Lunch near Kintetsu-Nara Station, then back to Osaka."}, {"t": "14:30", "id": "osakacastle", "note": "About 40 minutes back to Osaka-Namba, then the subway. Walk the moats and stone walls; check the main tower museum's closing time and go in first."}, {"t": "16:30", "id": "umedasky", "note": "About 20 minutes by train. Open-air rooftop deck between two towers for the sunset (around 4:50), then dinner in the retro food alley in the basement."}], "title": "Nara's bowing deer, then Osaka Castle and an Umeda sunset"},
+  {"area": "Hakone · Shinjuku", "date": "Sun 12/6", "full": "Sunday, Dec 6", "stops": [{"t": "10:00", "id": "shinosaka2", "note": "Check out and take a Hikari (most Nozomi skip Odawara) to Odawara, about 2 hr 20 min; book it in SmartEX. Then the Hakone Tozan or Odakyu line to Hakone-Yumoto, about 15 minutes. Leave bags in the station lockers."}, {"t": "13:00", "id": "hakoneyuryo", "note": "Free 3-minute shuttle from Hakone-Yumoto Station. Day-use hot spring in the woods; tattoo restrictions were lifted in April 2025. Rent a private open-air bath (Hanare Yuya Kaden) so you can soak together; book at hakoneyuryo.jp up to a month ahead (from about Nov 6). Then snack along Hakone-Yumoto's shopping street and take the Romancecar to Shinjuku (about 85 minutes; reserve seats). Pin is approximate."}, {"t": "18:30", "id": "himawari", "note": "Conveyor-belt sushi a few minutes from Shinjuku Station's south side, by the Southern Terrace lights: grab the plates you like, including cooked ones like chawanmushi (savory egg custard) and seared pieces. No reservation needed. Pin is approximate."}, {"t": "20:00", "id": "omoide", "note": "About 5 minutes' walk north. Yakitori alleys by the tracks."}, {"t": "20:30", "id": "don-quijote-shinjuku-kabukicho", "note": "About 5 minutes' walk east from Omoide Yokocho, across Yasukuni-dori. Packed discount store for end-of-trip souvenirs, snacks and KitKat flavors; bring your passport for tax-free. Pin is approximate."}, {"t": "21:00", "id": "goldengai", "note": "About 10 minutes' walk east. Tiny bars, some closed on Sundays but plenty open; groups over four will struggle to fit. Then the Marunouchi Line back to Ginza, about 17 minutes."}], "title": "Private onsen in Hakone, then Shinjuku's alleys"},
+  {"area": "Ginza · Haneda", "date": "Mon 12/7", "full": "Monday, Dec 7", "stops": [{"t": "10:00", "id": "ginzastroll", "note": "An easy last morning near the hotel: one more konbini haul, last souvenirs and snacks along Ginza's main street (most shops open around 10 or 11). Pick up the big bags from the hotel by about 12:30. Pin is approximate."}, {"t": "13:30", "id": "haneda", "note": "From Higashi-Ginza, the Toei Asakusa Line runs through to Haneda on the Keikyu Line, about 30 minutes. Be at Terminal 3 by about 1:30 PM for a 4 PM international flight."}], "title": "Last morning, then the flight home"}
 ];
 
 // ---- Hotels tab: recommendations to help decide where to stay. Temporary: delete this block,
 // the HOTEL CSS and the hotel lines in buildTabs/show once the hotels are booked. ----
 const HOTEL_STAYS = [
-  { head: "Tokyo · Ginza", sub: "Sun 11/29 – Thu 12/3 (4 nights), then Fri 12/4 (1 night) · budget about $90–240 a night", hotels: [
+  { head: "Tokyo · Ginza", sub: "Sun 11/29 – Thu 12/3 (4 nights), then Sun 12/6 (1 night) · budget about $90–240 a night", hotels: [
     { id: "tokyustay", tag: "Top pick", name: "Tokyu Stay Ginza", lat: 35.6703118, lng: 139.7673442,
       facts: "Ginza 4-chome, by Ginza and Higashi-Ginza stations · recent rates mostly about $90–240/night (Kayak) · 8.5/10 from 4,000+ reviews",
       text: "Right in the middle of Ginza, a couple of minutes from two subway stations, with a direct train to Haneda from Higashi-Ginza. Some rooms have their own washer-dryer (pick one when you book), so you can pack light for the week. Reviewers love the location, quiet nights and the Japanese breakfast; rooms are small and a bit dated, as most are in Tokyo." },
@@ -1095,12 +1102,12 @@ const HOTEL_STAYS = [
       text: "The money-saver: simple, spotless rooms with a free breakfast, a short walk to Ginza's main street and the Hibiya and Marunouchi lights. Rooms and bathrooms are tiny, so it's best if you mostly just sleep there." },
     { id: "tsuki", tag: "One-night treat", name: "TSUKI Tokyo", lat: 35.6702, lng: 139.7720, approx: true,
       facts: "Tsukiji, by Ginza · about $500/night for late-November dates (Dean's check) · rated 9.4/10 (Expedia)",
-      text: "Too much for the whole week, but a lovely single splurge night: book a room “with furo” for your own wooden Japanese soaking tub. If you want one special night, Friday after Hakone is a good pick." },
+      text: "Too much for the whole week, but a lovely single splurge night: book a room “with furo” for your own wooden Japanese soaking tub. If you want one special night, Sunday after Hakone is a good pick." },
   ]},
-  { head: "Osaka · Nipponbashi", sub: "Thu 12/3 (1 night)", hotels: [
+  { head: "Osaka · Nipponbashi", sub: "Thu 12/3 – Sun 12/6 (3 nights)", hotels: [
     { id: "hinode", tag: "Top pick", name: "Hot Spring Osaka Hinode Hotel Nipponbashi", lat: 34.6560, lng: 135.5040, approx: true,
       facts: "Naniwa, by Ebisucho Station · about $111/night for two (Expedia)",
-      text: "Thursday's whole route is walkable from here: Shinsekai and Kushikatsu Daruma are a few minutes south, and Kuromon Market and Dotonbori are a short walk or one subway stop north. It has its own hot spring with private family baths you can book for the two of you, a second private soak after Hakone. Reserve the private bath ahead, and email the hotel to confirm tattoos are fine in it." },
+      text: "A handy base for all three Osaka days: Kintetsu trains to Nara leave from Namba next door, and Thursday's whole route is walkable: Shinsekai and Kushikatsu Daruma are a few minutes south, and Kuromon Market and Dotonbori are a short walk or one subway stop north. It has its own hot spring with private family baths you can book for the two of you, a second private soak after Hakone. Reserve the private bath ahead, and email the hotel to confirm tattoos are fine in it." },
   ]},
   { head: "If you'd rather stay in Shinjuku", sub: "Alternative to Ginza", hotels: [
     { id: "gracery", tag: "Alternative", alt: true, name: "Hotel Gracery Shinjuku", lat: 35.6950, lng: 139.7016,
@@ -1108,15 +1115,15 @@ const HOTEL_STAYS = [
       text: "The fun one, with a giant Godzilla head on the roof, and steps from Golden Gai and Omoide Yokocho. Best if late nights out matter most. The trade-off: the east-side days (Asakusa, Toyosu, Tsukiji) are 30–40 minutes each way, and you're farther from Tokyo Station's bullet trains." },
   ]},
 ];
-const HOTEL_INTRO = "Our suggestion: stay in Ginza for every Tokyo night, plus one night in Osaka. Ginza is in the middle of this plan:";
+const HOTEL_INTRO = "Our suggestion: stay in Ginza for every Tokyo night, plus three nights in Osaka. Ginza is in the middle of this plan:";
 const HOTEL_WHY = [
   "Asakusa, Ueno, Toyosu, Tsukiji and Roppongi are each about 10–15 minutes away; Shibuya and Shinjuku about 20–25.",
-  "Bullet trains to Osaka leave from Tokyo Station, and Friday's train back from Odawara (after the Hakone onsen) arrives there too.",
+  "Bullet trains to Osaka leave from Tokyo Station, and on Sunday the Romancecar from Hakone gets you to Shinjuku, 17 minutes from Ginza on the Marunouchi Line.",
   "Haneda Airport is about 30 minutes away for the flight home.",
   "It's quiet at night, with the Tsukiji and Ginza food streets close by.",
 ];
 const HOTEL_TIPS = [
-  "Book the Tokyo hotel as two stays (Nov 29 – Dec 3 and Dec 4 – 5) and ask them to keep your big bags while you're in Osaka and Hakone, so you only carry an overnight bag.",
+  "Book the Tokyo hotel as two stays (Nov 29 – Dec 3 and Dec 6 – 7) and ask them to keep your big bags while you're in Osaka and Hakone, so you only carry a small bag for those three days.",
   "Pick refundable rates while the plan is still changing.",
   "Prices are rough guides from travel sites; check your dates with the links.",
 ];
@@ -1140,7 +1147,7 @@ let current = 0;
 const WEEKDAY_JA = { Sun: "日", Mon: "月", Tue: "火", Wed: "水", Thu: "木", Fri: "金", Sat: "土" };
 const AREA_JA = { Asakusa: "浅草", Ueno: "上野", Ikebukuro: "池袋", Yanaka: "谷中", Harajuku: "原宿", Shibuya: "渋谷", Ebisu: "恵比寿",
   Toyosu: "豊洲", Tsukiji: "築地", Ginza: "銀座", Azabudai: "麻布台", Roppongi: "六本木", Kamakura: "鎌倉", Nakameguro: "中目黒",
-  Hakone: "箱根", Shinjuku: "新宿", Osaka: "大阪", Namba: "難波", Shinsekai: "新世界", Dotonbori: "道頓堀", Umeda: "梅田", Tokyo: "東京", Nipponbashi: "日本橋", Hibiya: "日比谷", Marunouchi: "丸の内" };
+  Hakone: "箱根", Shinjuku: "新宿", Osaka: "大阪", Namba: "難波", Shinsekai: "新世界", Dotonbori: "道頓堀", Umeda: "梅田", Tokyo: "東京", Nipponbashi: "日本橋", Kyoto: "京都", Fushimi: "伏見", Gion: "祇園", Nara: "奈良", Haneda: "羽田", Hibiya: "日比谷", Marunouchi: "丸の内" };
 // "Asakusa · Ueno" -> "浅草 Asakusa · 上野 Ueno" (unknown names stay as written)
 const areaLabel = area => String(area).split(/(\s*[·→]\s*)/).map(part =>
   AREA_JA[part.trim()] ? `<span lang="ja" class="ja">${AREA_JA[part.trim()]}</span> ${esc(part.trim())}` : esc(part)).join("");
@@ -1309,16 +1316,16 @@ function showHotels(fly = true) {
 // ---- eSIM tab: what phone data to get and how to set it up ----
 const ESIM = {
   pick: { name: "Sakura Mobile Unlimited eSIM", tag: "Get this", url: "https://www.sakuramobile.jp/travel/esim/",
-    facts: "au (KDDI) 5G · unlimited data · 7-day plan, one per phone · roughly $30–40 each",
+    facts: "au (KDDI) 5G · unlimited data · 9-day plan, one per phone · roughly $35–50 each",
     text: "A Japanese company selling data straight on a Japanese carrier's 5G network, instead of reselling roaming data like most travel eSIMs, so it's usually faster and steadier. Truly unlimited: no daily cap or slowdown, where many cheaper “unlimited” eSIMs crawl after 1–3 GB a day. Sakura's own tests average about 180 Mbps." },
   why: [
-    "Install it at home before the flight: the 7 days only start counting when you arrive in Japan, so you're online as soon as you land at Haneda.",
-    "Hotspot is included (about 6 GB on the 7-day plan), so one phone can share with the other in a pinch.",
-    "Buying two together gets 10% off. Prices are in yen; a 4-day plan is about ¥3,900 with tax, so check the 7-day price on their site.",
+    "Install it at home before the flight: the 9 days only start counting when you arrive in Japan, so you're online as soon as you land at Haneda.",
+    "Hotspot is included (a few GB, more on longer plans), so one phone can share with the other in a pinch.",
+    "Buying two together gets 10% off. Prices are in yen; a 4-day plan is about ¥3,900 with tax, so check the 9-day price on their site.",
   ],
   steps: [
     ["Now", "Check both phones are carrier-unlocked and support eSIM. On iPhone: Settings › General › About › Carrier Lock should say “No SIM restrictions.” Phones still being paid off through a carrier are sometimes locked; ask the carrier to unlock them."],
-    ["Anytime before the trip", "Buy two Unlimited eSIMs, 7 days each (Nov 29 – Dec 5), on Sakura Mobile's site. Each phone needs its own."],
+    ["Anytime before the trip", "Buy two Unlimited eSIMs, 9 days each (Nov 29 – Dec 7), on Sakura Mobile's site. Each phone needs its own."],
     ["A few days before you fly", "At home on Wi-Fi, install it: Settings › Cellular › Add eSIM, then scan the QR code from Sakura's email. Install it only once and don't delete it; it can't be reinstalled."],
     ["When you land at Haneda", "Set the Sakura line as your cellular data line, and turn off data roaming on your US line so it can't charge you. Keep the US line switched on if you want texts like bank codes. If the Sakura line doesn't connect, follow the setup steps in Sakura's email (iPhones sometimes need a small extra setting)."],
   ],
@@ -1702,7 +1709,7 @@ window.EMA = EMA;
 // ---- Trip countdown in the header ----
 (() => {
   const el = document.getElementById("countdown"); if (!el) return;
-  const start = new Date(2026, 10, 29), end = new Date(2026, 11, 5);      // Nov 29 – Dec 5, local dates
+  const start = new Date(2026, 10, 29), end = new Date(2026, 11, 7);      // Nov 29 – Dec 7, local dates
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const days = Math.round((start - today) / 864e5);
   let html;

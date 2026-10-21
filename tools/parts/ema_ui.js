@@ -308,7 +308,7 @@ window.EMA = EMA;
 // ---- Trip countdown in the header ----
 (() => {
   const el = document.getElementById("countdown"); if (!el) return;
-  const start = new Date(2026, 10, 29), end = new Date(2026, 11, 5);      // Nov 29 – Dec 5, local dates
+  const start = new Date(2026, 10, 29), end = new Date(2026, 11, 7);      // Nov 29 – Dec 7, local dates
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const days = Math.round((start - today) / 864e5);
   let html;

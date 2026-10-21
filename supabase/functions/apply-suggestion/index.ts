@@ -51,7 +51,7 @@ function planForPrompt(p: Plan) {
 const TOOLS = [
   { name: "add_stop", description: "Add a place to a day at a time. Returns the updated day.",
     input_schema: { type: "object", properties: {
-      day: { type: "integer", description: "Day number, 1-7" }, time: { type: "string", description: "24-hour HH:MM" },
+      day: { type: "integer", description: "Day number, 1-9" }, time: { type: "string", description: "24-hour HH:MM" },
       place: { type: "string" }, lat: { type: "number" }, lng: { type: "number" },
       note: { type: "string", description: "1-2 short practical sentences, including how to get there from the previous stop" },
       kind: { type: "string", enum: ["sight", "street food", "sushi Casual", "sushi Mid-range", "sushi Splurge"] },
@@ -77,7 +77,7 @@ const TOOLS = [
 ];
 
 function rules(plan: Plan, s: { suggested_by: string; day: string | null; body: string }) {
-  return `You maintain a shared day-by-day plan for a trip to Japan, Sunday Nov 29 to Saturday Dec 5, 2026: Tokyo, plus an overnight in Osaka (Thursday to Friday, by Nozomi bullet train). The travelers land in Tokyo around 2 PM on Sunday.
+  return `You maintain a shared day-by-day plan for a trip to Japan, Sunday Nov 29 to Monday Dec 7, 2026: Tokyo (staying in Ginza), then three nights in Osaka (Thursday to Sunday, by Nozomi bullet train) with day trips to Kyoto and Nara, a private onsen in Hakone on Sunday on the way back, and a 4 PM flight home from Haneda on Monday. The travelers land in Tokyo around 2 PM on the first Sunday.
 
 Someone with the website link sent a message. It can be a suggestion (a change to the plan), a question (about the plan or the trip), or both.
 - For a suggestion, change the plan with the tools.
