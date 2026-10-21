@@ -1196,23 +1196,26 @@ function buildTabs() {
     b.className = "tab"; b.id = "tab-" + i; b.type = "button";
     b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "dayPanel");
     b.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">${WEEKDAY_JA[d.date.slice(0, 3)] || ""}</span><span><b>${esc(d.date)}</b><small>${d.stops.length} stop${d.stops.length === 1 ? "" : "s"}</small></span>`;
+    b.dataset.idx = i;
     tabs.appendChild(b);
   });
-  // Info tabs after the days (Hotels, eSIM)
-  INFO_TABS.forEach(t => {
+  // Info tabs (Ema Wall goes first, before the days; Hotels and eSIM after them).
+  // Tab numbers stay days 0..6 then info tabs; only their order on screen changes.
+  INFO_TABS.forEach((t, k) => {
     const b = document.createElement("button");
     b.className = "tab"; b.id = "tab-" + t.id; b.type = "button";
     b.setAttribute("role", "tab"); b.setAttribute("aria-controls", "dayPanel");
     b.innerHTML = `<span class="kanji" lang="ja" aria-hidden="true">${t.kanji}</span><span><b>${esc(t.label)}</b><small>${esc(t.sub)}</small></span>`;
-    tabs.appendChild(b);
+    b.dataset.idx = DAYS.length + k;
+    if (t.first) tabs.insertBefore(b, tabs.firstChild); else tabs.appendChild(b);
   });
-  [...tabs.children].forEach((b, i) => {
-    b.addEventListener("click", () => show(i));
+  [...tabs.children].forEach((b, pos) => {
+    b.addEventListener("click", () => show(+b.dataset.idx));
     b.addEventListener("keydown", e => {
       if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
         const total = tabs.children.length;
-        const n = (i + (e.key === "ArrowRight" ? 1 : total - 1)) % total;
-        tabs.children[n].focus(); show(n);
+        const next = tabs.children[(pos + (e.key === "ArrowRight" ? 1 : total - 1)) % total];
+        next.focus(); show(+next.dataset.idx);
       }
     });
   });
@@ -1220,10 +1223,10 @@ function buildTabs() {
 
 function show(i, fly = true) {
   current = Math.max(0, Math.min(i, DAYS.length + INFO_TABS.length - 1));
-  [...tabs.children].forEach((t, j) => { t.setAttribute("aria-selected", String(j === current)); t.tabIndex = j === current ? 0 : -1; });
+  [...tabs.children].forEach(t => { const on = +t.dataset.idx === current; t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1; });
   const info = INFO_TABS[current - DAYS.length];
   panel.setAttribute("aria-labelledby", info ? "tab-" + info.id : "tab-" + current);
-  const sel = tabs.children[current];
+  const sel = tabs.querySelector(`[data-idx="${current}"]`);
   if (sel) {
     const l = sel.offsetLeft - tabs.offsetLeft, r = l + sel.offsetWidth;
     if (l < tabs.scrollLeft) tabs.scrollLeft = l - 8;
@@ -1617,7 +1620,7 @@ window.EMA = EMA;
 
 
 const INFO_TABS = [
-  { id: "ema", kanji: "絵", label: "Ema Wall", sub: "shared notes", render: fly => window.EMA ? EMA.show(fly) : showEsim() },
+  { id: "ema", first: true, kanji: "絵", label: "Ema Wall", sub: "shared notes", render: fly => window.EMA ? EMA.show(fly) : showEsim() },
   { id: "hotels", kanji: "宿", label: "Hotels", sub: "where to stay", render: showHotels },
   { id: "esim", kanji: "通", label: "eSIM", sub: "phone data", render: showEsim },
 ];
