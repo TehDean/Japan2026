@@ -16,6 +16,7 @@ const EMA = (() => {
   const B = window.EMA_BACKEND;
   let notes = null, board = BOARDS[store.get("jp-ema-board", "")] ? store.get("jp-ema-board", "") : "book";
   let banner = "", readOnly = false, open = false, timer = null, known = null, mine = new Set(), swayNext = true, busy = false;
+  let fortune = null;   // the slip stays put when the wall redraws
 
   const ago = iso => {
     const m = Math.round((Date.now() - new Date(iso)) / 60000);
@@ -52,7 +53,9 @@ const EMA = (() => {
         }
       }
       known = new Set(fresh.map(n => n.id));
+      const same = quiet && notes && JSON.stringify(notes) === JSON.stringify(fresh) && !r.banner === !banner;
       notes = fresh;
+      if (same) return;
     } catch (e) {
       banner = (e && e.userMessage) || "Couldn't reach the wall just now. It'll try again shortly.";
       if (e && e.action) banner = { text: banner, action: e.action };
@@ -111,7 +114,7 @@ const EMA = (() => {
         <p>Shake the box like at Senso-ji and see what the trip has in store.</p>
         <div class="omikuji-box" id="kujiBox" aria-hidden="true" lang="ja">籤</div><br>
         <button type="button" class="ema-btn ghost" id="kujiBtn">Shake the box</button>
-        <div id="kujiSlip" aria-live="polite"></div>
+        <div id="kujiSlip" aria-live="polite">${fortune ? slipHtml(fortune) : ""}</div>
       </section>`;
     swayNext = false;
     panel.querySelectorAll("[data-board]").forEach(x => x.addEventListener("click", () => {
@@ -271,17 +274,18 @@ const EMA = (() => {
     ["末吉", "Future blessing", "Sleep well. The adventure that matters most is still ahead."],
     ["末吉", "Future blessing", "When the plan falls apart, the trip begins."]
   ];
+  const slipHtml = ([lvl, en, msg]) => `<div class="omikuji-slip"><div class="lvl" lang="ja">${lvl}</div><div class="lvl-en">${en}</div>${esc(msg)}</div>`;
   function drawFortune() {
     const box = panel.querySelector("#kujiBox"), slip = panel.querySelector("#kujiSlip");
     box.classList.remove("shake"); void box.offsetWidth; box.classList.add("shake");
-    slip.innerHTML = "";
+    slip.innerHTML = ""; fortune = null;
     setTimeout(() => {
       // Shuffle bag: no fortune repeats on this phone until every one has been drawn
       let bag = store.get("jp-kuji-bag", []).filter(i => i < FORTUNES.length);
       if (!bag.length) { bag = FORTUNES.map((_, i) => i); for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; } }
-      const [lvl, en, msg] = FORTUNES[bag.pop()];
+      fortune = FORTUNES[bag.pop()];
       store.set("jp-kuji-bag", bag);
-      slip.innerHTML = `<div class="omikuji-slip"><div class="lvl" lang="ja">${lvl}</div><div class="lvl-en">${en}</div>${esc(msg)}</div>`;
+      const now = panel.querySelector("#kujiSlip"); if (now) now.innerHTML = slipHtml(fortune);
     }, matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 700);
   }
 
