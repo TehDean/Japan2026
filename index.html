@@ -1083,16 +1083,19 @@ const DEFAULT_DAYS = [
 // ---- Hotels tab: recommendations to help decide where to stay. Temporary: delete this block,
 // the HOTEL CSS and the hotel lines in buildTabs/show once the hotels are booked. ----
 const HOTEL_STAYS = [
-  { head: "Tokyo · Ginza", sub: "Sun 11/29 – Thu 12/3 (4 nights), then Fri 12/4 (1 night)", hotels: [
-    { id: "tsuki", tag: "Top pick", name: "TSUKI Tokyo", lat: 35.6702, lng: 139.7720, approx: true,
-      facts: "Tsukiji, by Ginza · from about ¥20,000/night · rated 9.4/10 (Expedia, 259 reviews)",
-      text: "A small, calm Japanese-style hotel. Book a room “with furo”: it has its own wooden Japanese soaking tub, so you can have a hot bath together every night with no tattoo rules to worry about. Tsukiji Outer Market and Ginza are about a 10-minute walk, and Shintomicho subway station is 3 minutes away." },
-    { id: "mitsuiginza", tag: "Step up", name: "Mitsui Garden Hotel Ginza Premier", lat: 35.6669, lng: 139.7627, approx: true,
-      facts: "Ginza 8-chome · about ¥20,000–60,000/night",
-      text: "A polished, bigger hotel right in Ginza, close to Shimbashi and Ginza stations. Pick this if you'd rather have a full-service hotel with city views than a boutique stay. No soaking tub of your own, so the onsen nights would be Hakone and Osaka." },
-    { id: "peninsula", tag: "Splurge", name: "The Peninsula Tokyo", lat: 35.6747, lng: 139.7604,
-      facts: "Yurakucho, across from Hibiya Park · from about ¥50,000+/night",
-      text: "One of Tokyo's top luxury hotels, known for its service and views. It sits between Ginza and Tokyo Station, so it has the same easy access as the other two, just with a lot more pampering." },
+  { head: "Tokyo · Ginza", sub: "Sun 11/29 – Thu 12/3 (4 nights), then Fri 12/4 (1 night) · budget about $90–240 a night", hotels: [
+    { id: "tokyustay", tag: "Top pick", name: "Tokyu Stay Ginza", lat: 35.6703118, lng: 139.7673442,
+      facts: "Ginza 4-chome, by Ginza and Higashi-Ginza stations · recent rates mostly about $90–240/night (Kayak) · 8.5/10 from 4,000+ reviews",
+      text: "Right in the middle of Ginza, a couple of minutes from two subway stations, with a direct train to Haneda from Higashi-Ginza. Some rooms have their own washer-dryer (pick one when you book), so you can pack light for the week. Reviewers love the location, quiet nights and the Japanese breakfast; rooms are small and a bit dated, as most are in Tokyo." },
+    { id: "ibisginza", tag: "With a bath", name: "Ibis Styles Tokyo Ginza East", lat: 35.67363, lng: 139.7735417,
+      facts: "Shintomi, a short walk from Ginza · budget chain · 4.3 on Google from 1,100+ reviews",
+      text: "Clean, friendly and well run, with a public bath in the building, a rooftop terrace and coin laundry (detergent included). Rooms are small but fit two and their bags. The bath is shared, so ask the hotel about its tattoo rules; your private soaks are planned for Hakone and Osaka anyway." },
+    { id: "bellevue", tag: "Budget + breakfast", name: "Ginza Bellevue Hotel", lat: 35.6711578, lng: 139.7612447,
+      facts: "Ginza 6-chome, about 6 minutes from Ginza Station · a reviewer paid ¥14,500 (about $100) with breakfast",
+      text: "The money-saver: simple, spotless rooms with a free breakfast, a short walk to Ginza's main street and the Hibiya and Marunouchi lights. Rooms and bathrooms are tiny, so it's best if you mostly just sleep there." },
+    { id: "tsuki", tag: "One-night treat", name: "TSUKI Tokyo", lat: 35.6702, lng: 139.7720, approx: true,
+      facts: "Tsukiji, by Ginza · about $500/night for late-November dates (Dean's check) · rated 9.4/10 (Expedia)",
+      text: "Too much for the whole week, but a lovely single splurge night: book a room “with furo” for your own wooden Japanese soaking tub. If you want one special night, Friday after Hakone is a good pick." },
   ]},
   { head: "Osaka · Nipponbashi", sub: "Thu 12/3 (1 night)", hotels: [
     { id: "hinode", tag: "Top pick", name: "Hot Spring Osaka Hinode Hotel Nipponbashi", lat: 34.6560, lng: 135.5040, approx: true,
