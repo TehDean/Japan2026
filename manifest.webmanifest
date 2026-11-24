@@ -1,7 +1,7 @@
 {
   "name": "Japan December Plan",
   "short_name": "Japan Plan",
-  "description": "Day-by-day plan for Tokyo, Osaka, Kyoto, Nara and Hakone, Nov 29 to Dec 7, 2026.",
+  "description": "Day-by-day plan for Tokyo, Osaka, Kyoto and Hakone, Nov 29 to Dec 7, 2026.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

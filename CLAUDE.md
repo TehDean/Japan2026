@@ -1,6 +1,6 @@
 # Japan December Plan: notes for Claude
 
-A day-by-day plan for a trip to Japan, Sun Nov 29 to Mon Dec 7, 2026 (changed Oct 21 from a Sat Dec 5 return): Tokyo (staying in Ginza),
+A day-by-day plan for a trip to Japan, Sun Nov 29 to Mon Dec 7, 2026 (changed Oct 21 from a Sat Dec 5 return): Tokyo (Tokyu Stay Ginza),
 three nights in Osaka (Thu 12/3 to Sun 12/6) with day trips to Kyoto (Fri) and Nara (Sat), Hakone onsen and Shinjuku on Sun 12/6,
 and a 4 PM flight home from Haneda on Mon 12/7.
 It exists in two versions:
@@ -62,7 +62,7 @@ push notification and email only when a new escalated request has arrived (read-
   `DEFAULT_PLACES` / `DEFAULT_DAYS` in `tools/page_template.html` when updating the Claude dashboard, which is a
   snapshot built from those (it can't read Supabase) and is the website's offline fallback.
 - **Info tabs after the days:** `INFO_TABS` in `tools/page_template.html` (static, not in Supabase), added Oct 19, 2026.
-  **Hotels** (`HOTEL_STAYS`, `showHotels`; temporary, remove once hotels are booked) and **eSIM** (`ESIM`, `showEsim`;
+  **Hotels** (`HOTEL_STAYS`, `showHotels`; shows the hotels booked Nov 23, 2026: Tokyu Stay Ginza 11/29–12/3, Osaka Hinode Hotel Nipponbashi 12/3–12/6, Hotel Gracery Shinjuku 12/6–12/7; the hotels are also stops `tokyustay`, `hinode`, `gracery` in the plan) and **eSIM** (`ESIM`, `showEsim`;
   recommends the Sakura Mobile Unlimited eSIM, 9 days, one per phone). To remove a tab, drop its `INFO_TABS` entry
   and its data/render function; the shared hotel-card CSS is also used by the eSIM tab.
 - **Ema Wall (shared notes, added Oct 21, 2026):** the leftmost tab (`first: true` in `INFO_TABS`; the page still opens on Sunday). Anyone with the link can hang, edit, stamp done
