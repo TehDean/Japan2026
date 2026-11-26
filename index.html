@@ -890,6 +890,19 @@ h1 { letter-spacing: .01em; font-family: "Shippori Mincho", "Hiragino Mincho Pro
 .tips h3 { margin: 0 0 4px; font-size: 14px; }
 .tips ul { margin: 0; padding-left: 18px; }
 .tips li { margin: 3px 0; }
+.wx { margin: -4px 0 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); font-size: 14px; }
+.wx .eyebrow { margin-bottom: 4px; }
+.wx ul { margin: 0; padding: 0; list-style: none; }
+.wx-row { margin: 3px 0; display: flex; gap: 8px; align-items: baseline; }
+.wx-ic { width: 1.3em; flex: none; text-align: center; }
+.wx-row.rough { color: var(--accent); font-weight: 600; }
+.wx-note { margin: 8px 0 0; padding-top: 8px; border-top: 1px dashed var(--line); }
+.wx-note.bad { margin: 8px -12px -10px; padding: 8px 12px 10px; border-top: 0; background: var(--accent-soft); border-radius: 0 0 6px 6px; }
+.wx-note p { margin: 0; }
+.wx-note h4 { margin: 8px 0 2px; font-size: 13px; }
+.wx-note ul { list-style: disc; padding-left: 18px; }
+.wx-note li { margin: 2px 0; }
+.wx-src { margin: 6px 0 0; font-size: 12px; color: var(--muted); }
 /* Stop photos (website only; filled in by parts/photos_js.js) */
 .stop-photo { margin: 6px 0 4px; max-width: 420px; }
 .stop-photo img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); }
@@ -1243,6 +1256,7 @@ function show(i, fly = true) {
   panel.innerHTML = `
     <div class="day-head"><div class="eyebrow">${esc(d.full)}${d.area ? " · " + areaLabel(d.area) : ""}</div><h2>${esc(d.title)}</h2>
       <p>${d.stops.length ? d.stops.length + " stop" + (d.stops.length === 1 ? "" : "s") + (map ? ". Tap one to find it on the map." : "") : "Nothing planned yet."}</p></div>
+    <div class="wx" id="wx" hidden></div>
     <ol class="stops">${d.stops.map((s, n) => {
       const p = PLACES[s.id];
       return `<li class="stop${map ? " clickable" : ""}" data-id="${esc(s.id)}">
@@ -1251,6 +1265,7 @@ function show(i, fly = true) {
           <p class="stop-note">${esc(s.note)}</p>
           <a class="dir" href="${dirUrl(p)}" target="_blank" rel="noopener">Open in Google Maps ↗</a></div>
       </li>`; }).join("")}</ol>`;
+  WX.render(d);
   panel.querySelectorAll(".stop.clickable").forEach(li => li.addEventListener("click", e => {
     if (e.target.closest("a")) return;
     const p = PLACES[li.dataset.id];
@@ -1711,6 +1726,69 @@ window.EMA = EMA;
   el.hidden = false;
 })();
 
+
+// ---- Weather on each day: the live forecast (Open-Meteo, on the website) and the kitsune's daily check (weather.json,
+// written each morning by the scheduled task "Kitsune's weather check"; tools/weather.py). The Claude dashboard can't
+// reach outside sites, so it shows the copy of weather.json from when it was built. ----
+const WX_SNAPSHOT = {"checked": "2026-11-26T10:48+09:00", "checked_label": "Nov 26, 10:48 AM Japan time", "forecast": {"2026-11-28": {"Tokyo": {"code": 55, "hi": 68, "lo": 54, "rain": 0.15, "pop": 93, "wind": 8, "snow": 0}, "Osaka": {"code": 53, "hi": 66, "lo": 54, "rain": 0.09, "pop": 89, "wind": 11, "snow": 0}, "Kyoto": {"code": 51, "hi": 67, "lo": 50, "rain": 0.04, "pop": 92, "wind": 6, "snow": 0}, "Hakone": {"code": 63, "hi": 66, "lo": 56, "rain": 0.82, "pop": 98, "wind": 13, "snow": 0}}, "2026-11-29": {"Tokyo": {"code": 1, "hi": 54, "lo": 42, "rain": 0, "pop": 14, "wind": 14, "snow": 0}, "Osaka": {"code": 51, "hi": 54, "lo": 42, "rain": 0.0, "pop": 14, "wind": 12, "snow": 0}, "Kyoto": {"code": 51, "hi": 50, "lo": 37, "rain": 0.01, "pop": 47, "wind": 10, "snow": 0}, "Hakone": {"code": 51, "hi": 56, "lo": 44, "rain": 0.01, "pop": 35, "wind": 12, "snow": 0}}, "2026-11-30": {"Tokyo": {"code": 0, "hi": 56, "lo": 38, "rain": 0, "pop": 0, "wind": 5, "snow": 0}, "Osaka": {"code": 0, "hi": 57, "lo": 38, "rain": 0, "pop": 0, "wind": 6, "snow": 0}, "Kyoto": {"code": 0, "hi": 57, "lo": 35, "rain": 0, "pop": 0, "wind": 6, "snow": 0}, "Hakone": {"code": 0, "hi": 59, "lo": 44, "rain": 0, "pop": 2, "wind": 13, "snow": 0}}, "2026-12-01": {"Tokyo": {"code": 0, "hi": 63, "lo": 40, "rain": 0, "pop": 0, "wind": 4, "snow": 0}, "Osaka": {"code": 45, "hi": 64, "lo": 42, "rain": 0, "pop": 4, "wind": 5, "snow": 0}, "Kyoto": {"code": 0, "hi": 65, "lo": 40, "rain": 0, "pop": 2, "wind": 6, "snow": 0}, "Hakone": {"code": 45, "hi": 67, "lo": 50, "rain": 0, "pop": 0, "wind": 10, "snow": 0}}, "2026-12-02": {"Tokyo": {"code": 2, "hi": 61, "lo": 45, "rain": 0, "pop": 1, "wind": 6, "snow": 0}, "Osaka": {"code": 45, "hi": 64, "lo": 45, "rain": 0, "pop": 1, "wind": 4, "snow": 0}, "Kyoto": {"code": 45, "hi": 64, "lo": 43, "rain": 0, "pop": 2, "wind": 4, "snow": 0}, "Hakone": {"code": 45, "hi": 64, "lo": 49, "rain": 0, "pop": 0, "wind": 4, "snow": 0}}, "2026-12-03": {"Tokyo": {"code": 45, "hi": 64, "lo": 48, "rain": 0, "pop": 2, "wind": 6, "snow": 0}, "Osaka": {"code": 45, "hi": 62, "lo": 46, "rain": 0, "pop": 23, "wind": 4, "snow": 0}, "Kyoto": {"code": 45, "hi": 64, "lo": 44, "rain": 0, "pop": 25, "wind": 4, "snow": 0}, "Hakone": {"code": 45, "hi": 66, "lo": 49, "rain": 0, "pop": 8, "wind": 4, "snow": 0}}, "2026-12-04": {"Tokyo": {"code": 45, "hi": 62, "lo": 50, "rain": 0, "pop": 13, "wind": 8, "snow": 0}, "Osaka": {"code": 51, "hi": 63, "lo": 50, "rain": 0.02, "pop": 12, "wind": 4, "snow": 0}, "Kyoto": {"code": 45, "hi": 67, "lo": 47, "rain": 0, "pop": 10, "wind": 4, "snow": 0}, "Hakone": {"code": 51, "hi": 67, "lo": 51, "rain": 0.01, "pop": 33, "wind": 4, "snow": 0}}, "2026-12-05": {"Tokyo": {"code": 53, "hi": 58, "lo": 50, "rain": 0.12, "pop": 25, "wind": 8, "snow": 0}, "Osaka": {"code": 51, "hi": 66, "lo": 49, "rain": 0.05, "pop": 35, "wind": 9, "snow": 0}, "Kyoto": {"code": 51, "hi": 69, "lo": 48, "rain": 0.07, "pop": 31, "wind": 8, "snow": 0}, "Hakone": {"code": 51, "hi": 65, "lo": 52, "rain": 0.04, "pop": 45, "wind": 12, "snow": 0}}, "2026-12-06": {"Tokyo": {"code": 3, "hi": 55, "lo": 45, "rain": 0, "pop": 14, "wind": 6, "snow": 0}, "Osaka": {"code": 3, "hi": 58, "lo": 46, "rain": 0, "pop": 18, "wind": 8, "snow": 0}, "Kyoto": {"code": 3, "hi": 56, "lo": 43, "rain": 0, "pop": 20, "wind": 8, "snow": 0}, "Hakone": {"code": 51, "hi": 54, "lo": 46, "rain": 0.02, "pop": 36, "wind": 8, "snow": 0}}, "2026-12-07": {"Tokyo": {"code": 61, "hi": 49, "lo": 43, "rain": 0.68, "pop": 37, "wind": 10, "snow": 0}, "Osaka": {"code": 55, "hi": 54, "lo": 46, "rain": 0.44, "pop": 45, "wind": 9, "snow": 0}, "Kyoto": {"code": 80, "hi": 52, "lo": 43, "rain": 0.57, "pop": 42, "wind": 5, "snow": 0}, "Hakone": {"code": 81, "hi": 49, "lo": 46, "rain": 0.72, "pop": 55, "wind": 7, "snow": 0}}}, "notes": {"2026-11-29": {"level": "ok", "note": "🦊 A clear, crisp landing night, about 54°F and dropping into the low 40s. Perfect for Ameyoko and the lights; bring a warm layer for the walk under the trees.", "alternatives": []}, "2026-11-30": {"level": "ok", "note": "🦊 Sunny and calm, mid-50s. A great day for the Meiji Jingu forest and the sunset view. It gets chilly after dark, so jackets for Ebisu.", "alternatives": []}, "2026-12-01": {"level": "ok", "note": "🦊 Clear skies and the warmest Tokyo day so far, low 60s. Ideal for the Christmas market and Senso-ji at dusk.", "alternatives": []}, "2026-12-02": {"level": "ok", "note": "🦊 Partly cloudy and mild, around 61°F, with little chance of rain. The Roppongi lights should look lovely.", "alternatives": []}, "2026-12-03": {"level": "ok", "note": "🦊 Mild in Osaka, low 60s, maybe a misty morning. Rain looks unlikely, but the forecast is still a week out, so I'll keep watching.", "alternatives": []}, "2026-12-04": {"level": "ok", "note": "🦊 Kyoto looks mild and mostly dry, upper 60s, which is warm for December. Fushimi Inari's steps can be slippery if it drizzles; I'll check again closer to the day.", "alternatives": []}, "2026-12-05": {"level": "watch", "note": "🦊 A chance of light drizzle in Osaka (about 35%), but only a little. The aquarium and the Pokémon Center are indoors anyway; if it's wet, view the castle from the park paths quickly and skip the long walk round the moats.", "alternatives": []}, "2026-12-06": {"level": "watch", "note": "🦊 Cloudy with a chance of light drizzle in Hakone. An open-air bath in light rain is actually lovely, so no change needed. I'll watch for anything heavier.", "alternatives": []}, "2026-12-07": {"level": "watch", "note": "🦊 Rain may arrive in Tokyo on your last day, from mid-morning on. It's 11 days out, so this can change. Isetan's food hall and Don Quijote are indoors, and the airport bus leaves from inside Busta Shinjuku, so you can stay dry.", "alternatives": []}}};
+const WX = (() => {
+  const CITIES = { Tokyo: [35.68, 139.76], Osaka: [34.67, 135.50], Kyoto: [34.99, 135.77], Hakone: [35.23, 139.10] };
+  const NAMES = Object.keys(CITIES);
+  const CODES = { 0: ["☀️", "Clear"], 1: ["🌤️", "Mostly clear"], 2: ["⛅", "Partly cloudy"], 3: ["☁️", "Cloudy"], 45: ["🌫️", "Fog"], 48: ["🌫️", "Fog"],
+    51: ["🌦️", "Light drizzle"], 53: ["🌦️", "Drizzle"], 55: ["🌧️", "Heavy drizzle"], 56: ["🌧️", "Freezing drizzle"], 57: ["🌧️", "Freezing drizzle"],
+    61: ["🌧️", "Light rain"], 63: ["🌧️", "Rain"], 65: ["🌧️", "Heavy rain"], 66: ["🌧️", "Freezing rain"], 67: ["🌧️", "Freezing rain"],
+    71: ["🌨️", "Light snow"], 73: ["🌨️", "Snow"], 75: ["❄️", "Heavy snow"], 77: ["🌨️", "Snow grains"], 80: ["🌦️", "Showers"], 81: ["🌧️", "Showers"],
+    82: ["⛈️", "Heavy showers"], 85: ["🌨️", "Snow showers"], 86: ["❄️", "Heavy snow showers"], 95: ["⛈️", "Thunderstorms"], 96: ["⛈️", "Thunderstorms, hail"], 99: ["⛈️", "Thunderstorms, hail"] };
+  let snap = WX_SNAPSHOT, live = null, started = false;
+  const iso = d => { const m = /(\d{1,2})\/(\d{1,2})/.exec(d.date || ""); return m ? `2026-${m[1].padStart(2, "0")}-${m[2].padStart(2, "0")}` : null; };
+  const near = (p, c) => (p.lat - c[0]) ** 2 + (p.lng - c[1]) ** 2;
+  function cities(d) {
+    const out = [];
+    d.stops.forEach(s => { const p = PLACES[s.id]; if (!p) return;
+      const best = NAMES.reduce((a, n) => near(p, CITIES[n]) < near(p, CITIES[a]) ? n : a, NAMES[0]);
+      if (near(p, CITIES[best]) < 0.25 && !out.includes(best)) out.push(best); });
+    return out;
+  }
+  const rough = f => f.code >= 95 || [65, 67, 73, 75, 82, 86].includes(f.code) || (f.rain >= 0.4 && f.pop >= 60) || f.snow >= 0.4 || f.wind >= 25;
+  function start() {
+    if (started) return; started = true;
+    const redraw = () => { if (current < DAYS.length) render(DAYS[current]); };
+    fetch("weather.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j && j.notes) { snap = j; redraw(); } }).catch(() => {});
+    const q = "https://api.open-meteo.com/v1/forecast?latitude=" + NAMES.map(n => CITIES[n][0]).join(",") + "&longitude=" + NAMES.map(n => CITIES[n][1]).join(",") +
+      "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,snowfall_sum" +
+      "&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=Asia%2FTokyo&forecast_days=16";
+    fetch(q).then(r => r.ok ? r.json() : null).then(j => {
+      if (!j) return;
+      const all = Array.isArray(j) ? j : [j], out = {};
+      all.forEach((c, i) => { const D = c.daily; D.time.forEach((t, k) => { (out[t] = out[t] || {})[NAMES[i]] = { code: D.weather_code[k],
+        hi: D.temperature_2m_max[k], lo: D.temperature_2m_min[k], rain: D.precipitation_sum[k] || 0, pop: D.precipitation_probability_max[k],
+        wind: D.wind_speed_10m_max[k], snow: D.snowfall_sum[k] || 0 }; }); });
+      live = out; redraw();
+    }).catch(() => {});
+  }
+  function render(d) {
+    start();
+    const el = document.getElementById("wx"); if (!el) return;
+    const day = iso(d), cs = cities(d);
+    const today = new Date(Date.now() + 9 * 3600e3).toISOString().slice(0, 10);   // Japan's date
+    if (!day || !cs.length || day < today) { el.hidden = true; return; }
+    const src = (live && live[day]) || (snap && snap.forecast && snap.forecast[day]) || null;
+    const note = snap && snap.notes && snap.notes[day];
+    const rows = cs.map(n => { const f = src && src[n]; if (!f) return "";
+      const [ic, label] = CODES[f.code] || ["🌡️", "—"];
+      return `<li class="wx-row${rough(f) ? " rough" : ""}"><span class="wx-ic" aria-hidden="true">${ic}</span><span><b>${esc(n)}</b> · ${esc(label)} · ${Math.round(f.hi)}° / ${Math.round(f.lo)}°F · ${f.pop == null ? "?" : f.pop}% rain${f.rain >= 0.05 ? ` (${f.rain.toFixed(1)} in)` : ""}${f.snow >= 0.1 ? ` · ${f.snow.toFixed(1)} in snow` : ""} · wind ${Math.round(f.wind)} mph${rough(f) ? " · rough weather" : ""}</span></li>`; }).join("");
+    const anyRough = cs.some(n => src && src[n] && rough(src[n]));
+    let noteHtml = "";
+    if (note) noteHtml = `<div class="wx-note${note.level === "bad" ? " bad" : ""}"><p>${esc(note.note)}</p>${note.alternatives && note.alternatives.length ?
+      `<h4>Rainy-day backups</h4><ul>${note.alternatives.map(a => `<li>${esc(a)}</li>`).join("")}</ul>` : ""}</div>`;
+    else if (anyRough) noteHtml = `<div class="wx-note"><p>🦊 Rough weather is possible. The kitsune checks every morning and will suggest backups here.</p></div>`;
+    el.innerHTML = `<div class="eyebrow">Weather · <span lang="ja" class="ja">天気</span></div>
+      ${rows ? `<ul>${rows}</ul>` : `<p class="wx-src">The forecast shows up here about two weeks before the day.</p>`}${noteHtml}
+      <p class="wx-src">${live && live[day] ? "Live forecast from Open-Meteo." : snap ? "Forecast as of " + esc(snap.checked_label) + "." : ""}${note && snap ? " Kitsune checked " + esc(snap.checked_label) + "." : ""}</p>`;
+    el.hidden = false;
+  }
+  return { render };
+})();
 
 const INFO_TABS = [
   { id: "ema", first: true, kanji: "絵", label: "Ema Wall", sub: "shared notes", render: fly => window.EMA ? EMA.show(fly) : showEsim() },

@@ -1,8 +1,9 @@
 // Japan December Plan: keeps the site working offline.
 // The page itself: try the network first (so updates show up), fall back to the saved copy.
 // Map pieces, fonts and the map library: use the saved copy, fetch and save it the first time.
-// Suggestions (Supabase) and photo lookups (Wikipedia) always go to the network; the photos themselves are saved.
-const VERSION = "jp26-v3";   // bump to make installed copies drop their saved page
+// Suggestions (Supabase), photo lookups (Wikipedia) and the forecast (Open-Meteo) always go to the network; the photos
+// themselves are saved. The kitsune's weather.json: network first, saved copy offline.
+const VERSION = "jp26-v4";   // bump to make installed copies drop their saved page
 const SHELL = "shell-" + VERSION;
 const ASSETS = "assets-" + VERSION;
 const TILES = "tiles-" + VERSION;
@@ -55,6 +56,10 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
   if (url.hostname.endsWith("supabase.co")) return;                       // suggestions: always live
+  if (url.origin === location.origin && url.pathname.endsWith("/weather.json")) {   // the kitsune's weather check: newest first
+    e.respondWith(caches.open(SHELL).then(c => fetch(req).then(r => { if (r.ok) c.put(req, r.clone()); return r; })
+      .catch(() => c.match(req, { ignoreSearch: true }).then(h => h || Response.error())))); return;
+  }
   if (req.mode === "navigate" || (url.origin === location.origin && /\/(index\.html)?$/.test(url.pathname))) {
     e.respondWith(networkFirst(req)); return;
   }

@@ -1,0 +1,433 @@
+{
+ "checked": "2026-11-26T10:48+09:00",
+ "checked_label": "Nov 26, 10:48 AM Japan time",
+ "forecast": {
+  "2026-11-28": {
+   "Tokyo": {
+    "code": 55,
+    "hi": 68,
+    "lo": 54,
+    "rain": 0.15,
+    "pop": 93,
+    "wind": 8,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 53,
+    "hi": 66,
+    "lo": 54,
+    "rain": 0.09,
+    "pop": 89,
+    "wind": 11,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 51,
+    "hi": 67,
+    "lo": 50,
+    "rain": 0.04,
+    "pop": 92,
+    "wind": 6,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 63,
+    "hi": 66,
+    "lo": 56,
+    "rain": 0.82,
+    "pop": 98,
+    "wind": 13,
+    "snow": 0
+   }
+  },
+  "2026-11-29": {
+   "Tokyo": {
+    "code": 1,
+    "hi": 54,
+    "lo": 42,
+    "rain": 0,
+    "pop": 14,
+    "wind": 14,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 51,
+    "hi": 54,
+    "lo": 42,
+    "rain": 0.0,
+    "pop": 14,
+    "wind": 12,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 51,
+    "hi": 50,
+    "lo": 37,
+    "rain": 0.01,
+    "pop": 47,
+    "wind": 10,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 51,
+    "hi": 56,
+    "lo": 44,
+    "rain": 0.01,
+    "pop": 35,
+    "wind": 12,
+    "snow": 0
+   }
+  },
+  "2026-11-30": {
+   "Tokyo": {
+    "code": 0,
+    "hi": 56,
+    "lo": 38,
+    "rain": 0,
+    "pop": 0,
+    "wind": 5,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 0,
+    "hi": 57,
+    "lo": 38,
+    "rain": 0,
+    "pop": 0,
+    "wind": 6,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 0,
+    "hi": 57,
+    "lo": 35,
+    "rain": 0,
+    "pop": 0,
+    "wind": 6,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 0,
+    "hi": 59,
+    "lo": 44,
+    "rain": 0,
+    "pop": 2,
+    "wind": 13,
+    "snow": 0
+   }
+  },
+  "2026-12-01": {
+   "Tokyo": {
+    "code": 0,
+    "hi": 63,
+    "lo": 40,
+    "rain": 0,
+    "pop": 0,
+    "wind": 4,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 45,
+    "hi": 64,
+    "lo": 42,
+    "rain": 0,
+    "pop": 4,
+    "wind": 5,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 0,
+    "hi": 65,
+    "lo": 40,
+    "rain": 0,
+    "pop": 2,
+    "wind": 6,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 45,
+    "hi": 67,
+    "lo": 50,
+    "rain": 0,
+    "pop": 0,
+    "wind": 10,
+    "snow": 0
+   }
+  },
+  "2026-12-02": {
+   "Tokyo": {
+    "code": 2,
+    "hi": 61,
+    "lo": 45,
+    "rain": 0,
+    "pop": 1,
+    "wind": 6,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 45,
+    "hi": 64,
+    "lo": 45,
+    "rain": 0,
+    "pop": 1,
+    "wind": 4,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 45,
+    "hi": 64,
+    "lo": 43,
+    "rain": 0,
+    "pop": 2,
+    "wind": 4,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 45,
+    "hi": 64,
+    "lo": 49,
+    "rain": 0,
+    "pop": 0,
+    "wind": 4,
+    "snow": 0
+   }
+  },
+  "2026-12-03": {
+   "Tokyo": {
+    "code": 45,
+    "hi": 64,
+    "lo": 48,
+    "rain": 0,
+    "pop": 2,
+    "wind": 6,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 45,
+    "hi": 62,
+    "lo": 46,
+    "rain": 0,
+    "pop": 23,
+    "wind": 4,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 45,
+    "hi": 64,
+    "lo": 44,
+    "rain": 0,
+    "pop": 25,
+    "wind": 4,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 45,
+    "hi": 66,
+    "lo": 49,
+    "rain": 0,
+    "pop": 8,
+    "wind": 4,
+    "snow": 0
+   }
+  },
+  "2026-12-04": {
+   "Tokyo": {
+    "code": 45,
+    "hi": 62,
+    "lo": 50,
+    "rain": 0,
+    "pop": 13,
+    "wind": 8,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 51,
+    "hi": 63,
+    "lo": 50,
+    "rain": 0.02,
+    "pop": 12,
+    "wind": 4,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 45,
+    "hi": 67,
+    "lo": 47,
+    "rain": 0,
+    "pop": 10,
+    "wind": 4,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 51,
+    "hi": 67,
+    "lo": 51,
+    "rain": 0.01,
+    "pop": 33,
+    "wind": 4,
+    "snow": 0
+   }
+  },
+  "2026-12-05": {
+   "Tokyo": {
+    "code": 53,
+    "hi": 58,
+    "lo": 50,
+    "rain": 0.12,
+    "pop": 25,
+    "wind": 8,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 51,
+    "hi": 66,
+    "lo": 49,
+    "rain": 0.05,
+    "pop": 35,
+    "wind": 9,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 51,
+    "hi": 69,
+    "lo": 48,
+    "rain": 0.07,
+    "pop": 31,
+    "wind": 8,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 51,
+    "hi": 65,
+    "lo": 52,
+    "rain": 0.04,
+    "pop": 45,
+    "wind": 12,
+    "snow": 0
+   }
+  },
+  "2026-12-06": {
+   "Tokyo": {
+    "code": 3,
+    "hi": 55,
+    "lo": 45,
+    "rain": 0,
+    "pop": 14,
+    "wind": 6,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 3,
+    "hi": 58,
+    "lo": 46,
+    "rain": 0,
+    "pop": 18,
+    "wind": 8,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 3,
+    "hi": 56,
+    "lo": 43,
+    "rain": 0,
+    "pop": 20,
+    "wind": 8,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 51,
+    "hi": 54,
+    "lo": 46,
+    "rain": 0.02,
+    "pop": 36,
+    "wind": 8,
+    "snow": 0
+   }
+  },
+  "2026-12-07": {
+   "Tokyo": {
+    "code": 61,
+    "hi": 49,
+    "lo": 43,
+    "rain": 0.68,
+    "pop": 37,
+    "wind": 10,
+    "snow": 0
+   },
+   "Osaka": {
+    "code": 55,
+    "hi": 54,
+    "lo": 46,
+    "rain": 0.44,
+    "pop": 45,
+    "wind": 9,
+    "snow": 0
+   },
+   "Kyoto": {
+    "code": 80,
+    "hi": 52,
+    "lo": 43,
+    "rain": 0.57,
+    "pop": 42,
+    "wind": 5,
+    "snow": 0
+   },
+   "Hakone": {
+    "code": 81,
+    "hi": 49,
+    "lo": 46,
+    "rain": 0.72,
+    "pop": 55,
+    "wind": 7,
+    "snow": 0
+   }
+  }
+ },
+ "notes": {
+  "2026-11-29": {
+   "level": "ok",
+   "note": "🦊 A clear, crisp landing night, about 54°F and dropping into the low 40s. Perfect for Ameyoko and the lights; bring a warm layer for the walk under the trees.",
+   "alternatives": []
+  },
+  "2026-11-30": {
+   "level": "ok",
+   "note": "🦊 Sunny and calm, mid-50s. A great day for the Meiji Jingu forest and the sunset view. It gets chilly after dark, so jackets for Ebisu.",
+   "alternatives": []
+  },
+  "2026-12-01": {
+   "level": "ok",
+   "note": "🦊 Clear skies and the warmest Tokyo day so far, low 60s. Ideal for the Christmas market and Senso-ji at dusk.",
+   "alternatives": []
+  },
+  "2026-12-02": {
+   "level": "ok",
+   "note": "🦊 Partly cloudy and mild, around 61°F, with little chance of rain. The Roppongi lights should look lovely.",
+   "alternatives": []
+  },
+  "2026-12-03": {
+   "level": "ok",
+   "note": "🦊 Mild in Osaka, low 60s, maybe a misty morning. Rain looks unlikely, but the forecast is still a week out, so I'll keep watching.",
+   "alternatives": []
+  },
+  "2026-12-04": {
+   "level": "ok",
+   "note": "🦊 Kyoto looks mild and mostly dry, upper 60s, which is warm for December. Fushimi Inari's steps can be slippery if it drizzles; I'll check again closer to the day.",
+   "alternatives": []
+  },
+  "2026-12-05": {
+   "level": "watch",
+   "note": "🦊 A chance of light drizzle in Osaka (about 35%), but only a little. The aquarium and the Pokémon Center are indoors anyway; if it's wet, view the castle from the park paths quickly and skip the long walk round the moats.",
+   "alternatives": []
+  },
+  "2026-12-06": {
+   "level": "watch",
+   "note": "🦊 Cloudy with a chance of light drizzle in Hakone. An open-air bath in light rain is actually lovely, so no change needed. I'll watch for anything heavier.",
+   "alternatives": []
+  },
+  "2026-12-07": {
+   "level": "watch",
+   "note": "🦊 Rain may arrive in Tokyo on your last day, from mid-morning on. It's 11 days out, so this can change. Isetan's food hall and Don Quijote are indoors, and the airport bus leaves from inside Busta Shinjuku, so you can stay dry.",
+   "alternatives": []
+  }
+ }
+}

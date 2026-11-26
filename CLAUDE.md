@@ -77,6 +77,13 @@ push notification and email only when a new escalated request has arrived (read-
   visitor's browser (matching article near the pin, else nearest article, labeled "Nearby"). A place can set
   `photo` to a Wikipedia article title, or `"none"` to hide it; the suggestion box can set this too. The Claude
   dashboard has no photos (it can't load outside images).
+- **Weather (added Nov 25, 2026):** each day tab shows a weather box (`WX` in `tools/page_template.html`): the live
+  Open-Meteo forecast (website only) for the cities that day's stops are in (Tokyo, Osaka, Kyoto, Hakone), plus the
+  kitsune's daily note from `weather.json` (level ok/watch/bad, and up to 3 backups on bad days). The scheduled task
+  "Kitsune's weather check" (daily 5:41 PM Eastern = 7:41 AM Japan) runs `python3 tools/weather.py fetch`, writes the
+  notes, runs `python3 tools/weather.py write notes.json` and commits `weather.json` to `main`; it pushes Dean a
+  notification only when a day newly turns "bad", and turns itself off after Dec 7. The build embeds `weather.json`
+  (the dashboard can't fetch outside sites, so it shows the copy from its last build).
 - Website-only pieces are in `tools/parts/`. Don't edit `index.html` by hand; it is generated.
 - Build both versions: `python3 tools/build.py` → `index.html` (website) and `tools/build/dashboard.html` (Claude).
 - Owner's preferences for the plan: keep each day's stops close together (no crossing town); sushi a few times,

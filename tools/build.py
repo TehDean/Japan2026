@@ -29,6 +29,11 @@ def leaflet_css():
     return re.sub(r"/\*.*?\*/", "", css, flags=re.S)
 
 s = open(P("page_template.html")).read()
+# The kitsune's latest weather check, built in so the dashboard (and the website offline) can show it
+_wx = os.path.join(ROOT, "weather.json")
+if os.path.exists(_wx):
+    import json as _json
+    s = s.replace("const WX_SNAPSHOT = null; /*WX_SNAPSHOT*/", "const WX_SNAPSHOT = " + _json.dumps(_json.load(open(_wx)), ensure_ascii=False).replace("</", "<\\/") + ";")
 css = leaflet_css()
 part = lambda name: open(P("parts", name)).read()
 
