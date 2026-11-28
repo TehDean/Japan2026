@@ -16,6 +16,7 @@ whether it looks rough. Whoever runs the check (the scheduled task) then writes 
 weather.json that was in the repo when it was built.
 """
 import json, os, sys, urllib.request, datetime as dt
+# Forecast source: Open-Meteo; if it refuses (e.g. its daily limit on a shared connection), MET Norway as a backup.
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -61,6 +62,60 @@ def rough(f):
     if f["wind"] >= 25: why.append(f"strong wind ({f['wind']:.0f} mph)")
     return why
 
+MET_UA = "Japan2026 weather check github.com/TehDean/Japan2026"
+MET_CODES = {"clearsky": 0, "fair": 1, "partlycloudy": 2, "cloudy": 3, "fog": 45, "lightrain": 61, "rain": 63, "heavyrain": 65,
+             "lightrainshowers": 80, "rainshowers": 81, "heavyrainshowers": 82, "lightsleet": 66, "sleet": 67, "heavysleet": 67,
+             "lightsleetshowers": 66, "sleetshowers": 67, "heavysleetshowers": 67, "lightsnow": 71, "snow": 73, "heavysnow": 75,
+             "lightsnowshowers": 85, "snowshowers": 85, "heavysnowshowers": 86}
+
+def met_code(sym):
+    base = sym.split("_")[0]
+    return 95 if "thunder" in base else MET_CODES.get(base, 3)
+
+def fetch_met(names):
+    """Backup source: MET Norway (api.met.no), used when Open-Meteo refuses (for example its daily limit).
+    Gives about 9 days. It has no rain chance for Japan, so "pop" is the share of 8 AM-11 PM time with rain."""
+    fc, hours = {}, {}
+    for n in names:
+        lat, lng = CITIES[n]
+        d = get(f"https://api.met.no/weatherapi/locationforecast/2.0/complete?lat={lat}&lon={lng}", headers={"User-Agent": MET_UA})
+        days, covered = {}, None
+        for e in d["properties"]["timeseries"]:
+            t = dt.datetime.fromisoformat(e["time"].replace("Z", "+00:00")).astimezone(JST)
+            x = days.setdefault(t.date().isoformat(), {"temps": [], "wind": 0, "rain": 0.0, "snow": 0.0, "code": None, "wet": 0, "slots": 0})
+            inst = e["data"]["instant"]["details"]
+            x["temps"].append(inst["air_temperature"]); x["wind"] = max(x["wind"], inst.get("wind_speed", 0))
+            for key, span in (("next_1_hours", 1), ("next_6_hours", 6)):
+                blk = e["data"].get(key)
+                if not blk: continue
+                if key == "next_6_hours":
+                    det = blk.get("details", {})
+                    x["temps"] += [v for v in (det.get("air_temperature_max"), det.get("air_temperature_min")) if v is not None]
+                if covered and t < covered: break
+                sym = blk.get("summary", {}).get("symbol_code", "cloudy")
+                mm = blk.get("details", {}).get("precipitation_amount", 0) or 0
+                c = met_code(sym)
+                x["code"] = c if x["code"] is None else max(x["code"], c)
+                if c in (66, 67, 71, 73, 75, 85, 86): x["snow"] += mm / 25.4 * (10 if c >= 71 else 1)
+                else: x["rain"] += mm / 25.4
+                wet = mm / span >= 0.15
+                for h in range(span):
+                    ht = t + dt.timedelta(hours=h)
+                    if 8 <= ht.hour <= 23:
+                        y = days.setdefault(ht.date().isoformat(), {"temps": [], "wind": 0, "rain": 0.0, "snow": 0.0, "code": None, "wet": 0, "slots": 0})
+                        y["slots"] += 1; y["wet"] += wet
+                        if wet: hours.setdefault(ht.date().isoformat(), {}).setdefault(n, []).append(ht.hour)
+                covered = t + dt.timedelta(hours=span)
+                break
+        for day, x in days.items():
+            if not x["temps"] or x["code"] is None or x["slots"] < 8: continue
+            fc.setdefault(day, {})[n] = {"code": x["code"], "hi": round(max(x["temps"]) * 9 / 5 + 32), "lo": round(min(x["temps"]) * 9 / 5 + 32),
+                                         "rain": round(x["rain"], 2), "pop": round(100 * x["wet"] / x["slots"]),
+                                         "wind": round(x["wind"] * 2.237), "snow": round(x["snow"], 2)}
+    for day in hours:
+        for n in hours[day]: hours[day][n] = sorted(set(hours[day][n]))
+    return fc, hours
+
 def fetch():
     names = list(CITIES)
     q = ("https://api.open-meteo.com/v1/forecast?latitude=" + ",".join(str(CITIES[n][0]) for n in names) +
@@ -68,9 +123,14 @@ def fetch():
          "&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,snowfall_sum"
          "&hourly=precipitation_probability,precipitation,weather_code"
          "&temperature_unit=fahrenheit&wind_speed_unit=mph&precipitation_unit=inch&timezone=Asia%2FTokyo&forecast_days=16")
-    res = get(q)
-    res = res if isinstance(res, list) else [res]
-    fc, hours = {}, {}
+    try:
+        res = get(q)
+        source = "Open-Meteo"
+    except Exception as err:
+        print(f"Open-Meteo didn't answer ({err}); using the backup, MET Norway (about 9 days ahead).")
+        res, source = None, "MET Norway (backup)"
+    fc, hours = ({}, {}) if res is not None else fetch_met(names)
+    res = [] if res is None else res if isinstance(res, list) else [res]
     for n, c in zip(names, res):
         D = c["daily"]
         for k, t in enumerate(D["time"]):
@@ -101,13 +161,13 @@ def fetch():
             if i == len(hs) or hs[i] != hs[i - 1] + 1:
                 b = hs[i - 1]; out.append(f"{a}:00" if a == b else f"{a}:00-{b + 1}:00"); a = hs[i] if i < len(hs) else None
         return ", ".join(out)
-    print(f"Checked {dt.datetime.now(JST):%a %b %d, %H:%M} Japan time. Units: °F, inches, mph.")
+    print(f"Checked {dt.datetime.now(JST):%a %b %d, %H:%M} Japan time. Source: {source}. Units: °F, inches, mph.")
     for x in days:
         print(f"\n== {x['date']} {x['label']}: {x['title']}")
         print("   stops: " + " | ".join(x["stops"]))
         for n in x["cities"]:
             f = x["forecast"][n]
-            if not f: print(f"   {n}: no forecast yet (beyond 16 days)"); continue
+            if not f: print(f"   {n}: no forecast yet (too far ahead)"); continue
             r = rough(f)
             print(f"   {n}: {CODES.get(f['code'], f['code'])}, {f['hi']}/{f['lo']}°F, rain {f['pop']}% {f['rain']} in, snow {f['snow']} in, "
                   f"wind {f['wind']} mph; rainy hours: {span(x['rain_hours'][n])}" + (f"  ROUGH: {', '.join(r)}" if r else ""))
